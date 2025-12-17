@@ -15,8 +15,6 @@
             <nav class="nav">
                 <button class="nav-btn active" data-view="wireframe">와이어프레임</button>
                 <button class="nav-btn" data-view="mockup">목업</button>
-                <button class="nav-btn" data-view="prototype">프로토타입</button>
-                <button class="nav-btn" data-view="collaborate">협업</button>
             </nav>
         </div>
         <div class="header-right">
@@ -100,38 +98,8 @@
         </aside>
     </div>
 
-    <!-- 협업 모달 -->
-    <div class="modal" id="collaborateModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>협업 및 피드백</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="comment-section">
-                    <h4>코멘트</h4>
-                    <div class="comment-list" id="commentList">
-                        <!-- 코멘트가 여기에 표시됩니다 -->
-                    </div>
-                    <div class="comment-input">
-                        <textarea placeholder="코멘트를 입력하세요..."></textarea>
-                        <button class="btn btn-primary">코멘트 추가</button>
-                    </div>
-                </div>
-                <div class="version-section">
-                    <h4>버전 관리</h4>
-                    <div class="version-list" id="versionList">
-                        <!-- 버전 히스토리가 여기에 표시됩니다 -->
-                    </div>
-                    <button class="btn btn-secondary">새 버전 저장</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="js/app.js"></script>
     <script src="js/components.js"></script>
     <script src="js/canvas.js"></script>
-    <script src="js/collaboration.js"></script>
 </body>
 </html>

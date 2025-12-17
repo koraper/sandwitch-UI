@@ -22,7 +22,6 @@ This is a single-page application with a modular JavaScript architecture:
 - **Main App (`js/app.js`)**: Central orchestrator using the `SandwichUI` class that manages global state, element lifecycle, and user interactions
 - **Component System (`js/components.js`)**: Manages the drag-and-drop component library with factory pattern for creating UI elements
 - **Canvas Management (`js/canvas.js`)**: Handles drawing tools, element positioning, grid snapping, and visual feedback
-- **Collaboration (`js/collaboration.js`)**: Manages comments, version control, and sharing features using LocalStorage
 
 ### Key Architectural Patterns
 
@@ -52,7 +51,7 @@ All application state is managed through the main `SandwichUI` class:
 - `elements[]`: Array of all canvas elements
 - `history[]`: Stack of previous states for undo/redo
 - `selectedElement`: Currently active element for property editing
-- LocalStorage keys: `sandwitchUI`, `sandwitchUI_comments`, `sandwitchUI_versions`
+- LocalStorage key: `sandwitchUI`
 
 ## Important Implementation Details
 
@@ -65,5 +64,8 @@ Uses HTML5 Drag & Drop API for component library items and custom mouse event ha
 ### Canvas Coordinate System
 All positioning uses absolute pixels relative to the canvas container. The grid snapping system rounds coordinates to the nearest 20px when enabled.
 
-### Version Control System
-Versions are complete snapshots of the `elements[]` array stored in LocalStorage with metadata (author, timestamp, description). The comparison system performs shallow diffing to identify added/removed/modified elements.
+### Wireframe Mode
+Wireframe mode applies special styling to all elements to show basic structural outlines instead of full visual styling. This is done by adding the `wireframe-mode` class to the canvas container.
+
+### Component Types
+The application supports basic UI components (text, button, input, image), layout components (container, grid, flex), and navigation components (navbar, sidebar, tab). Each component type has its own template and initialization logic.

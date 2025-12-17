@@ -33,16 +33,6 @@ class SandwichUI {
         document.getElementById('saveBtn').addEventListener('click', () => this.save());
         document.getElementById('exportBtn').addEventListener('click', () => this.export());
 
-        // 협업 모달
-        document.querySelector('[data-view="collaborate"]').addEventListener('click', () => {
-            this.showCollaborateModal();
-        });
-
-        // 모달 닫기
-        document.querySelector('.modal-close').addEventListener('click', () => {
-            this.hideModal('collaborateModal');
-        });
-
         // 툴바 버튼
         document.getElementById('undoBtn').addEventListener('click', () => this.undo());
         document.getElementById('redoBtn').addEventListener('click', () => this.redo());
@@ -123,12 +113,6 @@ class SandwichUI {
             case 'mockup':
                 this.initMockupMode();
                 break;
-            case 'prototype':
-                this.initPrototypeMode();
-                break;
-            case 'collaborate':
-                this.showCollaborateModal();
-                break;
         }
     }
 
@@ -146,11 +130,7 @@ class SandwichUI {
         });
     }
 
-    initPrototypeMode() {
-        // 프로토타입 모드 초기화
-        this.setupPrototypeInteractions();
-    }
-
+  
     selectTool(tool) {
         // 툴 선택
         document.querySelectorAll('.tool-btn').forEach(btn => {
@@ -721,16 +701,7 @@ class SandwichUI {
         this.showNotification('내보내기 완료!');
     }
 
-    showCollaborateModal() {
-        document.getElementById('collaborateModal').classList.add('show');
-        this.loadComments();
-        this.loadVersions();
-    }
-
-    hideModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
-    }
-
+    
     showNotification(message) {
         const notification = document.createElement('div');
         notification.className = 'notification';
