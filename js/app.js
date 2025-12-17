@@ -632,17 +632,25 @@ class SandwichUI {
         // 캔버스 초기화
         document.getElementById('canvasContent').innerHTML = '';
 
-        // 드롭존 다시 추가
-        const dropZone = document.createElement('div');
-        dropZone.className = 'drop-zone';
-        dropZone.id = 'dropZone';
-        dropZone.innerHTML = '<p>여기에 컴포넌트를 드래그하세요</p>';
-        document.getElementById('canvasContent').appendChild(dropZone);
+        // 요소가 없으면 빈 캔버스 표시
+        if (this.elements.length === 0) {
+            const emptyCanvas = document.createElement('div');
+            emptyCanvas.className = 'empty-canvas';
+            emptyCanvas.innerHTML = '<p>여기에 컴포넌트를 드래그하여 목업을 만드세요</p>';
+            document.getElementById('canvasContent').appendChild(emptyCanvas);
+        } else {
+            // 드롭존 추가
+            const dropZone = document.createElement('div');
+            dropZone.className = 'drop-zone';
+            dropZone.id = 'dropZone';
+            dropZone.style.display = 'none';
+            document.getElementById('canvasContent').appendChild(dropZone);
 
-        // 모든 요소 렌더링
-        this.elements.forEach(element => {
-            this.renderElement(element);
-        });
+            // 모든 요소 렌더링
+            this.elements.forEach(element => {
+                this.renderElement(element);
+            });
+        }
     }
 
     zoom(factor) {

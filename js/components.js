@@ -29,41 +29,24 @@ class ComponentManager {
             });
         });
 
-        // 드롭존 설정
-        const dropZone = document.getElementById('dropZone');
+        // 캔버스에 드롭 설정
         const canvas = document.getElementById('canvasContent');
 
-        [dropZone, canvas].forEach(zone => {
-            zone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy';
+        canvas.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
 
-                if (dropZone) {
-                    dropZone.classList.add('drag-over');
-                }
-            });
+        canvas.addEventListener('drop', (e) => {
+            e.preventDefault();
 
-            zone.addEventListener('dragleave', (e) => {
-                if (dropZone && e.target === dropZone) {
-                    dropZone.classList.remove('drag-over');
-                }
-            });
+            if (this.draggedComponent) {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
 
-            zone.addEventListener('drop', (e) => {
-                e.preventDefault();
-
-                if (dropZone) {
-                    dropZone.classList.remove('drag-over');
-                }
-
-                if (this.draggedComponent) {
-                    const rect = canvas.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-
-                    this.createComponent(this.draggedComponent.type, x, y);
-                }
-            });
+                this.createComponent(this.draggedComponent.type, x, y);
+            }
         });
     }
 
