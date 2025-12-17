@@ -1,28 +1,28 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+이 파일은 이 저장소에서 코드 작업 시 Claude Code (claude.ai/code)를 위한 가이드를 제공합니다.
 
-## Repository Overview
+## 저장소 개요
 
-This is a new repository called "sandwitch-UI" that appears to be a VS Code workspace project. The repository is currently in its initial state with minimal structure.
+"sandwitch-UI"라는 이름의 새로운 저장소로, VS Code 워크스페이스 프로젝트로 보입니다. 현재 최소한의 구조로 초기 상태에 있습니다.
 
-## Current State
+## 현재 상태
 
-- This is a fresh repository with only Git configuration and VS Code workspace files
-- No package.json, source code, or build configuration files are present yet
-- The repository appears to be set up as a UI project based on the name
-- VS Code workspace configuration is present in `sandwitch-UI.code-workspace`
+- Git 설정과 VS Code 워크스페이스 파일만 있는 새 저장소입니다
+- 아직 package.json, 소스 코드, 빌드 구성 파일이 없습니다
+- 이름으로 보아 UI 프로젝트로 설정된 것으로 보입니다
+- `sandwitch-UI.code-workspace`에 VS Code 워크스페이스 구성이 있습니다
 
-## Development Setup
+## 개발 설정
 
-Since this is a new repository, the specific build, test, and development commands are not yet defined. Future instances should:
+새로운 저장소이므로 특정 빌드, 테스트, 개발 명령어는 아직 정의되지 않았습니다. 이후 인스턴스는 다음을 수행해야 합니다:
 
-1. Check for the presence of package.json or other configuration files to determine the technology stack
-2. Look for framework-specific files (React, Vue, Angular, etc.) once the project is initialized
-3. Verify the presence of build tools and configuration as the project develops
+1. package.json이나 다른 구성 파일의 존재를 확인하여 기술 스택을 결정합니다
+2. 프로젝트가 초기화되면 프레임워크별 파일(React, Vue, Angular 등)을 찾습니다
+3. 프로젝트가 발전함에 따라 빌드 도구와 구성의 존재를 확인합니다
 
-## Notes
+## 참고사항
 
-- This repository appears to be in the initial setup phase
-- The technology stack and development commands will need to be determined as the project progresses
-- Future instances should update this file as the project structure becomes clearer
+- 이 저장소는 초기 설정 단계에 있는 것으로 보입니다
+- 기술 스택과 개발 명령어는 프로젝트가 진행됨에 따라 결정되어야 합니다
+- 향후 인스턴스는 프로젝트 구조가 명확해지면 이 파일을 업데이트해야 합니다
