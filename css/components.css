@@ -1,0 +1,445 @@
+/* 컴포넌트 스타일 */
+
+/* 캔버스 요소 기본 스타일 */
+.canvas-element {
+    position: absolute;
+    min-width: 50px;
+    min-height: 30px;
+    border: 1px solid transparent;
+    cursor: move;
+    user-select: none;
+}
+
+.canvas-element.selected {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.canvas-element:hover {
+    border-color: #e1e4e8;
+}
+
+/* 리사이즈 핸들 */
+.resize-handle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #2563eb;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.canvas-element.selected .resize-handle {
+    opacity: 1;
+}
+
+.resize-handle.nw { top: -4px; left: -4px; cursor: nw-resize; }
+.resize-handle.ne { top: -4px; right: -4px; cursor: ne-resize; }
+.resize-handle.sw { bottom: -4px; left: -4px; cursor: sw-resize; }
+.resize-handle.se { bottom: -4px; right: -4px; cursor: se-resize; }
+.resize-handle.n { top: -4px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
+.resize-handle.s { bottom: -4px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
+.resize-handle.e { right: -4px; top: 50%; transform: translateY(-50%); cursor: e-resize; }
+.resize-handle.w { left: -4px; top: 50%; transform: translateY(-50%); cursor: w-resize; }
+
+/* 텍스트 컴포넌트 */
+.component-text {
+    padding: 8px 12px;
+    background: transparent;
+    color: #333;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 40px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.component-text.editing {
+    border: 1px solid #2563eb;
+    outline: none;
+    cursor: text;
+}
+
+/* 버튼 컴포넌트 */
+.component-button {
+    padding: 8px 16px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    transition: background-color 0.2s;
+}
+
+.component-button:hover {
+    background: #1d4ed8;
+}
+
+.component-button.secondary {
+    background: #6b7280;
+}
+
+.component-button.secondary:hover {
+    background: #4b5563;
+}
+
+.component-button.outline {
+    background: transparent;
+    border: 1px solid #2563eb;
+    color: #2563eb;
+}
+
+.component-button.outline:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* 입력창 컴포넌트 */
+.component-input {
+    padding: 8px 12px;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    color: #333;
+    min-height: 40px;
+    width: 200px;
+}
+
+.component-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.component-input::placeholder {
+    color: #999;
+}
+
+/* 이미지 컴포넌트 */
+.component-image {
+    background: #f8f9fa;
+    border: 1px dashed #e1e4e8;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+    min-width: 100px;
+    min-height: 100px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.component-image::before {
+    content: "📷 이미지";
+}
+
+.component-image.has-image::before {
+    content: "";
+}
+
+/* 컨테이너 컴포넌트 */
+.component-container {
+    background: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    min-width: 200px;
+    min-height: 150px;
+    padding: 16px;
+}
+
+.component-container.has-content {
+    background: white;
+}
+
+/* 그리드 컴포넌트 */
+.component-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 16px;
+    background: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    min-width: 300px;
+    min-height: 200px;
+}
+
+.grid-item {
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    padding: 12px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 12px;
+}
+
+/* 플렉스 컴포넌트 */
+.component-flex {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    min-width: 300px;
+    min-height: 120px;
+}
+
+.component-flex.column {
+    flex-direction: column;
+}
+
+.flex-item {
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    padding: 12px;
+    min-height: 60px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 12px;
+}
+
+/* 네비게이션 바 컴포넌트 */
+.component-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    min-width: 400px;
+    min-height: 60px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 24px;
+}
+
+.navbar-item {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.navbar-item:hover,
+.navbar-item.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+/* 사이드바 컴포넌트 */
+.component-sidebar {
+    width: 250px;
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    min-height: 400px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid #e1e4e8;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 8px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    color: #666;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.sidebar-item:hover {
+    background: #f8f9fa;
+    color: #333;
+}
+
+.sidebar-item.active {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+}
+
+.sidebar-item::before {
+    content: "📄";
+    margin-right: 8px;
+}
+
+/* 탭 컴포넌트 */
+.component-tabs {
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    min-width: 400px;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.tabs-header {
+    display: flex;
+    border-bottom: 1px solid #e1e4e8;
+    background: #f8f9fa;
+}
+
+.tab-item {
+    padding: 12px 20px;
+    border-bottom: 2px solid transparent;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.tab-item:hover {
+    color: #333;
+    background: rgba(0,0,0,0.02);
+}
+
+.tab-item.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+    background: white;
+}
+
+.tabs-content {
+    padding: 20px;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* 와이어프레임 스타일 */
+.wireframe-mode .canvas-element {
+    background: #f8f9fa !important;
+    border: 2px dashed #333 !important;
+    color: #333 !important;
+}
+
+.wireframe-mode .component-button,
+.wireframe-mode .component-input,
+.wireframe-mode .component-image {
+    background: transparent !important;
+    border: 2px solid #333 !important;
+    color: #333 !important;
+}
+
+.wireframe-mode .component-button::before {
+    content: "[BUTTON]";
+    font-size: 12px;
+}
+
+.wireframe-mode .component-input::before {
+    content: "[INPUT]";
+    font-size: 12px;
+}
+
+/* 레이아웃 도우미 */
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,0.05) 19px, rgba(0,0,0,0.05) 20px),
+        repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0,0,0,0.05) 19px, rgba(0,0,0,0.05) 20px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.grid-overlay.show {
+    opacity: 1;
+}
+
+/* 가이드라인 */
+.guide-line {
+    position: absolute;
+    background: #2563eb;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.guide-line.horizontal {
+    height: 1px;
+    width: 100%;
+}
+
+.guide-line.vertical {
+    width: 1px;
+    height: 100%;
+}
+
+/* 스냅 라인 */
+.snap-indicator {
+    position: absolute;
+    background: #10b981;
+    z-index: 1001;
+    pointer-events: none;
+}
+
+.snap-indicator.horizontal {
+    height: 2px;
+    width: 100%;
+}
+
+.snap-indicator.vertical {
+    width: 2px;
+    height: 100%;
+}
