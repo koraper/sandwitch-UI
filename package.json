@@ -4,8 +4,8 @@
   "description": "디자이너를 위한 UI 목업 및 프로토타이핑 도구",
   "main": "index.html",
   "scripts": {
-    "start": "python -m http.server 8080",
-    "dev": "python -m http.server 8080"
+    "start": "python3 -m http.server 8080",
+    "dev": "python3 -m http.server 8080"
   },
   "keywords": ["ui", "mockup", "prototype", "wireframe", "design"],
   "author": "Service Planner",
