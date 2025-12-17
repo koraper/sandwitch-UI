@@ -30,14 +30,21 @@ class SandwichUI {
         });
 
         // 저장 및 내보내기
-        document.getElementById('saveBtn').addEventListener('click', () => this.save());
-        document.getElementById('exportBtn').addEventListener('click', () => this.export());
+        const saveBtn = document.getElementById('saveBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        if (saveBtn) saveBtn.addEventListener('click', () => this.save());
+        if (exportBtn) exportBtn.addEventListener('click', () => this.export());
 
         // 툴바 버튼
-        document.getElementById('undoBtn').addEventListener('click', () => this.undo());
-        document.getElementById('redoBtn').addEventListener('click', () => this.redo());
-        document.getElementById('zoomInBtn').addEventListener('click', () => this.zoom(1.2));
-        document.getElementById('zoomOutBtn').addEventListener('click', () => this.zoom(0.8));
+        const undoBtn = document.getElementById('undoBtn');
+        const redoBtn = document.getElementById('redoBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        
+        if (undoBtn) undoBtn.addEventListener('click', () => this.undo());
+        if (redoBtn) redoBtn.addEventListener('click', () => this.redo());
+        if (zoomInBtn) zoomInBtn.addEventListener('click', () => this.zoom(1.2));
+        if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => this.zoom(0.8));
 
         // 도구 선택
         document.querySelectorAll('.tool-btn').forEach(btn => {
@@ -103,7 +110,9 @@ class SandwichUI {
 
         // 캔버스 클래스 업데이트
         const canvas = document.getElementById('canvas');
-        canvas.classList.toggle('wireframe-mode', view === 'wireframe');
+        if (canvas) {
+            canvas.classList.toggle('wireframe-mode', view === 'wireframe');
+        }
 
         // 뷰별 초기화
         switch(view) {
@@ -629,22 +638,25 @@ class SandwichUI {
     }
 
     updateCanvas() {
+        const canvasContent = document.getElementById('canvasContent');
+        if (!canvasContent) return;
+
         // 캔버스 초기화
-        document.getElementById('canvasContent').innerHTML = '';
+        canvasContent.innerHTML = '';
 
         // 요소가 없으면 빈 캔버스 표시
         if (this.elements.length === 0) {
             const emptyCanvas = document.createElement('div');
             emptyCanvas.className = 'empty-canvas';
             emptyCanvas.innerHTML = '<p>여기에 컴포넌트를 드래그하여 목업을 만드세요</p>';
-            document.getElementById('canvasContent').appendChild(emptyCanvas);
+            canvasContent.appendChild(emptyCanvas);
         } else {
             // 드롭존 추가
             const dropZone = document.createElement('div');
             dropZone.className = 'drop-zone';
             dropZone.id = 'dropZone';
             dropZone.style.display = 'none';
-            document.getElementById('canvasContent').appendChild(dropZone);
+            canvasContent.appendChild(dropZone);
 
             // 모든 요소 렌더링
             this.elements.forEach(element => {
@@ -748,7 +760,15 @@ class SandwichUI {
     }
 }
 
-// 앱 초기화
+// 앱 초기화 (로그인 후에만 실행)
 document.addEventListener('DOMContentLoaded', () => {
-    window.sandwichUI = new SandwichUI();
+    // 로그인 상태 확인 - 로그인된 경우에만 앱 초기화
+    const isLoggedIn = localStorage.getItem('sandwitchUI_loggedIn');
+    const rememberMe = localStorage.getItem('sandwitchUI_rememberMe') === 'true';
+    
+    if (isLoggedIn && rememberMe) {
+        // 자동 로그인 상태인 경우 login.js에서 처리
+        // 여기서는 초기화하지 않음
+    }
+    // 로그인되지 않은 경우 login.js가 처리
 });

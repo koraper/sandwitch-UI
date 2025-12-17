@@ -13,94 +13,71 @@ body {
     overflow: hidden;
 }
 
+body.has-main-app {
+    overflow: auto;
+}
+
 /* 로그인 페이지 */
 .login-container {
     display: flex;
     height: 100vh;
-}
-
-.login-left {
-    flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    padding: 4rem;
-    position: relative;
-}
-
-.login-brand {
-    margin-bottom: 4rem;
-}
-
-.logo {
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.brand-description {
-    font-size: 1.2rem;
-    opacity: 0.9;
-}
-
-.login-features {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.feature {
-    display: flex;
     align-items: center;
-    gap: 1.5rem;
-}
-
-.feature-icon {
-    font-size: 2.5rem;
-    background: rgba(255, 255, 255, 0.2);
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.feature-text h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
-
-.feature-text p {
-    opacity: 0.9;
-    line-height: 1.5;
+    background: #f8f9fa;
 }
 
 .login-right {
-    flex: 1;
+    width: 100%;
+    max-width: 450px;
     background: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
 .login-form-container {
     width: 100%;
-    max-width: 400px;
+}
+
+.login-form-container .login-brand {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-form-container .logo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.login-form-container .logo i {
+    font-size: 2.5rem;
+}
+
+.login-form-container .brand-description {
+    font-size: 1rem;
+    color: #666;
 }
 
 .login-form-container h2 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin-bottom: 0.5rem;
     color: #333;
+    text-align: center;
 }
 
 .login-subtitle {
     color: #666;
     margin-bottom: 2rem;
+    text-align: center;
 }
 
 .login-form {
@@ -113,19 +90,45 @@ body {
 }
 
 .form-group label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #333;
 }
 
+.form-group label i {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #999;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .form-group input {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
     border: 1px solid #e1e4e8;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s;
+}
+
+.form-group input[type="password"] {
+    padding-right: 3rem;
 }
 
 .form-group input:focus {
@@ -134,10 +137,16 @@ body {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+.input-wrapper:focus-within .input-icon {
+    color: #667eea;
+}
+
 .password-toggle {
     position: absolute;
     right: 1rem;
-    top: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
 }
 
 .toggle-password {
@@ -146,6 +155,14 @@ body {
     cursor: pointer;
     font-size: 1.2rem;
     color: #666;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password i {
+    font-size: 1.2rem;
 }
 
 .form-options {
@@ -203,7 +220,7 @@ body {
 .login-btn {
     width: 100%;
     padding: 0.875rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #000000;
     color: white;
     border: none;
     border-radius: 8px;
@@ -214,6 +231,7 @@ body {
 }
 
 .login-btn:hover {
+    background: #333333;
     transform: translateY(-1px);
 }
 
@@ -312,6 +330,13 @@ body {
     cursor: pointer;
     font-size: 1rem;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tool-btn i {
+    font-size: 1rem;
 }
 
 .tool-btn:hover {
@@ -321,6 +346,18 @@ body {
 .tool-btn.active {
     background: #667eea;
     color: white;
+}
+
+/* 헤더 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: white;
+    border-bottom: 1px solid #e1e4e8;
+    height: 70px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .header-left {
@@ -333,6 +370,13 @@ body {
     font-size: 1.5rem;
     font-weight: bold;
     color: #2563eb;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo i {
+    font-size: 1.5rem;
 }
 
 .nav {
@@ -602,40 +646,12 @@ body {
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .login-container {
-        flex-direction: column;
-    }
-
-    .login-left {
-        padding: 2rem;
-        text-align: center;
-    }
-
-    .login-brand {
-        margin-bottom: 2rem;
-    }
-
-    .logo {
-        font-size: 2rem;
-    }
-
-    .login-features {
-        gap: 1rem;
-    }
-
-    .feature {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-    }
-
-    .feature-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 2rem;
+        padding: 1rem;
     }
 
     .login-right {
-        padding: 1.5rem;
+        padding: 2rem;
+        max-width: 100%;
     }
 
     .floating-toolbar {
@@ -648,24 +664,17 @@ body {
 }
 
 @media (max-width: 480px) {
-    .login-left {
+    .login-right {
         padding: 1.5rem;
+        border-radius: 12px;
     }
 
-    .brand-description {
-        font-size: 1rem;
+    .login-form-container .logo {
+        font-size: 2rem;
     }
 
-    .feature-text h3 {
-        font-size: 1rem;
-    }
-
-    .feature-text p {
+    .login-form-container .brand-description {
         font-size: 0.9rem;
-    }
-
-    .login-form-container {
-        max-width: 100%;
     }
 
     .login-form-container h2 {
