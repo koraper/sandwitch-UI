@@ -598,6 +598,11 @@ class WaitingRoomManager {
 
         // 상태 배지 생성
         const badge = this.createStatusBadge(lecture.status || 'ongoing');
+        
+        // 입장 불가능한 상태 확인
+        const isDisabled = lecture.status === 'ended' || lecture.status === 'cancelled';
+        const disabledAttr = isDisabled ? 'disabled' : '';
+        const disabledClass = isDisabled ? 'disabled' : '';
 
         card.innerHTML = `
             <div class="lecture-card-header">
@@ -626,15 +631,15 @@ class WaitingRoomManager {
                 </div>
             </div>
             <div class="lecture-card-footer">
-                <button class="btn-enter" data-lecture-id="${lecture.id}">
+                <button class="btn-enter ${disabledClass}" data-lecture-id="${lecture.id}" ${disabledAttr}>
                     <i class="fas fa-door-open"></i> 입장하기
                 </button>
             </div>
         `;
 
-        // 입장 버튼 이벤트
+        // 입장 버튼 이벤트 (활성화된 경우만)
         const enterBtn = card.querySelector('.btn-enter');
-        if (enterBtn) {
+        if (enterBtn && !isDisabled) {
             enterBtn.addEventListener('click', () => {
                 this.showEntryModal(lecture);
             });

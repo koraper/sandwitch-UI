@@ -1134,6 +1134,22 @@
     transform: translateY(0);
 }
 
+.btn-enter:disabled,
+.btn-enter.disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-enter:disabled:hover,
+.btn-enter.disabled:hover {
+    background: #e5e7eb;
+    transform: none;
+    box-shadow: none;
+}
+
 /* 로딩 상태 */
 .loading-state {
     grid-column: 1 / -1;
