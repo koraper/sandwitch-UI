@@ -1053,16 +1053,16 @@
     color: #065f46;
 }
 
-/* 종료됨 - 회색 */
+/* 종료됨 - 검정 계열 */
 .badge-ended {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: #1f2937;
+    color: #ffffff;
 }
 
-/* 취소됨 - 빨간색 */
+/* 취소됨 - 회색 계열 */
 .badge-cancelled {
-    background: #fee2e2;
-    color: #991b1b;
+    background: #e5e7eb;
+    color: #6b7280;
 }
 
 .lecture-card-body {
