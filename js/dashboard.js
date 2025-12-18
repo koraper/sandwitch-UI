@@ -356,6 +356,37 @@ class DashboardManager {
                 this.handleExit();
             });
         }
+
+        // 새로고침 버튼
+        const refreshBtn = document.getElementById('refreshBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                this.handleRefresh();
+            });
+        }
+    }
+
+    /**
+     * 새로고침 처리
+     */
+    handleRefresh() {
+        // 로딩 표시
+        const loadingElement = document.getElementById('dashboardLoading');
+        const lectureInfoSection = document.getElementById('lectureInfoSection');
+        const competencySection = document.getElementById('competencySection');
+        
+        if (loadingElement) loadingElement.style.display = 'flex';
+        if (lectureInfoSection) lectureInfoSection.style.display = 'none';
+        if (competencySection) competencySection.style.display = 'none';
+
+        // 역량 카드 데이터 다시 로드 (실제로는 서버 API 호출)
+        this.loadCompetencyCards();
+        this.renderCompetencyCards();
+        
+        // 로딩 숨김
+        setTimeout(() => {
+            this.hideLoading();
+        }, 500); // 짧은 딜레이로 새로고침 효과 표시
     }
 
     /**
