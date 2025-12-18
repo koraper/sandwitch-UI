@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강사 대기실 - 샌드위치</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- 강사 대기실 -->
+    <div class="waiting-room-container manager-waiting-room">
+        <!-- 헤더 -->
+        <header class="waiting-room-header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-hamburger"></i> 샌드위치
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-profile" id="userProfile">
+                    <span class="user-name" id="userName">강사</span>
+                    <span class="manager-badge">Manager</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> 로그아웃
+                </button>
+            </div>
+        </header>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="waiting-room-main">
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1><i class="fas fa-chalkboard-teacher"></i> 내 특강 관리</h1>
+                    <p class="page-subtitle">개설한 특강을 관리하고 대시보드로 입장하세요</p>
+                </div>
+            </div>
+
+            <!-- 필터 탭 섹션 -->
+            <div class="filter-tabs-section">
+                <div class="filter-tabs" id="filterTabs">
+                    <button class="filter-tab active" data-status="all">
+                        <i class="fas fa-list"></i> 전체
+                        <span class="tab-count" id="countAll">0</span>
+                    </button>
+                    <button class="filter-tab" data-status="upcoming">
+                        <i class="fas fa-clock"></i> 예정됨
+                        <span class="tab-count" id="countUpcoming">0</span>
+                    </button>
+                    <button class="filter-tab" data-status="ongoing">
+                        <i class="fas fa-play-circle"></i> 진행 중
+                        <span class="tab-count" id="countOngoing">0</span>
+                    </button>
+                    <button class="filter-tab" data-status="ended">
+                        <i class="fas fa-check-circle"></i> 종료됨
+                        <span class="tab-count" id="countEnded">0</span>
+                    </button>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input-mini" 
+                        placeholder="특강명, 기관명으로 검색..."
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+
+            <!-- 특강 리스트 -->
+            <div class="lecture-list manager-lecture-list" id="lectureList">
+                <!-- 특강 카드들이 여기에 동적으로 생성됩니다 -->
+                <div class="loading-state" id="loadingState">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>특강 목록을 불러오는 중...</p>
+                </div>
+            </div>
+
+            <!-- 빈 상태 -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <p>개설한 특강이 없습니다.</p>
+                <button class="btn-create-first" id="createFirstBtn">
+                    <i class="fas fa-plus"></i> 첫 특강 개설하기
+                </button>
+            </div>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination-container" id="paginationContainer" style="display: none;">
+                <div class="pagination-info">
+                    <span id="paginationInfo">1-4 / 전체 4개</span>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn-pagination" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i> 이전
+                    </button>
+                    <div class="pagination-numbers" id="paginationNumbers"></div>
+                    <button class="btn-pagination" id="nextBtn">
+                        다음 <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- FAB 버튼 (특강 개설) -->
+        <button class="fab-create" id="fabCreateBtn" title="새 특강 개설">
+            <i class="fas fa-plus"></i>
+            <span class="fab-label">특강 개설</span>
+        </button>
+    </div>
+
+    <!-- 특강 생성 모달 -->
+    <div class="modal" id="createLectureModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-container modal-large">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-info">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h2 class="modal-title">새 특강 개설</h2>
+                <button class="modal-close-btn" id="modalCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createLectureForm" class="create-lecture-form">
+                    <!-- 특강 기본 정보 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-info-circle"></i> 기본 정보
+                        </h3>
+                        <div class="form-group">
+                            <label for="lectureName">특강명 <span class="required">*</span></label>
+                            <input 
+                                type="text" 
+                                id="lectureName" 
+                                class="form-input" 
+                                placeholder="예: 생성형 AI 활용 가이드"
+                                required
+                            >
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="institution">수행 기관 <span class="required">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="institution" 
+                                    class="form-input" 
+                                    placeholder="예: 한국대학교 컴퓨터공학과"
+                                    required
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="instructorName">강사명</label>
+                                <input 
+                                    type="text" 
+                                    id="instructorName" 
+                                    class="form-input" 
+                                    placeholder="강사 이름"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 일시 정보 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-calendar-alt"></i> 일시
+                        </h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">시작 일시 <span class="required">*</span></label>
+                                <input 
+                                    type="datetime-local" 
+                                    id="startDate" 
+                                    class="form-input"
+                                    required
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">종료 일시 <span class="required">*</span></label>
+                                <input 
+                                    type="datetime-local" 
+                                    id="endDate" 
+                                    class="form-input"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">장소</label>
+                            <input 
+                                type="text" 
+                                id="location" 
+                                class="form-input" 
+                                placeholder="예: 온라인 (Zoom) 또는 공학관 301호"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- 설명 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-align-left"></i> 특강 설명
+                        </h3>
+                        <div class="form-group">
+                            <label for="description">주제 및 내용 요약</label>
+                            <textarea 
+                                id="description" 
+                                class="form-textarea" 
+                                rows="4"
+                                placeholder="특강의 주요 내용을 간략히 설명해주세요..."
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 옵션 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-cog"></i> 옵션
+                        </h3>
+                        <div class="form-checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="showStudentId">
+                                <span class="checkmark"></span>
+                                <span class="checkbox-label">인증서에 학번 표시</span>
+                            </label>
+                            <small class="checkbox-hint">체크하면 인증서에 학생의 학번이 표시됩니다.</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-outline" id="cancelCreateBtn">
+                    취소
+                </button>
+                <button type="submit" form="createLectureForm" class="modal-btn modal-btn-primary" id="submitCreateBtn">
+                    <i class="fas fa-check"></i> 개설하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 코드 표시 모달 -->
+    <div class="modal" id="codeDisplayModal">
+        <div class="modal-overlay" id="codeModalOverlay"></div>
+        <div class="modal-container modal-medium">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="modal-title">특강이 개설되었습니다!</h2>
+            </div>
+            <div class="modal-body">
+                <div class="code-display-content">
+                    <p class="code-instruction">아래 입장 코드를 학생들에게 공유해주세요.</p>
+                    <div class="access-code-display">
+                        <span class="access-code" id="displayAccessCode">ABC123</span>
+                        <button class="btn-copy-code" id="copyCodeBtn" title="코드 복사">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="copy-feedback" id="copyFeedback" style="display: none;">
+                        <i class="fas fa-check"></i> 클립보드에 복사되었습니다!
+                    </p>
+                    <div class="created-lecture-info" id="createdLectureInfo">
+                        <div class="info-row">
+                            <span class="info-label">특강명</span>
+                            <span class="info-value" id="createdLectureName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">일시</span>
+                            <span class="info-value" id="createdLectureDate">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-primary" id="closeCodeModalBtn">
+                    <i class="fas fa-check"></i> 확인
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/modal.js"></script>
+    <script src="js/manager-waiting-room.js"></script>
+</body>
+</html>
+
