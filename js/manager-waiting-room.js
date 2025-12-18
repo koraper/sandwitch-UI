@@ -845,7 +845,7 @@ class ManagerWaitingRoomManager {
      */
     enterDashboard(lecture) {
         // 매니저는 코드 입력 없이 바로 대시보드 입장
-        window.location.href = `dashboard.html?lectureId=${lecture.id}&mode=manager`;
+        window.location.href = `manager-dashboard.html?lectureId=${lecture.id}`;
     }
 
     /**
