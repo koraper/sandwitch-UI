@@ -722,7 +722,8 @@ class WaitingRoomManager {
                 {
                     label: '입장',
                     action: () => this.verifyEntryCode(lecture),
-                    style: 'primary'
+                    style: 'primary',
+                    id: 'entrySubmitBtn'
                 }
             ],
             closeOnBackdrop: true
@@ -730,16 +731,37 @@ class WaitingRoomManager {
 
         // 입력 필드 이벤트 설정
         setTimeout(() => {
-            this.setupCodeInputs();
+            this.setupCodeInputs(lecture);
         }, 100);
     }
 
     /**
      * 코드 입력 필드 설정
      */
-    setupCodeInputs() {
+    setupCodeInputs(lecture) {
         const inputs = document.querySelectorAll('.code-digit');
+        const submitBtn = document.getElementById('entrySubmitBtn');
+        
         if (!inputs.length) return;
+
+        // 초기 상태: 입장 버튼 비활성화
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+        }
+
+        // 입장 버튼 활성화 상태 체크
+        const checkAllFilled = () => {
+            const allFilled = Array.from(inputs).every(inp => inp.value);
+            if (submitBtn) {
+                submitBtn.disabled = !allFilled;
+                if (allFilled) {
+                    submitBtn.classList.remove('disabled');
+                } else {
+                    submitBtn.classList.add('disabled');
+                }
+            }
+        };
 
         inputs.forEach((input, index) => {
             // 첫 번째 입력 필드에 포커스
@@ -752,17 +774,18 @@ class WaitingRoomManager {
                 const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
                 e.target.value = value;
 
+                // 입장 버튼 상태 업데이트
+                checkAllFilled();
+
                 // 값이 입력되면 다음 필드로 이동
                 if (value && index < inputs.length - 1) {
                     inputs[index + 1].focus();
                 }
 
-                // 마지막 필드에 입력되면 자동으로 검증 (선택사항)
+                // 마지막 필드에 입력되면 포커스 해제
                 if (value && index === inputs.length - 1) {
-                    // 모든 필드가 채워졌는지 확인
                     const allFilled = Array.from(inputs).every(inp => inp.value);
                     if (allFilled) {
-                        // 자동 검증은 사용자가 버튼을 클릭하도록 유도
                         inputs[index].blur();
                     }
                 }
@@ -774,6 +797,12 @@ class WaitingRoomManager {
                 if (e.key === 'Backspace' && !e.target.value && index > 0) {
                     inputs[index - 1].focus();
                     inputs[index - 1].value = '';
+                    checkAllFilled();
+                }
+                
+                // 백스페이스로 현재 필드 삭제 시에도 체크
+                if (e.key === 'Backspace' && e.target.value) {
+                    setTimeout(() => checkAllFilled(), 0);
                 }
 
                 // 왼쪽 화살표
@@ -803,6 +832,9 @@ class WaitingRoomManager {
                 for (let i = 0; i < Math.min(pastedData.length, inputs.length - index); i++) {
                     inputs[index + i].value = pastedData[i];
                 }
+
+                // 입장 버튼 상태 업데이트
+                checkAllFilled();
 
                 // 마지막으로 채워진 필드 다음으로 포커스 이동
                 const nextIndex = Math.min(index + pastedData.length, inputs.length - 1);

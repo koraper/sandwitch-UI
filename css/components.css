@@ -592,6 +592,22 @@
     transform: translateY(0);
 }
 
+.modal-btn-primary:disabled,
+.modal-btn-primary.disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.modal-btn-primary:disabled:hover,
+.modal-btn-primary.disabled:hover {
+    background: #e5e7eb;
+    transform: none;
+    box-shadow: none;
+}
+
 .modal-btn-secondary {
     background: #6b7280;
     color: white;
