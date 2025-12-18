@@ -703,7 +703,7 @@ class WaitingRoomManager {
                         <input type="text" class="code-digit" id="code5" maxlength="1" autocomplete="off">
                         <input type="text" class="code-digit" id="code6" maxlength="1" autocomplete="off">
                     </div>
-                    <small class="form-hint">강사로부터 전달받은 6자리 Access Code를 입력하세요</small>
+                    <small class="form-hint">입장 코드는 6자리의 문자 + 숫자 조합입니다.</small>
                 </div>
             </div>
         `;
