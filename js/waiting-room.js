@@ -122,13 +122,11 @@ class WaitingRoomManager {
             filterUpdateBtn.addEventListener('click', () => this.applyFilters());
         }
 
-        // 필터 셀렉트 엔터키 처리
+        // 필터 셀렉트 변경 시 즉시 적용
         const filterSelects = document.querySelectorAll('.filter-select');
         filterSelects.forEach(select => {
-            select.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    this.applyFilters();
-                }
+            select.addEventListener('change', () => {
+                this.applyFilters();
             });
         });
     }
