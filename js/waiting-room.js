@@ -146,7 +146,7 @@ class WaitingRoomManager {
             // const response = await fetch('/api/lectures');
             // this.lectures = await response.json();
 
-            // 데모용 데이터
+            // 데모용 데이터 (기준일: 2025-12-19)
             this.lectures = [
                 {
                     id: 1,
@@ -154,11 +154,11 @@ class WaitingRoomManager {
                     description: 'ChatGPT, Claude 등 생성형 AI 도구를 활용한 실무 프로젝트',
                     institution: '한국대학교 컴퓨터공학과',
                     instructor: '김교수',
-                    date: '2024-03-15',
+                    date: '2025-12-19',
                     time: '14:00 - 16:00',
                     location: '온라인 (Zoom)',
                     accessCode: 'ABC123',
-                    status: 'ongoing' // 진행중
+                    status: 'ongoing' // 진행중 (오늘)
                 },
                 {
                     id: 2,
@@ -166,11 +166,11 @@ class WaitingRoomManager {
                     description: 'Python을 활용한 데이터 분석 및 시각화 기초 강의',
                     institution: '서울대학교 통계학과',
                     instructor: '이교수',
-                    date: '2024-03-20',
+                    date: '2025-12-26',
                     time: '10:00 - 12:00',
                     location: '본관 301호',
                     accessCode: 'XYZ789',
-                    status: 'upcoming' // 예정됨
+                    status: 'upcoming' // 예정됨 (다음주)
                 },
                 {
                     id: 3,
@@ -178,11 +178,11 @@ class WaitingRoomManager {
                     description: 'React와 Node.js를 활용한 풀스택 웹 개발',
                     institution: '연세대학교 정보산업공학과',
                     instructor: '박교수',
-                    date: '2024-03-25',
+                    date: '2025-12-15',
                     time: '15:00 - 17:00',
                     location: '공학관 205호',
                     accessCode: 'DEF456',
-                    status: 'cancelled' // 취소됨
+                    status: 'cancelled' // 취소됨 (과거 날짜)
                 },
                 {
                     id: 4,
@@ -190,11 +190,11 @@ class WaitingRoomManager {
                     description: 'Scikit-learn과 TensorFlow를 활용한 머신러닝 기초부터 실전까지',
                     institution: '고려대학교 인공지능학과',
                     instructor: '최교수',
-                    date: '2024-03-22',
+                    date: '2025-12-10',
                     time: '13:00 - 15:00',
                     location: '과학관 401호',
                     accessCode: 'GHI789',
-                    status: 'ended' // 종료됨
+                    status: 'ended' // 종료됨 (지난주)
                 },
                 {
                     id: 5,
@@ -202,11 +202,11 @@ class WaitingRoomManager {
                     description: 'AWS, Azure 등 클라우드 플랫폼 활용 및 인프라 구축',
                     institution: '성균관대학교 소프트웨어학과',
                     instructor: '정교수',
-                    date: '2024-03-18',
+                    date: '2025-11-28',
                     time: '11:00 - 13:00',
                     location: '온라인 (Zoom)',
                     accessCode: 'JKL012',
-                    status: 'ended' // 종료됨
+                    status: 'ended' // 종료됨 (지난달)
                 },
                 {
                     id: 6,
@@ -214,11 +214,11 @@ class WaitingRoomManager {
                     description: 'React Native를 활용한 크로스 플랫폼 모바일 앱 개발',
                     institution: '한양대학교 컴퓨터소프트웨어학부',
                     instructor: '강교수',
-                    date: '2024-03-28',
+                    date: '2026-01-08',
                     time: '14:00 - 16:00',
                     location: '공학관 101호',
                     accessCode: 'MNO345',
-                    status: 'upcoming' // 예정됨
+                    status: 'upcoming' // 예정됨 (내년 1월)
                 },
                 {
                     id: 7,
@@ -226,11 +226,11 @@ class WaitingRoomManager {
                     description: '이더리움과 스마트 컨트랙트 개발 기초 강의',
                     institution: '중앙대학교 정보통신공학과',
                     instructor: '윤교수',
-                    date: '2024-03-30',
+                    date: '2025-12-23',
                     time: '10:00 - 12:00',
                     location: '본관 201호',
                     accessCode: 'PQR678',
-                    status: 'upcoming' // 예정됨
+                    status: 'upcoming' // 예정됨 (다음주)
                 }
             ];
 
