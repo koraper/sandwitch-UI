@@ -703,6 +703,7 @@ class WaitingRoomManager {
                         <input type="text" class="code-digit" id="code5" maxlength="1" autocomplete="off">
                         <input type="text" class="code-digit" id="code6" maxlength="1" autocomplete="off">
                     </div>
+                    <div id="codeErrorMessage" class="code-error-message" style="display: none;"></div>
                     <small class="form-hint">입장 코드는 6자리의 문자 + 숫자 조합입니다.</small>
                 </div>
             </div>
@@ -773,6 +774,9 @@ class WaitingRoomManager {
             input.addEventListener('input', (e) => {
                 const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
                 e.target.value = value;
+
+                // 에러 메시지 숨김
+                this.hideInlineError();
 
                 // 입장 버튼 상태 업데이트
                 checkAllFilled();
@@ -849,6 +853,32 @@ class WaitingRoomManager {
     }
 
     /**
+     * 인라인 에러 메시지 표시
+     */
+    showInlineError(message) {
+        const errorElement = document.getElementById('codeErrorMessage');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // 3초 후 자동으로 숨김
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    /**
+     * 인라인 에러 메시지 숨김
+     */
+    hideInlineError() {
+        const errorElement = document.getElementById('codeErrorMessage');
+        if (errorElement) {
+            errorElement.style.display = 'none';
+        }
+    }
+
+    /**
      * 입장 코드 검증
      */
     async verifyEntryCode(lecture) {
@@ -893,7 +923,9 @@ class WaitingRoomManager {
                     this.showInfo(`특강 대시보드로 이동합니다. (특강 ID: ${lecture.id})`);
                 }, 1000);
             } else {
-                this.showError('입장 코드가 올바르지 않습니다. 다시 확인해주세요.');
+                // 인라인 에러 메시지 표시
+                this.showInlineError('입장 코드가 올바르지 않습니다. 다시 확인해주세요.');
+                
                 // 입력 필드 초기화 및 첫 번째 필드에 포커스
                 const inputs = document.querySelectorAll('.code-digit');
                 inputs.forEach(input => {
