@@ -619,6 +619,74 @@
     color: #374151;
 }
 
+/* 입장 모달 스타일 */
+.entry-modal-content {
+    width: 100%;
+}
+
+.entry-modal-header {
+    margin-bottom: 1.5rem;
+}
+
+.entry-modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+}
+
+.entry-modal-subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.entry-modal-body .form-group {
+    margin-bottom: 0;
+}
+
+.entry-modal-body .form-group label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.75rem;
+}
+
+.entry-modal-body .input-wrapper {
+    margin-bottom: 0.5rem;
+}
+
+.entry-modal-body .input-wrapper input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.entry-modal-body .input-wrapper input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.entry-modal-body .input-wrapper input.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.entry-modal-body .form-hint {
+    display: block;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
 /* 타입별 모달 스타일 */
 .modal-info .modal-header {
     border-bottom-color: #dbeafe;
@@ -693,16 +761,11 @@
     font-size: 1.5rem;
 }
 
-.header-center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    padding: 0 2rem;
-}
-
+/* 검색 섹션 (메인 컨텐츠 영역) */
 .search-section {
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
+    margin: 2rem auto 2rem;
 }
 
 .search-input-wrapper {
@@ -732,7 +795,7 @@
 .search-input:focus {
     outline: none;
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .search-input::placeholder {
@@ -948,60 +1011,12 @@
     padding: 1.5rem 2rem;
     border-top: 1px solid #e1e4e8;
     background: #f9fafb;
-}
-
-/* 입장 코드 입력 섹션 */
-.entry-code-section {
-    width: 100%;
-}
-
-.entry-code-label {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 0.75rem;
-}
-
-.entry-code-input-wrapper {
     display: flex;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-}
-
-.entry-code-input {
-    flex: 1;
-    padding: 0.875rem 1rem;
-    border: 2px solid #e1e4e8;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-align: center;
-    text-transform: uppercase;
-    transition: all 0.2s;
-}
-
-.entry-code-input:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.entry-code-input.error {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-.entry-code-hint {
-    display: block;
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-top: 0.5rem;
+    justify-content: flex-end;
 }
 
 .btn-enter {
-    padding: 0.875rem 1.5rem;
+    padding: 0.875rem 1.75rem;
     background: #2563eb;
     color: white;
     border: none;
@@ -1197,14 +1212,9 @@
         gap: 1rem;
     }
 
-    .header-center {
-        width: 100%;
-        padding: 0;
-        order: 2;
-    }
-
     .search-section {
         max-width: 100%;
+        margin: 1.5rem auto;
     }
 
     .header-right {

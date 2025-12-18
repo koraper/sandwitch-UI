@@ -100,6 +100,16 @@ class WaitingRoomManager {
                 }
             });
         }
+
+        // 페이지네이션 버튼
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => this.goToPage(this.currentPage - 1));
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => this.goToPage(this.currentPage + 1));
+        }
     }
 
     /**
@@ -164,6 +174,42 @@ class WaitingRoomManager {
                     location: '과학관 401호',
                     accessCode: 'GHI789',
                     status: 'ongoing' // 진행중
+                },
+                {
+                    id: 5,
+                    title: '클라우드 컴퓨팅 기초',
+                    description: 'AWS, Azure 등 클라우드 플랫폼 활용 및 인프라 구축',
+                    institution: '성균관대학교 소프트웨어학과',
+                    instructor: '정교수',
+                    date: '2024-03-18',
+                    time: '11:00 - 13:00',
+                    location: '온라인 (Zoom)',
+                    accessCode: 'JKL012',
+                    status: 'ended' // 종료됨
+                },
+                {
+                    id: 6,
+                    title: '모바일 앱 개발',
+                    description: 'React Native를 활용한 크로스 플랫폼 모바일 앱 개발',
+                    institution: '한양대학교 컴퓨터소프트웨어학부',
+                    instructor: '강교수',
+                    date: '2024-03-28',
+                    time: '14:00 - 16:00',
+                    location: '공학관 101호',
+                    accessCode: 'MNO345',
+                    status: 'upcoming' // 예정됨
+                },
+                {
+                    id: 7,
+                    title: '블록체인 기초',
+                    description: '이더리움과 스마트 컨트랙트 개발 기초 강의',
+                    institution: '중앙대학교 정보통신공학과',
+                    instructor: '윤교수',
+                    date: '2024-03-30',
+                    time: '10:00 - 12:00',
+                    location: '본관 201호',
+                    accessCode: 'PQR678',
+                    status: 'upcoming' // 예정됨
                 }
             ];
 
@@ -269,9 +315,18 @@ class WaitingRoomManager {
         // 검색어가 없으면 전체 리스트 표시
         if (!this.searchQuery) {
             this.filteredLectures = [...this.lectures];
+            this.currentPage = 1;
             this.renderLectures();
             return;
         }
+
+        // 상태 매핑 (한글 <-> 영어)
+        const statusMap = {
+            '진행중': 'ongoing', '진행': 'ongoing', 'ongoing': 'ongoing', 'ing': 'ongoing',
+            '예정됨': 'upcoming', '예정': 'upcoming', 'upcoming': 'upcoming', '예정된': 'upcoming',
+            '종료됨': 'ended', '종료': 'ended', 'ended': 'ended', '완료': 'ended',
+            '취소됨': 'cancelled', '취소': 'cancelled', 'cancelled': 'cancelled', '취소된': 'cancelled'
+        };
 
         // 특강 필터링
         this.filteredLectures = this.lectures.filter(lecture => {
@@ -279,11 +334,20 @@ class WaitingRoomManager {
             const instructor = lecture.instructor.toLowerCase();
             const institution = lecture.institution.toLowerCase();
             const description = lecture.description.toLowerCase();
+            const accessCode = (lecture.accessCode || '').toLowerCase();
+            const status = (lecture.status || '').toLowerCase();
+
+            // 상태 검색어 매칭
+            const matchedStatus = Object.keys(statusMap).some(key =>
+                key.includes(this.searchQuery) && statusMap[key] === status
+            );
 
             return title.includes(this.searchQuery) ||
                    instructor.includes(this.searchQuery) ||
                    institution.includes(this.searchQuery) ||
-                   description.includes(this.searchQuery);
+                   description.includes(this.searchQuery) ||
+                   accessCode.includes(this.searchQuery) ||
+                   matchedStatus;
         });
 
         // 검색 시 첫 페이지로 이동
@@ -483,53 +547,17 @@ class WaitingRoomManager {
                 </div>
             </div>
             <div class="lecture-card-footer">
-                <div class="entry-code-section">
-                    <label for="entryCode_${lecture.id}" class="entry-code-label">
-                        입장 코드 <span class="required">*</span>
-                    </label>
-                    <div class="entry-code-input-wrapper">
-                        <input 
-                            type="text" 
-                            id="entryCode_${lecture.id}" 
-                            class="entry-code-input" 
-                            placeholder="6자리 코드 입력" 
-                            maxlength="6" 
-                            pattern="[A-Za-z0-9]{6}"
-                            autocomplete="off"
-                            data-lecture-id="${lecture.id}"
-                        >
-                        <button class="btn-enter" data-lecture-id="${lecture.id}">
-                            <i class="fas fa-door-open"></i> 입장
-                        </button>
-                    </div>
-                    <small class="entry-code-hint">강사로부터 전달받은 6자리 Access Code를 입력하세요</small>
-                </div>
+                <button class="btn-enter" data-lecture-id="${lecture.id}">
+                    <i class="fas fa-door-open"></i> 입장하기
+                </button>
             </div>
         `;
-
-        // 입장 코드 입력 필드 이벤트
-        const entryCodeInput = card.querySelector('.entry-code-input');
-        if (entryCodeInput) {
-            // 대문자 변환 및 영숫자만 입력
-            entryCodeInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            });
-
-            // Enter 키로 입장
-            entryCodeInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    this.verifyEntryCodeFromCard(lecture, entryCodeInput.value.trim());
-                }
-            });
-        }
 
         // 입장 버튼 이벤트
         const enterBtn = card.querySelector('.btn-enter');
         if (enterBtn) {
             enterBtn.addEventListener('click', () => {
-                const code = entryCodeInput?.value.trim() || '';
-                this.verifyEntryCodeFromCard(lecture, code);
+                this.showEntryModal(lecture);
             });
         }
 
