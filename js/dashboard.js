@@ -194,8 +194,8 @@ class DashboardManager {
                 name: '프롬프트 문제해결력',
                 nameEn: 'Prompt Problem Solving',
                 description: '프롬프트 작성 및 문제 해결 과정의 구조화 정도 평가\n"복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계"',
-                mode: 'learning', // 'learning' or 'evaluation'
-                status: 'open' // 'locked', 'open', 'done'
+                mode: 'evaluation', // 'learning' or 'evaluation'
+                status: 'done' // 'locked', 'open', 'done'
             },
             {
                 id: 'dig',
@@ -203,8 +203,8 @@ class DashboardManager {
                 name: '데이터 기반 통찰력',
                 nameEn: 'Data Insight Generation',
                 description: '데이터를 AI로 분석하고 인사이트를 도출하는 능력\n"코드를 직접 실행하여 데이터를 검증하고, 근거 기반의 실질적인 해결책을 도출"',
-                mode: 'evaluation',
-                status: 'locked'
+                mode: 'learning',
+                status: 'open'
             },
             {
                 id: 'gcc',
@@ -213,7 +213,7 @@ class DashboardManager {
                 nameEn: 'Generative Content Creation',
                 description: '텍스트/이미지/영상 생성 능력\n"상황과 목적에 완벽히 부합하는 결과물을 생성하고, 스타일을 정교하게 최적화"',
                 mode: 'learning',
-                status: 'done'
+                status: 'locked'
             },
             {
                 id: 'wfa',
