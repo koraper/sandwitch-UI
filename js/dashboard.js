@@ -25,7 +25,7 @@ class DashboardManager {
 
         // 역량 카드 렌더링
         this.renderCompetencyCards();
-        
+
         // 로딩 완료 - 컨텐츠 표시
         this.hideLoading();
     }
@@ -267,8 +267,8 @@ class DashboardManager {
 
         // 모드 배지
         const modeBadge = card.mode === 'learning'
-            ? '<span class="mode-badge mode-learning">학습 중</span>'
-            : '<span class="mode-badge mode-evaluation">평가 중</span>';
+            ? '<span class="mode-badge mode-learning"><i class="fas fa-graduation-cap"></i> 학습 모드</span>'
+            : '<span class="mode-badge mode-evaluation"><i class="fas fa-clipboard-check"></i> 평가 모드</span>';
 
         cardElement.innerHTML = `
             <div class="competency-card-header">
