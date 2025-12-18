@@ -222,7 +222,7 @@ class DashboardManager {
                 nameEn: 'Work Flow Automation',
                 description: '반복 업무를 AI 및 자동화 도구로 설계하는 능력\n"업무 흐름을 구조화하여, 예외 상황에서도 오류 없이 작동하는 자동화 프로세스를 설계"',
                 mode: 'evaluation',
-                status: 'open'
+                status: 'locked'
             }
         ];
     }
