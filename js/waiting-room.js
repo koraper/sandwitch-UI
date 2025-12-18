@@ -5,6 +5,11 @@ class WaitingRoomManager {
         this.filteredLectures = [];
         this.currentUser = null;
         this.searchQuery = '';
+        this.filters = {
+            year: '',
+            month: '',
+            status: ''
+        };
         this.currentPage = 1;
         this.itemsPerPage = 4; // 2행 2열 = 4개
         this.init();
@@ -110,6 +115,22 @@ class WaitingRoomManager {
         if (nextBtn) {
             nextBtn.addEventListener('click', () => this.goToPage(this.currentPage + 1));
         }
+
+        // 필터 업데이트 버튼
+        const filterUpdateBtn = document.getElementById('filterUpdateBtn');
+        if (filterUpdateBtn) {
+            filterUpdateBtn.addEventListener('click', () => this.applyFilters());
+        }
+
+        // 필터 셀렉트 엔터키 처리
+        const filterSelects = document.querySelectorAll('.filter-select');
+        filterSelects.forEach(select => {
+            select.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    this.applyFilters();
+                }
+            });
+        });
     }
 
     /**
@@ -229,6 +250,9 @@ class WaitingRoomManager {
             // 필터링된 특강 리스트 초기화
             this.filteredLectures = [...this.lectures];
 
+            // 연도 필터 옵션 생성
+            this.populateYearFilter();
+
             // 특강 카드 렌더링
             this.renderLectures();
 
@@ -301,6 +325,102 @@ class WaitingRoomManager {
     }
 
     /**
+     * 연도 필터 옵션 생성
+     */
+    populateYearFilter() {
+        const yearSelect = document.getElementById('filterYear');
+        if (!yearSelect) return;
+
+        // 특강 데이터에서 연도 추출
+        const years = new Set();
+        this.lectures.forEach(lecture => {
+            if (lecture.date) {
+                const year = lecture.date.split('-')[0];
+                years.add(year);
+            }
+        });
+
+        // 연도 정렬 (최신순)
+        const sortedYears = Array.from(years).sort((a, b) => b - a);
+
+        // 옵션 추가
+        sortedYears.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = `${year}년`;
+            yearSelect.appendChild(option);
+        });
+    }
+
+    /**
+     * 필터 적용
+     */
+    applyFilters() {
+        // 필터 값 가져오기
+        const yearSelect = document.getElementById('filterYear');
+        const monthSelect = document.getElementById('filterMonth');
+        const statusSelect = document.getElementById('filterStatus');
+
+        this.filters.year = yearSelect?.value || '';
+        this.filters.month = monthSelect?.value || '';
+        this.filters.status = statusSelect?.value || '';
+
+        // 검색어와 필터 모두 적용
+        this.applySearchAndFilters();
+    }
+
+    /**
+     * 검색어와 필터 통합 적용
+     */
+    applySearchAndFilters() {
+        let results = [...this.lectures];
+
+        // 1. 검색어 필터링
+        if (this.searchQuery) {
+            results = results.filter(lecture => {
+                const title = lecture.title.toLowerCase();
+                const instructor = lecture.instructor.toLowerCase();
+                const institution = lecture.institution.toLowerCase();
+                const description = lecture.description.toLowerCase();
+                const accessCode = (lecture.accessCode || '').toLowerCase();
+
+                return title.includes(this.searchQuery) ||
+                       instructor.includes(this.searchQuery) ||
+                       institution.includes(this.searchQuery) ||
+                       description.includes(this.searchQuery) ||
+                       accessCode.includes(this.searchQuery);
+            });
+        }
+
+        // 2. 연도 필터링
+        if (this.filters.year) {
+            results = results.filter(lecture => {
+                return lecture.date && lecture.date.startsWith(this.filters.year);
+            });
+        }
+
+        // 3. 월 필터링
+        if (this.filters.month) {
+            results = results.filter(lecture => {
+                if (!lecture.date) return false;
+                const month = lecture.date.split('-')[1];
+                return month === this.filters.month;
+            });
+        }
+
+        // 4. 상태 필터링
+        if (this.filters.status) {
+            results = results.filter(lecture => {
+                return lecture.status === this.filters.status;
+            });
+        }
+
+        this.filteredLectures = results;
+        this.currentPage = 1;
+        this.renderLectures();
+    }
+
+    /**
      * 검색 처리
      */
     handleSearch(query) {
@@ -312,49 +432,8 @@ class WaitingRoomManager {
             searchClearBtn.style.display = this.searchQuery ? 'flex' : 'none';
         }
 
-        // 검색어가 없으면 전체 리스트 표시
-        if (!this.searchQuery) {
-            this.filteredLectures = [...this.lectures];
-            this.currentPage = 1;
-            this.renderLectures();
-            return;
-        }
-
-        // 상태 매핑 (한글 <-> 영어)
-        const statusMap = {
-            '진행중': 'ongoing', '진행': 'ongoing', 'ongoing': 'ongoing', 'ing': 'ongoing',
-            '예정됨': 'upcoming', '예정': 'upcoming', 'upcoming': 'upcoming', '예정된': 'upcoming',
-            '종료됨': 'ended', '종료': 'ended', 'ended': 'ended', '완료': 'ended',
-            '취소됨': 'cancelled', '취소': 'cancelled', 'cancelled': 'cancelled', '취소된': 'cancelled'
-        };
-
-        // 특강 필터링
-        this.filteredLectures = this.lectures.filter(lecture => {
-            const title = lecture.title.toLowerCase();
-            const instructor = lecture.instructor.toLowerCase();
-            const institution = lecture.institution.toLowerCase();
-            const description = lecture.description.toLowerCase();
-            const accessCode = (lecture.accessCode || '').toLowerCase();
-            const status = (lecture.status || '').toLowerCase();
-
-            // 상태 검색어 매칭
-            const matchedStatus = Object.keys(statusMap).some(key =>
-                key.includes(this.searchQuery) && statusMap[key] === status
-            );
-
-            return title.includes(this.searchQuery) ||
-                   instructor.includes(this.searchQuery) ||
-                   institution.includes(this.searchQuery) ||
-                   description.includes(this.searchQuery) ||
-                   accessCode.includes(this.searchQuery) ||
-                   matchedStatus;
-        });
-
-        // 검색 시 첫 페이지로 이동
-        this.currentPage = 1;
-
-        // 필터링된 결과 렌더링
-        this.renderLectures();
+        // 검색어와 필터 통합 적용
+        this.applySearchAndFilters();
     }
 
     /**

@@ -764,14 +764,18 @@
 /* 검색 섹션 (메인 컨텐츠 영역) */
 .search-section {
     width: 100%;
-    max-width: 600px;
+    max-width: 1200px;
     margin: 2rem auto 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
 }
 
 .search-input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
+    flex: 1;
 }
 
 .search-icon {
@@ -821,6 +825,81 @@
 .btn-search-clear:hover {
     background: #e5e7eb;
     color: #374151;
+}
+
+/* 검색 필터 */
+.search-filters {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.filter-select {
+    padding: 0.75rem 2.5rem 0.75rem 0.875rem;
+    border: 2px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    min-width: 120px;
+}
+
+.filter-select:hover {
+    border-color: #d1d5db;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-filter-update {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.btn-filter-update:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+}
+
+.btn-filter-update:active {
+    transform: translateY(0);
+}
+
+.btn-filter-update i {
+    font-size: 0.875rem;
 }
 
 .btn-search-clear i {
@@ -1215,6 +1294,26 @@
     .search-section {
         max-width: 100%;
         margin: 1.5rem auto;
+        flex-direction: column;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .search-filters {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 100px;
+    }
+
+    .btn-filter-update {
+        width: 100%;
+        justify-content: center;
     }
 
     .header-right {

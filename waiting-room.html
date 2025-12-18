@@ -44,11 +44,50 @@
                         type="text" 
                         id="searchInput" 
                         class="search-input" 
-                        placeholder="특강명, 강사명, 기관명, 입장 코드, 상태로 검색..."
+                        placeholder="특강명, 강사명, 기관명, 입장 코드로 검색..."
                         autocomplete="off"
                     >
                     <button class="btn-search-clear" id="searchClearBtn" style="display: none;">
                         <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label for="filterYear">연도</label>
+                        <select id="filterYear" class="filter-select">
+                            <option value="">전체</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterMonth">월</label>
+                        <select id="filterMonth" class="filter-select">
+                            <option value="">전체</option>
+                            <option value="01">1월</option>
+                            <option value="02">2월</option>
+                            <option value="03">3월</option>
+                            <option value="04">4월</option>
+                            <option value="05">5월</option>
+                            <option value="06">6월</option>
+                            <option value="07">7월</option>
+                            <option value="08">8월</option>
+                            <option value="09">9월</option>
+                            <option value="10">10월</option>
+                            <option value="11">11월</option>
+                            <option value="12">12월</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterStatus">특강 상태</label>
+                        <select id="filterStatus" class="filter-select">
+                            <option value="">전체</option>
+                            <option value="upcoming">예정됨</option>
+                            <option value="ongoing">진행중</option>
+                            <option value="ended">종료됨</option>
+                            <option value="cancelled">취소됨</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter-update" id="filterUpdateBtn">
+                        <i class="fas fa-sync-alt"></i> 업데이트
                     </button>
                 </div>
             </div>
