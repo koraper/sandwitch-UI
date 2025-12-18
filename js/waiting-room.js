@@ -69,12 +69,11 @@ class WaitingRoomManager {
             logoutBtn.addEventListener('click', () => this.handleLogout());
         }
 
-        // 프로필 클릭 (마이페이지 이동 - 향후 구현)
+        // 프로필 클릭 (마이페이지 이동)
         const userProfile = document.getElementById('userProfile');
         if (userProfile) {
             userProfile.addEventListener('click', () => {
-                // TODO: 마이페이지로 이동
-                console.log('마이페이지 이동 (향후 구현)');
+                window.location.href = 'profile.html';
             });
         }
 
