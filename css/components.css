@@ -768,14 +768,26 @@
     margin: 2rem auto 2rem;
     display: flex;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: flex-end;
+}
+
+.search-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.search-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
 }
 
 .search-input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    flex: 1;
 }
 
 .search-icon {
@@ -1297,7 +1309,7 @@
         flex-direction: column;
     }
 
-    .search-input-wrapper {
+    .search-input-group {
         width: 100%;
     }
 
