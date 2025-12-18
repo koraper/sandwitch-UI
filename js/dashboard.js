@@ -25,6 +25,9 @@ class DashboardManager {
 
         // 역량 카드 렌더링
         this.renderCompetencyCards();
+        
+        // 로딩 완료 - 컨텐츠 표시
+        this.hideLoading();
     }
 
     /**
@@ -45,6 +48,7 @@ class DashboardManager {
         this.lectureId = parseInt(urlParams.get('lectureId'));
 
         if (!this.lectureId) {
+            this.hideLoading();
             this.showError('특강 정보를 찾을 수 없습니다.');
             setTimeout(() => {
                 window.location.href = 'waiting-room.html';
@@ -148,6 +152,7 @@ class DashboardManager {
         this.lecture = lectures.find(l => l.id === this.lectureId);
 
         if (!this.lecture) {
+            this.hideLoading();
             this.showError('특강 정보를 찾을 수 없습니다.');
             setTimeout(() => {
                 window.location.href = 'waiting-room.html';
@@ -325,6 +330,25 @@ class DashboardManager {
             exitBtn.addEventListener('click', () => {
                 this.handleExit();
             });
+        }
+    }
+
+    /**
+     * 로딩 스피너 숨기기
+     */
+    hideLoading() {
+        const loadingElement = document.getElementById('dashboardLoading');
+        const lectureInfoSection = document.getElementById('lectureInfoSection');
+        const competencySection = document.getElementById('competencySection');
+
+        if (loadingElement) {
+            loadingElement.style.display = 'none';
+        }
+        if (lectureInfoSection) {
+            lectureInfoSection.style.display = 'block';
+        }
+        if (competencySection) {
+            competencySection.style.display = 'block';
         }
     }
 

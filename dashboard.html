@@ -30,8 +30,14 @@
 
         <!-- 메인 컨텐츠 -->
         <main class="dashboard-main">
+            <!-- 로딩 스피너 -->
+            <div class="dashboard-loading" id="dashboardLoading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>특강 정보를 불러오는 중...</p>
+            </div>
+
             <!-- 특강 정보 섹션 -->
-            <div class="lecture-info-section">
+            <div class="lecture-info-section" id="lectureInfoSection" style="display: none;">
                 <div class="lecture-info-grid">
                     <div class="lecture-info-item">
                         <i class="fas fa-book"></i>
@@ -72,7 +78,7 @@
             </div>
 
             <!-- 역량 카드 섹션 -->
-            <div class="competency-section">
+            <div class="competency-section" id="competencySection" style="display: none;">
                 <h2 class="section-title">
                     <i class="fas fa-tasks"></i> 핵심 역량
                 </h2>

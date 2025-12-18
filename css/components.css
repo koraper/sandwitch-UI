@@ -1891,6 +1891,38 @@
     margin: 0 auto;
 }
 
+/* 로딩 스피너 */
+.dashboard-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem;
+    color: #6b7280;
+}
+
+.dashboard-loading i {
+    font-size: 3rem;
+    color: #2563eb;
+    margin-bottom: 1.5rem;
+    animation: spin 1s linear infinite;
+}
+
+.dashboard-loading p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* 특강 정보 섹션 */
 .lecture-info-section {
     background: white;
