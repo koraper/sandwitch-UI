@@ -182,7 +182,7 @@ class WaitingRoomManager {
                     time: '15:00 - 17:00',
                     location: '공학관 205호',
                     accessCode: 'DEF456',
-                    status: 'ended' // 종료됨
+                    status: 'cancelled' // 취소됨
                 },
                 {
                     id: 4,
