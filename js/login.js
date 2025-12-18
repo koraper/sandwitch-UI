@@ -420,7 +420,8 @@ class LoginManager {
     }
 
     showSignup() {
-        this.showNotification('회원가입 기능은 곧 지원될 예정입니다.');
+        // 회원가입 페이지로 이동
+        window.location.href = 'signup.html';
     }
 
     showError(message) {

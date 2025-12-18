@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - 샌드위치</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- 회원가입 페이지 -->
+    <div class="signup-container" id="signupContainer">
+        <div class="signup-right">
+            <div class="signup-form-container">
+                <div class="signup-brand">
+                    <h1 class="logo"><i class="fas fa-hamburger"></i> 샌드위치</h1>
+                </div>
+                <h2>회원가입</h2>
+                <p class="signup-subtitle">새로운 계정을 만들어보세요</p>
+
+                <form class="signup-form" id="signupForm">
+                    <!-- 이메일 인증 섹션 -->
+                    <div class="signup-section">
+                        <h3 class="section-title">1. 이메일 인증</h3>
+                        <div class="form-group">
+                            <label for="signupEmail">이메일 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="email" id="signupEmail" name="email" placeholder="name@example.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-auth-request" id="authRequestBtn">
+                                <i class="fas fa-paper-plane"></i> 인증번호 요청
+                            </button>
+                        </div>
+                        <div class="form-group" id="authCodeGroup" style="display: none;">
+                            <label for="authCode">인증번호 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="authCode" name="authCode" placeholder="6자리 인증번호 입력" maxlength="6" pattern="[0-9]{6}">
+                                <span class="auth-timer" id="authTimer" style="display: none;"></span>
+                            </div>
+                            <button type="button" class="btn-auth-verify" id="authVerifyBtn">
+                                <i class="fas fa-check"></i> 인증 확인
+                            </button>
+                        </div>
+                        <div class="auth-status" id="authStatus"></div>
+                    </div>
+
+                    <!-- 계정 정보 입력 섹션 -->
+                    <div class="signup-section" id="accountInfoSection" style="opacity: 0.5; pointer-events: none;">
+                        <h3 class="section-title">2. 계정 정보 입력</h3>
+                        <div class="form-group">
+                            <label for="signupPassword">비밀번호 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="password" id="signupPassword" name="password" placeholder="비밀번호를 입력하세요" required disabled>
+                                <div class="password-toggle">
+                                    <button type="button" class="toggle-password" title="비밀번호 표시/숨김" aria-label="비밀번호 표시/숨김"><i class="far fa-eye"></i></button>
+                                </div>
+                            </div>
+                            <small class="password-hint">영어 대소문자, 숫자, 특수문자 조합 8~50자</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPasswordConfirm">비밀번호 확인 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="password" id="signupPasswordConfirm" name="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" required disabled>
+                                <div class="password-toggle">
+                                    <button type="button" class="toggle-password" title="비밀번호 표시/숨김" aria-label="비밀번호 표시/숨김"><i class="far fa-eye"></i></button>
+                                </div>
+                            </div>
+                            <div class="password-match" id="passwordMatch"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupName">이름 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="signupName" name="name" placeholder="실명을 입력하세요" required disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupStudentId">학번 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="signupStudentId" name="studentId" placeholder="학번을 입력하세요" required disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPhone">연락처 <span class="optional">(선택)</span></label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="signupPhone" name="phone" placeholder="연락처를 입력하세요 (선택사항)" disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 약관 동의 섹션 -->
+                    <div class="signup-section" id="termsSection" style="opacity: 0.5; pointer-events: none;">
+                        <h3 class="section-title">3. 약관 동의</h3>
+                        <div class="terms-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="termPrivacy" name="termPrivacy" required disabled>
+                                <span class="checkmark"></span>
+                                <span class="term-text">
+                                    <a href="#" class="term-link">개인정보 처리 방침</a>에 동의합니다 <span class="required">(필수)</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="terms-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="termData" name="termData" required disabled>
+                                <span class="checkmark"></span>
+                                <span class="term-text">
+                                    평가 데이터 수집 및 AI 분석 동의 <span class="required">(필수)</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" id="signupCancelBtn">취소</button>
+                        <button type="submit" class="btn-submit" id="signupSubmitBtn" disabled>가입 완료</button>
+                    </div>
+                </form>
+
+                <div class="login-link">
+                    <p>이미 계정이 있으신가요? <a href="index.html">로그인</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/modal.js"></script>
+    <script src="js/signup.js"></script>
+</body>
+</html>
+
