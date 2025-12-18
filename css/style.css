@@ -90,17 +90,10 @@ body.has-main-app {
 }
 
 .form-group label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #333;
-}
-
-.form-group label i {
-    font-size: 0.9rem;
-    color: #666;
 }
 
 .input-wrapper {
@@ -109,18 +102,9 @@ body.has-main-app {
     align-items: center;
 }
 
-.input-icon {
-    position: absolute;
-    left: 1rem;
-    color: #999;
-    font-size: 1rem;
-    pointer-events: none;
-    z-index: 1;
-}
-
 .form-group input {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    padding: 0.75rem 1rem;
     border: 1px solid #e1e4e8;
     border-radius: 8px;
     font-size: 1rem;
@@ -137,9 +121,14 @@ body.has-main-app {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.input-wrapper:focus-within .input-icon {
-    color: #667eea;
+.password-hint {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.4;
 }
+
 
 .password-toggle {
     position: absolute;

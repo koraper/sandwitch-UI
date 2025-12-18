@@ -83,14 +83,16 @@ class LoginManager {
         const password = document.getElementById('password').value;
         const rememberMe = document.querySelector('input[name="remember"]').checked;
 
-        // 간단한 유효성 검사
+        // 이메일 유효성 검사
         if (!this.validateEmail(email)) {
             this.showError('올바른 이메일 주소를 입력해주세요.');
             return;
         }
 
-        if (password.length < 6) {
-            this.showError('비밀번호는 최소 6자 이상이어야 합니다.');
+        // 비밀번호 유효성 검사
+        const passwordValidation = this.validatePassword(password);
+        if (!passwordValidation.isValid) {
+            this.showError(passwordValidation.message);
             return;
         }
 
@@ -101,6 +103,66 @@ class LoginManager {
     validateEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
+    }
+
+    /**
+     * 비밀번호 유효성 검사
+     * 요구사항: 영어 대소문자 + 숫자 + 특수문자 조합, 길이 8~50자
+     * @param {string} password - 검증할 비밀번호
+     * @returns {Object} {isValid: boolean, message: string}
+     */
+    validatePassword(password) {
+        // 길이 검사
+        if (password.length < 8) {
+            return {
+                isValid: false,
+                message: '비밀번호는 최소 8자 이상이어야 합니다.'
+            };
+        }
+
+        if (password.length > 50) {
+            return {
+                isValid: false,
+                message: '비밀번호는 최대 50자까지 입력 가능합니다.'
+            };
+        }
+
+        // 영어 대문자 검사
+        if (!/[A-Z]/.test(password)) {
+            return {
+                isValid: false,
+                message: '비밀번호는 영어 대문자를 포함해야 합니다.'
+            };
+        }
+
+        // 영어 소문자 검사
+        if (!/[a-z]/.test(password)) {
+            return {
+                isValid: false,
+                message: '비밀번호는 영어 소문자를 포함해야 합니다.'
+            };
+        }
+
+        // 숫자 검사
+        if (!/[0-9]/.test(password)) {
+            return {
+                isValid: false,
+                message: '비밀번호는 숫자를 포함해야 합니다.'
+            };
+        }
+
+        // 특수문자 검사
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            return {
+                isValid: false,
+                message: '비밀번호는 특수문자를 포함해야 합니다.'
+            };
+        }
+
+        return {
+            isValid: true,
+            message: ''
+        };
     }
 
     authenticate(email, password, rememberMe) {
@@ -288,44 +350,60 @@ class LoginManager {
     }
 
     handleLogout() {
-        if (confirm('로그아웃 하시겠습니까?')) {
-            localStorage.removeItem('sandwitchUI_loggedIn');
-            localStorage.removeItem('sandwitchUI_userEmail');
-            localStorage.removeItem('sandwitchUI_rememberMe');
-            
-            // body 클래스 제거
-            document.body.classList.remove('has-main-app');
-            document.body.style.overflow = 'hidden';
-            
-            // 메인 앱 숨기기
-            const mainApp = document.getElementById('mainApp');
-            if (mainApp) {
-                mainApp.style.display = 'none';
+        if (!window.modalManager) {
+            // 모달 매니저가 없으면 기본 confirm 사용
+            if (confirm('로그아웃 하시겠습니까?')) {
+                this.performLogout();
             }
-
-            // 플로팅 툴바 숨기기
-            const floatingToolbar = document.querySelector('.floating-toolbar');
-            if (floatingToolbar) {
-                floatingToolbar.style.display = 'none';
-            }
-
-            // 로그인 페이지 표시
-            const loginContainer = document.querySelector('.login-container');
-            if (loginContainer) {
-                loginContainer.style.display = 'flex';
-            }
-
-            // 폼 초기화
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const rememberCheckbox = document.querySelector('input[name="remember"]');
-            
-            if (emailInput) emailInput.value = '';
-            if (passwordInput) passwordInput.value = '';
-            if (rememberCheckbox) rememberCheckbox.checked = false;
-
-            this.showSuccess('로그아웃되었습니다.');
+            return;
         }
+
+        window.modalManager.confirm(
+            '로그아웃 하시겠습니까?',
+            () => {
+                this.performLogout();
+            },
+            null
+        );
+    }
+
+    performLogout() {
+        localStorage.removeItem('sandwitchUI_loggedIn');
+        localStorage.removeItem('sandwitchUI_userEmail');
+        localStorage.removeItem('sandwitchUI_rememberMe');
+        
+        // body 클래스 제거
+        document.body.classList.remove('has-main-app');
+        document.body.style.overflow = 'hidden';
+        
+        // 메인 앱 숨기기
+        const mainApp = document.getElementById('mainApp');
+        if (mainApp) {
+            mainApp.style.display = 'none';
+        }
+
+        // 플로팅 툴바 숨기기
+        const floatingToolbar = document.querySelector('.floating-toolbar');
+        if (floatingToolbar) {
+            floatingToolbar.style.display = 'none';
+        }
+
+        // 로그인 페이지 표시
+        const loginContainer = document.querySelector('.login-container');
+        if (loginContainer) {
+            loginContainer.style.display = 'flex';
+        }
+
+        // 폼 초기화
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const rememberCheckbox = document.querySelector('input[name="remember"]');
+        
+        if (emailInput) emailInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+        if (rememberCheckbox) rememberCheckbox.checked = false;
+
+        this.showSuccess('로그아웃되었습니다.');
     }
 
     togglePasswordVisibility() {
@@ -353,51 +431,29 @@ class LoginManager {
         this.showNotification(message, 'success');
     }
 
-    showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.textContent = message;
-        
-        const colors = {
-            error: '#ef4444',
-            success: '#10b981',
-            info: '#3b82f6'
+    showNotification(message, type = 'info', options = {}) {
+        if (!window.modalManager) {
+            console.error('ModalManager가 로드되지 않았습니다.');
+            return;
+        }
+
+        // success 타입을 info로 매핑 (모달은 info, warning, error만 지원)
+        const modalType = type === 'success' ? 'info' : type;
+
+        const defaultOptions = {
+            type: modalType,
+            message: message,
+            buttons: [
+                {
+                    label: '확인',
+                    action: null,
+                    style: 'primary'
+                }
+            ],
+            closeOnBackdrop: true
         };
 
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${colors[type] || colors.info};
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 10000;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-            max-width: 400px;
-        `;
-
-        document.body.appendChild(notification);
-
-        // 애니메이션
-        setTimeout(() => {
-            notification.style.opacity = '1';
-            notification.style.transform = 'translateY(0)';
-        }, 10);
-
-        // 자동 제거
-        setTimeout(() => {
-            notification.style.opacity = '0';
-            notification.style.transform = 'translateY(-10px)';
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-                }
-            }, 300);
-        }, 3000);
+        window.modalManager.show({ ...defaultOptions, ...options });
     }
 }
 

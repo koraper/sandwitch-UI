@@ -483,12 +483,28 @@ class CanvasManager {
 
     // 캔버스 초기화
     clearCanvas() {
-        if (confirm('캔버스를 비우시겠습니까?')) {
-            this.app.elements = [];
-            this.app.updateCanvas();
-            this.app.saveHistory();
-            this.showNotification('캔버스가 비워졌습니다.');
+        if (!window.modalManager) {
+            // 모달 매니저가 없으면 기본 confirm 사용
+            if (confirm('캔버스를 비우시겠습니까?')) {
+                this.performClearCanvas();
+            }
+            return;
         }
+
+        window.modalManager.confirm(
+            '캔버스를 비우시겠습니까?',
+            () => {
+                this.performClearCanvas();
+            },
+            null
+        );
+    }
+
+    performClearCanvas() {
+        this.app.elements = [];
+        this.app.updateCanvas();
+        this.app.saveHistory();
+        this.showNotification('캔버스가 비워졌습니다.');
     }
 
     // 선택 영역

@@ -722,41 +722,26 @@ class SandwichUI {
     }
 
     
-    showNotification(message) {
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #10b981;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 10000;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s;
-        `;
+    showNotification(message, type = 'info', options = {}) {
+        if (!window.modalManager) {
+            console.error('ModalManager가 로드되지 않았습니다.');
+            return;
+        }
 
-        document.body.appendChild(notification);
+        const defaultOptions = {
+            type: type,
+            message: message,
+            buttons: [
+                {
+                    label: '확인',
+                    action: null,
+                    style: 'primary'
+                }
+            ],
+            closeOnBackdrop: true
+        };
 
-        // 애니메이션
-        setTimeout(() => {
-            notification.style.opacity = '1';
-            notification.style.transform = 'translateY(0)';
-        }, 10);
-
-        // 자동 제거
-        setTimeout(() => {
-            notification.style.opacity = '0';
-            notification.style.transform = 'translateY(-10px)';
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 300);
-        }, 3000);
+        window.modalManager.show({ ...defaultOptions, ...options });
     }
 }
 
