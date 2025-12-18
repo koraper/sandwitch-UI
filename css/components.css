@@ -645,46 +645,64 @@
     margin-bottom: 0;
 }
 
-.entry-modal-body .form-group label {
+.entry-modal-body .entry-code-label {
     display: block;
     font-size: 0.95rem;
     font-weight: 500;
     color: #374151;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
-.entry-modal-body .input-wrapper {
-    margin-bottom: 0.5rem;
+.code-input-wrapper {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-bottom: 1rem;
 }
 
-.entry-modal-body .input-wrapper input {
-    width: 100%;
-    padding: 0.875rem 1rem;
+.code-digit {
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0;
     border: 2px solid #e1e4e8;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    letter-spacing: 0.15em;
     text-align: center;
     text-transform: uppercase;
     transition: all 0.2s;
+    background: white;
 }
 
-.entry-modal-body .input-wrapper input:focus {
+.code-digit:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    transform: scale(1.05);
 }
 
-.entry-modal-body .input-wrapper input.error {
+.code-digit:hover {
+    border-color: #d1d5db;
+}
+
+.code-digit.error {
     border-color: #ef4444;
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
 .entry-modal-body .form-hint {
     display: block;
     font-size: 0.875rem;
     color: #6b7280;
+    text-align: center;
 }
 
 /* 타입별 모달 스타일 */
@@ -1387,5 +1405,15 @@
 
     .btn-logout span {
         display: none;
+    }
+
+    .code-input-wrapper {
+        gap: 0.5rem;
+    }
+
+    .code-digit {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.25rem;
     }
 }

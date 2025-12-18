@@ -694,9 +694,14 @@ class WaitingRoomManager {
             </div>
             <div class="entry-modal-body">
                 <div class="form-group">
-                    <label for="entryCode">입장 코드 (6자리) <span class="required">*</span></label>
-                    <div class="input-wrapper">
-                        <input type="text" id="entryCode" name="entryCode" placeholder="6자리 코드 입력" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off">
+                    <label class="entry-code-label">입장 코드 (6자리) <span class="required">*</span></label>
+                    <div class="code-input-wrapper">
+                        <input type="text" class="code-digit" id="code1" maxlength="1" autocomplete="off">
+                        <input type="text" class="code-digit" id="code2" maxlength="1" autocomplete="off">
+                        <input type="text" class="code-digit" id="code3" maxlength="1" autocomplete="off">
+                        <input type="text" class="code-digit" id="code4" maxlength="1" autocomplete="off">
+                        <input type="text" class="code-digit" id="code5" maxlength="1" autocomplete="off">
+                        <input type="text" class="code-digit" id="code6" maxlength="1" autocomplete="off">
                     </div>
                     <small class="form-hint">강사로부터 전달받은 6자리 Access Code를 입력하세요</small>
                 </div>
@@ -723,40 +728,110 @@ class WaitingRoomManager {
             closeOnBackdrop: true
         });
 
-        // 입력 필드 포커스 및 이벤트 설정
+        // 입력 필드 이벤트 설정
         setTimeout(() => {
-            const entryCodeInput = document.getElementById('entryCode');
-            if (entryCodeInput) {
-                entryCodeInput.focus();
-                
-                // 대문자 변환 및 영숫자만 입력
-                entryCodeInput.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                });
+            this.setupCodeInputs();
+        }, 100);
+    }
+
+    /**
+     * 코드 입력 필드 설정
+     */
+    setupCodeInputs() {
+        const inputs = document.querySelectorAll('.code-digit');
+        if (!inputs.length) return;
+
+        inputs.forEach((input, index) => {
+            // 첫 번째 입력 필드에 포커스
+            if (index === 0) {
+                input.focus();
+            }
+
+            // 입력 이벤트
+            input.addEventListener('input', (e) => {
+                const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                e.target.value = value;
+
+                // 값이 입력되면 다음 필드로 이동
+                if (value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+
+                // 마지막 필드에 입력되면 자동으로 검증 (선택사항)
+                if (value && index === inputs.length - 1) {
+                    // 모든 필드가 채워졌는지 확인
+                    const allFilled = Array.from(inputs).every(inp => inp.value);
+                    if (allFilled) {
+                        // 자동 검증은 사용자가 버튼을 클릭하도록 유도
+                        inputs[index].blur();
+                    }
+                }
+            });
+
+            // 키다운 이벤트 (백스페이스, 화살표 키 처리)
+            input.addEventListener('keydown', (e) => {
+                // 백스페이스: 현재 필드가 비어있으면 이전 필드로 이동
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                    inputs[index - 1].value = '';
+                }
+
+                // 왼쪽 화살표
+                if (e.key === 'ArrowLeft' && index > 0) {
+                    inputs[index - 1].focus();
+                }
+
+                // 오른쪽 화살표
+                if (e.key === 'ArrowRight' && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
 
                 // Enter 키로 입장
-                entryCodeInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        this.verifyEntryCode(lecture);
-                    }
-                });
-            }
-        }, 100);
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const lecture = { id: document.querySelector('.entry-modal-content')?.dataset?.lectureId };
+                    this.verifyEntryCode(lecture);
+                }
+            });
+
+            // 붙여넣기 이벤트
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = e.clipboardData.getData('text').toUpperCase().replace(/[^A-Z0-9]/g, '');
+                
+                // 붙여넣은 데이터를 각 필드에 분배
+                for (let i = 0; i < Math.min(pastedData.length, inputs.length - index); i++) {
+                    inputs[index + i].value = pastedData[i];
+                }
+
+                // 마지막으로 채워진 필드 다음으로 포커스 이동
+                const nextIndex = Math.min(index + pastedData.length, inputs.length - 1);
+                inputs[nextIndex].focus();
+            });
+
+            // 포커스 시 전체 선택
+            input.addEventListener('focus', (e) => {
+                e.target.select();
+            });
+        });
     }
 
     /**
      * 입장 코드 검증
      */
     async verifyEntryCode(lecture) {
-        const entryCodeInput = document.getElementById('entryCode');
-        if (!entryCodeInput) return;
+        // 6개의 입력 필드에서 값 가져오기
+        const inputs = document.querySelectorAll('.code-digit');
+        if (!inputs.length) return;
 
-        const inputCode = entryCodeInput.value.trim().toUpperCase();
+        const inputCode = Array.from(inputs).map(input => input.value.toUpperCase()).join('');
 
         // 입력 검증
-        if (!inputCode || inputCode.length !== 6) {
-            this.showError('6자리 입장 코드를 입력해주세요.');
+        if (inputCode.length !== 6) {
+            this.showError('6자리 입장 코드를 모두 입력해주세요.');
+            // 비어있는 첫 번째 필드에 포커스
+            const emptyInput = Array.from(inputs).find(input => !input.value);
+            if (emptyInput) emptyInput.focus();
             return;
         }
 
