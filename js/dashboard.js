@@ -270,6 +270,11 @@ class DashboardManager {
             ? '<span class="mode-badge mode-learning"><i class="fas fa-graduation-cap"></i> 학습 모드</span>'
             : '<span class="mode-badge mode-evaluation"><i class="fas fa-clipboard-check"></i> 평가 모드</span>';
 
+        // 워크스페이스 이동 버튼 (Open 상태일 때만)
+        const workspaceButton = card.status === 'open'
+            ? '<button class="btn-workspace" data-competency-id="' + card.id + '"><i class="fas fa-arrow-right"></i> 워크스페이스 이동</button>'
+            : '';
+
         cardElement.innerHTML = `
             <div class="competency-card-header">
                 <div class="competency-header-left">
@@ -287,6 +292,7 @@ class DashboardManager {
                     <span class="status-icon">${statusIcon}</span>
                     <span class="status-text">${statusText}</span>
                 </div>
+                ${workspaceButton}
             </div>
         `;
 
@@ -294,6 +300,15 @@ class DashboardManager {
         cardElement.addEventListener('click', () => {
             this.handleCardClick(card);
         });
+
+        // 워크스페이스 이동 버튼 클릭 이벤트
+        const workspaceBtn = cardElement.querySelector('.btn-workspace');
+        if (workspaceBtn) {
+            workspaceBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // 카드 클릭 이벤트 방지
+                this.handleWorkspaceClick(card);
+            });
+        }
 
         return cardElement;
     }
@@ -318,6 +333,16 @@ class DashboardManager {
             // TODO: 워크스페이스 페이지로 이동
             // window.location.href = `workspace.html?lectureId=${this.lectureId}&competency=${card.id}`;
         }
+    }
+
+    /**
+     * 워크스페이스 이동 버튼 클릭 처리
+     */
+    handleWorkspaceClick(card) {
+        const modeText = card.mode === 'learning' ? '학습 모드' : '평가 모드';
+        this.showInfo(`워크스페이스로 이동합니다. (${card.name} - ${modeText})\n워크스페이스 페이지는 향후 구현 예정입니다.`);
+        // TODO: 워크스페이스 페이지로 이동
+        // window.location.href = `workspace.html?lectureId=${this.lectureId}&competency=${card.id}`;
     }
 
     /**

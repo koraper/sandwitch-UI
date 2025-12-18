@@ -2088,6 +2088,7 @@
 .competency-card-footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.5rem;
 }
 
@@ -2160,6 +2161,37 @@
 
 .competency-card-done .status-text {
     color: #10b981;
+}
+
+/* 워크스페이스 이동 버튼 */
+.btn-workspace {
+    padding: 0.625rem 1.25rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.btn-workspace:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+}
+
+.btn-workspace:active {
+    transform: translateY(0);
+}
+
+.btn-workspace i {
+    font-size: 0.8rem;
 }
 
 /* 대시보드 반응형 */
