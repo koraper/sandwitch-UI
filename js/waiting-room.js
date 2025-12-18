@@ -876,8 +876,8 @@ class WaitingRoomManager {
             // });
             // const result = await response.json();
 
-            // 데모용 검증
-            const isValid = inputCode === lecture.accessCode.toUpperCase();
+            // 데모용 검증 (모든 특강의 입장 코드는 123456)
+            const isValid = inputCode === '123456';
 
             if (isValid) {
                 // 입장 성공 - 특강 대시보드로 이동
@@ -894,6 +894,16 @@ class WaitingRoomManager {
                 }, 1000);
             } else {
                 this.showError('입장 코드가 올바르지 않습니다. 다시 확인해주세요.');
+                // 입력 필드 초기화 및 첫 번째 필드에 포커스
+                const inputs = document.querySelectorAll('.code-digit');
+                inputs.forEach(input => {
+                    input.value = '';
+                    input.classList.add('error');
+                });
+                setTimeout(() => {
+                    inputs.forEach(input => input.classList.remove('error'));
+                    if (inputs[0]) inputs[0].focus();
+                }, 300);
             }
         } catch (error) {
             console.error('코드 검증 실패:', error);
