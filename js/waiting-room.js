@@ -194,7 +194,7 @@ class WaitingRoomManager {
                     time: '13:00 - 15:00',
                     location: '과학관 401호',
                     accessCode: 'GHI789',
-                    status: 'ongoing' // 진행중
+                    status: 'ended' // 종료됨
                 },
                 {
                     id: 5,
