@@ -228,11 +228,9 @@ class ManagerLoginManager {
         // 성공 메시지 표시
         this.showSuccess('로그인 성공! 강사 대기실로 이동합니다...');
 
-        // 강사 대기실로 이동 (향후 구현)
+        // 강사 대기실로 이동
         setTimeout(() => {
-            // TODO: 강사 대기실 페이지로 이동
-            // window.location.href = 'manager-waiting-room.html';
-            this.showInfo('강사 대기실 페이지는 향후 구현 예정입니다.');
+            window.location.href = 'manager-waiting-room.html';
         }, 500);
     }
 

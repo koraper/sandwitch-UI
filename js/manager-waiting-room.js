@@ -544,7 +544,7 @@ class ManagerWaitingRoomManager {
     createStatusBadge(status) {
         const badges = {
             upcoming: { text: '예정됨', class: 'lecture-badge badge-upcoming' },
-            ongoing: { text: '진행 중', class: 'lecture-badge badge-ongoing' },
+            ongoing: { text: '진행중', class: 'lecture-badge badge-ongoing' },
             ended: { text: '종료됨', class: 'lecture-badge badge-ended' }
         };
 
