@@ -18,6 +18,23 @@
                     <i class="fas fa-hamburger"></i> 샌드위치
                 </div>
             </div>
+            <div class="header-center">
+                <div class="search-section">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="search-input" 
+                            placeholder="특강명, 강사명, 기관명으로 검색..."
+                            autocomplete="off"
+                        >
+                        <button class="btn-search-clear" id="searchClearBtn" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="header-right">
                 <div class="user-profile" id="userProfile">
                     <span class="user-name" id="userName">사용자</span>
@@ -49,6 +66,22 @@
             <div class="empty-state" id="emptyState" style="display: none;">
                 <i class="fas fa-inbox"></i>
                 <p>현재 진행 중인 특강이 없습니다.</p>
+            </div>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination-container" id="paginationContainer" style="display: none;">
+                <div class="pagination-info">
+                    <span id="paginationInfo">1-4 / 전체 4개</span>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn-pagination" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i> 이전
+                    </button>
+                    <div class="pagination-numbers" id="paginationNumbers"></div>
+                    <button class="btn-pagination" id="nextBtn">
+                        다음 <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
         </main>
     </div>

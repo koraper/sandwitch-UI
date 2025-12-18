@@ -2,7 +2,11 @@
 class WaitingRoomManager {
     constructor() {
         this.lectures = [];
+        this.filteredLectures = [];
         this.currentUser = null;
+        this.searchQuery = '';
+        this.currentPage = 1;
+        this.itemsPerPage = 4; // 2행 2열 = 4개
         this.init();
     }
 
@@ -66,6 +70,34 @@ class WaitingRoomManager {
             userProfile.addEventListener('click', () => {
                 // TODO: 마이페이지로 이동
                 console.log('마이페이지 이동 (향후 구현)');
+            });
+        }
+
+        // 검색 입력 필드
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.handleSearch(e.target.value);
+            });
+
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    e.target.value = '';
+                    this.handleSearch('');
+                }
+            });
+        }
+
+        // 검색 초기화 버튼
+        const searchClearBtn = document.getElementById('searchClearBtn');
+        if (searchClearBtn) {
+            searchClearBtn.addEventListener('click', () => {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.focus();
+                    this.handleSearch('');
+                }
             });
         }
     }
@@ -148,6 +180,9 @@ class WaitingRoomManager {
                 return;
             }
 
+            // 필터링된 특강 리스트 초기화
+            this.filteredLectures = [...this.lectures];
+
             // 특강 카드 렌더링
             this.renderLectures();
 
@@ -168,17 +203,240 @@ class WaitingRoomManager {
      */
     renderLectures() {
         const lectureList = document.getElementById('lectureList');
+        const emptyState = document.getElementById('emptyState');
+        const paginationContainer = document.getElementById('paginationContainer');
         if (!lectureList) return;
 
         // 기존 카드 제거 (로딩 상태 제외)
         const existingCards = lectureList.querySelectorAll('.lecture-card');
         existingCards.forEach(card => card.remove());
 
+        // 필터링된 특강이 없는 경우
+        if (this.filteredLectures.length === 0) {
+            if (emptyState) {
+                emptyState.style.display = 'flex';
+                emptyState.innerHTML = `
+                    <i class="fas fa-search"></i>
+                    <p>검색 결과가 없습니다.</p>
+                `;
+            }
+            if (paginationContainer) {
+                paginationContainer.style.display = 'none';
+            }
+            return;
+        }
+
+        // 빈 상태 숨기기
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+
+        // 페이지네이션 계산
+        const totalPages = Math.ceil(this.filteredLectures.length / this.itemsPerPage);
+        
+        // 현재 페이지가 유효한 범위인지 확인
+        if (this.currentPage > totalPages) {
+            this.currentPage = totalPages || 1;
+        }
+
+        // 현재 페이지에 표시할 특강 추출
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const lecturesToShow = this.filteredLectures.slice(startIndex, endIndex);
+
         // 특강 카드 생성
-        this.lectures.forEach(lecture => {
+        lecturesToShow.forEach(lecture => {
             const card = this.createLectureCard(lecture);
             lectureList.appendChild(card);
         });
+
+        // 페이지네이션 업데이트
+        this.updatePagination(totalPages);
+    }
+
+    /**
+     * 검색 처리
+     */
+    handleSearch(query) {
+        this.searchQuery = query.trim().toLowerCase();
+        const searchClearBtn = document.getElementById('searchClearBtn');
+
+        // 검색 초기화 버튼 표시/숨김
+        if (searchClearBtn) {
+            searchClearBtn.style.display = this.searchQuery ? 'flex' : 'none';
+        }
+
+        // 검색어가 없으면 전체 리스트 표시
+        if (!this.searchQuery) {
+            this.filteredLectures = [...this.lectures];
+            this.renderLectures();
+            return;
+        }
+
+        // 특강 필터링
+        this.filteredLectures = this.lectures.filter(lecture => {
+            const title = lecture.title.toLowerCase();
+            const instructor = lecture.instructor.toLowerCase();
+            const institution = lecture.institution.toLowerCase();
+            const description = lecture.description.toLowerCase();
+
+            return title.includes(this.searchQuery) ||
+                   instructor.includes(this.searchQuery) ||
+                   institution.includes(this.searchQuery) ||
+                   description.includes(this.searchQuery);
+        });
+
+        // 검색 시 첫 페이지로 이동
+        this.currentPage = 1;
+
+        // 필터링된 결과 렌더링
+        this.renderLectures();
+    }
+
+    /**
+     * 페이지 이동
+     */
+    goToPage(page) {
+        const totalPages = Math.ceil(this.filteredLectures.length / this.itemsPerPage);
+        
+        if (page < 1 || page > totalPages) {
+            return;
+        }
+
+        this.currentPage = page;
+        this.renderLectures();
+
+        // 페이지 상단으로 스크롤
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /**
+     * 페이지네이션 업데이트
+     */
+    updatePagination(totalPages) {
+        const paginationContainer = document.getElementById('paginationContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const paginationNumbers = document.getElementById('paginationNumbers');
+        const paginationInfo = document.getElementById('paginationInfo');
+
+        if (!paginationContainer || totalPages <= 1) {
+            if (paginationContainer) {
+                paginationContainer.style.display = 'none';
+            }
+            return;
+        }
+
+        paginationContainer.style.display = 'flex';
+
+        // 이전/다음 버튼 상태 업데이트
+        if (prevBtn) {
+            prevBtn.disabled = this.currentPage === 1;
+        }
+        if (nextBtn) {
+            nextBtn.disabled = this.currentPage === totalPages;
+        }
+
+        // 페이지 번호 생성
+        if (paginationNumbers) {
+            paginationNumbers.innerHTML = '';
+            
+            // 페이지 번호 표시 로직 (최대 5개)
+            let startPage = Math.max(1, this.currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `btn-page-number ${i === this.currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => this.goToPage(i));
+                paginationNumbers.appendChild(pageBtn);
+            }
+        }
+
+        // 페이지 정보 업데이트
+        if (paginationInfo) {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+            const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.filteredLectures.length);
+            paginationInfo.textContent = `${startIndex}-${endIndex} / 전체 ${this.filteredLectures.length}개`;
+        }
+    }
+
+    /**
+     * 페이지 이동
+     */
+    goToPage(page) {
+        const totalPages = Math.ceil(this.filteredLectures.length / this.itemsPerPage);
+        
+        if (page < 1 || page > totalPages) {
+            return;
+        }
+
+        this.currentPage = page;
+        this.renderLectures();
+
+        // 페이지 상단으로 스크롤
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /**
+     * 페이지네이션 업데이트
+     */
+    updatePagination(totalPages) {
+        const paginationContainer = document.getElementById('paginationContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const paginationNumbers = document.getElementById('paginationNumbers');
+        const paginationInfo = document.getElementById('paginationInfo');
+
+        if (!paginationContainer || totalPages <= 1) {
+            if (paginationContainer) {
+                paginationContainer.style.display = 'none';
+            }
+            return;
+        }
+
+        paginationContainer.style.display = 'flex';
+
+        // 이전/다음 버튼 상태 업데이트
+        if (prevBtn) {
+            prevBtn.disabled = this.currentPage === 1;
+        }
+        if (nextBtn) {
+            nextBtn.disabled = this.currentPage === totalPages;
+        }
+
+        // 페이지 번호 생성
+        if (paginationNumbers) {
+            paginationNumbers.innerHTML = '';
+            
+            // 페이지 번호 표시 로직 (최대 5개)
+            let startPage = Math.max(1, this.currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `btn-page-number ${i === this.currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => this.goToPage(i));
+                paginationNumbers.appendChild(pageBtn);
+            }
+        }
+
+        // 페이지 정보 업데이트
+        if (paginationInfo) {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+            const endIndex = Math.min(this.currentPage * this.itemsPerPage, this.filteredLectures.length);
+            paginationInfo.textContent = `${startIndex}-${endIndex} / 전체 ${this.filteredLectures.length}개`;
+        }
     }
 
     /**
