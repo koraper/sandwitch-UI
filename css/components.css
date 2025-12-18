@@ -2116,29 +2116,51 @@
 
 .mode-badge-indicator .mode-badge {
     font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+}
+
+.mode-badge-indicator .mode-badge i {
+    font-size: 0.7rem;
 }
 
 /* 상태 배지 스타일 */
+.status-indicator.status-locked,
+.status-indicator.status-open,
+.status-indicator.status-done {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+}
+
+.status-indicator.status-locked .status-icon,
+.status-indicator.status-open .status-icon,
+.status-indicator.status-done .status-icon {
+    font-size: 0.7rem;
+}
+
+.status-indicator.status-locked .status-text,
+.status-indicator.status-open .status-text,
+.status-indicator.status-done .status-text {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
 .status-indicator.status-locked {
     background: #f3f4f6;
     color: #6b7280;
-    padding: 0.25rem 0.5rem;
-    border-radius: 8px;
 }
 
 .status-indicator.status-open {
     background: #eff6ff;
     color: #2563eb;
-    padding: 0.25rem 0.5rem;
-    border-radius: 8px;
 }
 
 .status-indicator.status-done {
     background: #ecfdf5;
     color: #10b981;
-    padding: 0.25rem 0.5rem;
-    border-radius: 8px;
 }
 
 .competency-card-body {
@@ -3144,12 +3166,12 @@
     transition: all 0.2s;
 }
 
-.form-checkbox-group .checkbox-container input:checked + .checkmark {
+.form-checkbox-group .checkbox-container input:checked+.checkmark {
     background: #6366f1;
     border-color: #6366f1;
 }
 
-.form-checkbox-group .checkbox-container input:checked + .checkmark::after {
+.form-checkbox-group .checkbox-container input:checked+.checkmark::after {
     content: '✓';
     color: white;
     font-size: 0.75rem;
