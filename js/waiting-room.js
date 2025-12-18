@@ -918,11 +918,9 @@ class WaitingRoomManager {
                 // 모달 닫기
                 window.modalManager.closeAll();
                 
-                // 특강 대시보드로 이동 (향후 구현)
+                // 특강 대시보드로 이동
                 setTimeout(() => {
-                    // TODO: 특강 대시보드 페이지로 이동
-                    // window.location.href = `dashboard.html?lectureId=${lecture.id}`;
-                    this.showInfo(`특강 대시보드로 이동합니다. (특강 ID: ${lecture.id})`);
+                    window.location.href = `dashboard.html?lectureId=${lecture.id}`;
                 }, 1000);
                 
                 return true; // 모달을 닫음 (이미 closeAll 호출했지만 명시적으로)

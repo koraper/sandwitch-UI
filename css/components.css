@@ -35,14 +35,57 @@
     opacity: 1;
 }
 
-.resize-handle.nw { top: -4px; left: -4px; cursor: nw-resize; }
-.resize-handle.ne { top: -4px; right: -4px; cursor: ne-resize; }
-.resize-handle.sw { bottom: -4px; left: -4px; cursor: sw-resize; }
-.resize-handle.se { bottom: -4px; right: -4px; cursor: se-resize; }
-.resize-handle.n { top: -4px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
-.resize-handle.s { bottom: -4px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
-.resize-handle.e { right: -4px; top: 50%; transform: translateY(-50%); cursor: e-resize; }
-.resize-handle.w { left: -4px; top: 50%; transform: translateY(-50%); cursor: w-resize; }
+.resize-handle.nw {
+    top: -4px;
+    left: -4px;
+    cursor: nw-resize;
+}
+
+.resize-handle.ne {
+    top: -4px;
+    right: -4px;
+    cursor: ne-resize;
+}
+
+.resize-handle.sw {
+    bottom: -4px;
+    left: -4px;
+    cursor: sw-resize;
+}
+
+.resize-handle.se {
+    bottom: -4px;
+    right: -4px;
+    cursor: se-resize;
+}
+
+.resize-handle.n {
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: n-resize;
+}
+
+.resize-handle.s {
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: s-resize;
+}
+
+.resize-handle.e {
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: e-resize;
+}
+
+.resize-handle.w {
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: w-resize;
+}
 
 /* 텍스트 컴포넌트 */
 .component-text {
@@ -230,7 +273,7 @@
     border-radius: 6px;
     min-width: 400px;
     min-height: 60px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
@@ -266,7 +309,7 @@
     border: 1px solid #e1e4e8;
     border-radius: 6px;
     min-height: 400px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
 }
@@ -337,7 +380,7 @@
 
 .tab-item:hover {
     color: #333;
-    background: rgba(0,0,0,0.02);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 .tab-item.active {
@@ -397,8 +440,8 @@
     right: 0;
     bottom: 0;
     background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,0.05) 19px, rgba(0,0,0,0.05) 20px),
-        repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0,0,0,0.05) 19px, rgba(0,0,0,0.05) 20px);
+        repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0, 0, 0, 0.05) 19px, rgba(0, 0, 0, 0.05) 20px),
+        repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0, 0, 0, 0.05) 19px, rgba(0, 0, 0, 0.05) 20px);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s;
@@ -709,9 +752,19 @@
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
 }
 
 .entry-modal-body .form-hint {
@@ -740,6 +793,7 @@
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1750,5 +1804,379 @@
     .profile-actions .btn-submit {
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* ========================================
+   특강 대시보드 스타일
+   ======================================== */
+
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f9fafb;
+}
+
+.dashboard-header {
+    background: white;
+    border-bottom: 1px solid #e1e4e8;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header .header-left {
+    flex: 0 0 auto;
+}
+
+.dashboard-header .header-center {
+    flex: 1;
+    text-align: center;
+}
+
+.dashboard-header .header-right {
+    flex: 0 0 auto;
+}
+
+.dashboard-header .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dashboard-header .logo:hover {
+    color: #2563eb;
+}
+
+.lecture-title-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.btn-exit {
+    padding: 0.75rem 1.5rem;
+    background: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-exit:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(107, 114, 128, 0.3);
+}
+
+.dashboard-main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* 특강 정보 섹션 */
+.lecture-info-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.lecture-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.lecture-info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lecture-info-item i {
+    font-size: 1.5rem;
+    color: #2563eb;
+    width: 2rem;
+    text-align: center;
+}
+
+.lecture-info-item .info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.lecture-info-item .info-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.lecture-info-item .info-value {
+    font-size: 1rem;
+    color: #111827;
+    font-weight: 500;
+}
+
+/* 역량 섹션 */
+.competency-section {
+    margin-top: 2rem;
+}
+
+.competency-section .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.competency-section .section-title i {
+    color: #2563eb;
+}
+
+.competency-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+/* 역량 카드 */
+.competency-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.competency-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.competency-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.competency-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.competency-code {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2563eb;
+    letter-spacing: 0.1em;
+}
+
+.competency-code-fullname {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.mode-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.mode-learning {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.mode-evaluation {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.competency-card-body {
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.competency-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 0.75rem 0;
+}
+
+.competency-description {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.competency-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-icon {
+    font-size: 1.25rem;
+}
+
+.status-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* 상태별 카드 스타일 */
+.competency-card-locked {
+    background: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.competency-card-locked:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.competency-card-locked .competency-code {
+    color: #9ca3af;
+}
+
+.competency-card-locked .competency-code-fullname {
+    color: #9ca3af;
+}
+
+.competency-card-locked .status-icon {
+    color: #9ca3af;
+}
+
+.competency-card-locked .status-text {
+    color: #6b7280;
+}
+
+.competency-card-locked .competency-description {
+    color: #9ca3af;
+}
+
+.competency-card-open {
+    border-color: #2563eb;
+}
+
+.competency-card-open .status-icon {
+    color: #2563eb;
+}
+
+.competency-card-open .status-text {
+    color: #2563eb;
+}
+
+.competency-card-done {
+    border-color: #10b981;
+}
+
+.competency-card-done .status-icon {
+    color: #10b981;
+}
+
+.competency-card-done .status-text {
+    color: #10b981;
+}
+
+/* 대시보드 반응형 */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .dashboard-header .header-center {
+        order: 2;
+    }
+
+    .dashboard-header .header-right {
+        order: 3;
+        width: 100%;
+    }
+
+    .btn-exit {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .dashboard-main {
+        padding: 1.5rem 1rem;
+    }
+
+    .lecture-info-section {
+        padding: 1.5rem;
+    }
+
+    .lecture-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .competency-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .lecture-title-header {
+        font-size: 1.25rem;
+    }
+
+    .competency-card {
+        padding: 1.5rem;
+    }
+
+    .competency-code {
+        font-size: 1.25rem;
+    }
+
+    .competency-name {
+        font-size: 1.1rem;
     }
 }
