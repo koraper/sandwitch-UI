@@ -597,8 +597,8 @@ class WaitingRoomManager {
         // 상태 배지 생성
         const badge = this.createStatusBadge(lecture.status || 'ongoing');
         
-        // 입장 불가능한 상태 확인
-        const isDisabled = lecture.status === 'ended' || lecture.status === 'cancelled';
+        // 입장 불가능한 상태 확인 (진행중만 입장 가능)
+        const isDisabled = lecture.status !== 'ongoing';
         const disabledAttr = isDisabled ? 'disabled' : '';
         const disabledClass = isDisabled ? 'disabled' : '';
 
