@@ -292,6 +292,17 @@ body.has-main-app {
     text-decoration: underline;
 }
 
+.signup-link .user-login-link {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.signup-link .user-login-link a {
+    color: #2563eb;
+    font-weight: 500;
+}
+
 /* 회원가입 페이지 */
 .signup-container {
     display: flex;

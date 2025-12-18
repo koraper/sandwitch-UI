@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강사 로그인 - 샌드위치</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- 강사 로그인 페이지 -->
+    <div class="login-container" id="loginContainer">
+        <!-- 로그인 폼 -->
+        <div class="login-right">
+            <div class="login-form-container">
+                <div class="login-brand">
+                    <h1 class="logo"><i class="fas fa-hamburger"></i> 샌드위치</h1>
+                </div>
+                <h2>강사 로그인</h2>
+                <p class="login-subtitle">강사 계정으로 로그인하세요<br> 특강 관리 및 학생 평가를 진행할 수 있습니다.</p>
+
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                            <div class="password-toggle">
+                                <button type="button" class="toggle-password" title="비밀번호 표시/숨김" aria-label="비밀번호 표시/숨김"><i class="far fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <small class="password-hint">영어 대문자 또는 소문자, 숫자, 특수문자 조합 8~50자</small>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="remember">
+                            <span class="checkmark"></span>
+                            로그인 상태 유지
+                        </label>
+                        <a href="#" class="forgot-password">비밀번호 찾기</a>
+                    </div>
+
+                    <button type="submit" class="login-btn">로그인</button>
+                </form>
+
+                <div class="signup-link">
+                    <p>아직 계정이 없으신가요? <a href="signup.html">회원가입</a></p>
+                    <p class="user-login-link">일반 사용자로 로그인하시나요? <a href="index.html">사용자 로그인</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/modal.js"></script>
+    <script src="js/login-manager.js"></script>
+</body>
+</html>
+
