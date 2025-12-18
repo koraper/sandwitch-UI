@@ -79,7 +79,7 @@ class ManagerWaitingRoomManager {
         const userProfile = document.getElementById('userProfile');
         if (userProfile) {
             userProfile.addEventListener('click', () => {
-                window.location.href = 'profile.html';
+                window.location.href = 'manager-profile.html';
             });
         }
 
