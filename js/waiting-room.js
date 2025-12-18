@@ -722,7 +722,9 @@ class WaitingRoomManager {
                 },
                 {
                     label: '입장',
-                    action: () => this.verifyEntryCode(lecture),
+                    action: () => {
+                        return this.verifyEntryCode(lecture);
+                    },
                     style: 'primary',
                     id: 'entrySubmitBtn'
                 }
@@ -880,21 +882,22 @@ class WaitingRoomManager {
 
     /**
      * 입장 코드 검증
+     * @returns {boolean} false를 반환하면 모달이 닫히지 않음
      */
     async verifyEntryCode(lecture) {
         // 6개의 입력 필드에서 값 가져오기
         const inputs = document.querySelectorAll('.code-digit');
-        if (!inputs.length) return;
+        if (!inputs.length) return false;
 
         const inputCode = Array.from(inputs).map(input => input.value.toUpperCase()).join('');
 
         // 입력 검증
         if (inputCode.length !== 6) {
-            this.showError('6자리 입장 코드를 모두 입력해주세요.');
+            this.showInlineError('6자리 입장 코드를 모두 입력해주세요.');
             // 비어있는 첫 번째 필드에 포커스
             const emptyInput = Array.from(inputs).find(input => !input.value);
             if (emptyInput) emptyInput.focus();
-            return;
+            return false; // 모달을 닫지 않음
         }
 
         // 코드 검증 (실제로는 서버 API 호출)
@@ -922,6 +925,8 @@ class WaitingRoomManager {
                     // window.location.href = `dashboard.html?lectureId=${lecture.id}`;
                     this.showInfo(`특강 대시보드로 이동합니다. (특강 ID: ${lecture.id})`);
                 }, 1000);
+                
+                return true; // 모달을 닫음 (이미 closeAll 호출했지만 명시적으로)
             } else {
                 // 인라인 에러 메시지 표시
                 this.showInlineError('입장 코드가 올바르지 않습니다. 다시 확인해주세요.');
@@ -936,10 +941,13 @@ class WaitingRoomManager {
                     inputs.forEach(input => input.classList.remove('error'));
                     if (inputs[0]) inputs[0].focus();
                 }, 300);
+                
+                return false; // 모달을 닫지 않음
             }
         } catch (error) {
             console.error('코드 검증 실패:', error);
-            this.showError('코드 검증 중 오류가 발생했습니다. 다시 시도해주세요.');
+            this.showInlineError('코드 검증 중 오류가 발생했습니다. 다시 시도해주세요.');
+            return false; // 모달을 닫지 않음
         }
     }
 

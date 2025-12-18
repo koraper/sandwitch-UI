@@ -170,9 +170,18 @@ class ModalManager {
             btn.className = `modal-btn modal-btn-${button.style || 'secondary'}`;
             btn.textContent = button.label;
             
+            // id 속성 추가 (버튼 식별용)
+            if (button.id) {
+                btn.id = button.id;
+            }
+            
             btn.addEventListener('click', () => {
                 if (button.action) {
-                    button.action();
+                    const result = button.action();
+                    // action이 false를 반환하면 모달을 닫지 않음
+                    if (result === false) {
+                        return;
+                    }
                 }
                 this.close(modal, onClose);
             });
