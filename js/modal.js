@@ -175,9 +175,9 @@ class ModalManager {
                 btn.id = button.id;
             }
             
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
                 if (button.action) {
-                    const result = button.action();
+                    const result = await button.action();
                     // action이 false를 반환하면 모달을 닫지 않음
                     if (result === false) {
                         return;
