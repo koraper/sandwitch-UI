@@ -120,6 +120,18 @@ class WaitingRoomManager {
                     location: '공학관 205호',
                     accessCode: 'DEF456',
                     status: 'ended' // 종료됨
+                },
+                {
+                    id: 4,
+                    title: '머신러닝 입문',
+                    description: 'Scikit-learn과 TensorFlow를 활용한 머신러닝 기초부터 실전까지',
+                    institution: '고려대학교 인공지능학과',
+                    instructor: '최교수',
+                    date: '2024-03-22',
+                    time: '13:00 - 15:00',
+                    location: '과학관 401호',
+                    accessCode: 'GHI789',
+                    status: 'ongoing' // 진행중
                 }
             ];
 
@@ -264,6 +276,35 @@ class WaitingRoomManager {
         }
 
         return card;
+    }
+
+    /**
+     * 상태 배지 생성
+     * @param {string} status - 특강 상태: 'upcoming', 'ongoing', 'ended', 'cancelled'
+     * @returns {string} 배지 HTML
+     */
+    createStatusBadge(status) {
+        const badges = {
+            upcoming: {
+                text: '예정됨',
+                class: 'lecture-badge badge-upcoming'
+            },
+            ongoing: {
+                text: '진행중',
+                class: 'lecture-badge badge-ongoing'
+            },
+            ended: {
+                text: '종료됨',
+                class: 'lecture-badge badge-ended'
+            },
+            cancelled: {
+                text: '취소됨',
+                class: 'lecture-badge badge-cancelled'
+            }
+        };
+
+        const badge = badges[status] || badges.ongoing;
+        return `<span class="${badge.class}">${badge.text}</span>`;
     }
 
     /**
