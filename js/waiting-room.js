@@ -1,0 +1,451 @@
+// 메인 대기실 관리 클래스
+class WaitingRoomManager {
+    constructor() {
+        this.lectures = [];
+        this.currentUser = null;
+        this.init();
+    }
+
+    init() {
+        // 로그인 상태 확인
+        this.checkLoginStatus();
+        
+        // 사용자 정보 로드
+        this.loadUserInfo();
+        
+        // 이벤트 리스너 설정
+        this.setupEventListeners();
+        
+        // 특강 리스트 로드
+        this.loadLectures();
+    }
+
+    /**
+     * 로그인 상태 확인
+     */
+    checkLoginStatus() {
+        const isLoggedIn = localStorage.getItem('sandwitchUI_loggedIn');
+        if (!isLoggedIn) {
+            // 로그인되지 않은 경우 로그인 페이지로 이동
+            window.location.href = 'index.html';
+        }
+    }
+
+    /**
+     * 사용자 정보 로드
+     */
+    loadUserInfo() {
+        const email = localStorage.getItem('sandwitchUI_userEmail');
+        const name = localStorage.getItem('sandwitchUI_userName') || email?.split('@')[0] || '사용자';
+        
+        this.currentUser = {
+            email: email,
+            name: name
+        };
+
+        // 사용자 이름 표시
+        const userNameEl = document.getElementById('userName');
+        if (userNameEl) {
+            userNameEl.textContent = this.currentUser.name;
+        }
+    }
+
+    /**
+     * 이벤트 리스너 설정
+     */
+    setupEventListeners() {
+        // 로그아웃 버튼
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => this.handleLogout());
+        }
+
+        // 프로필 클릭 (마이페이지 이동 - 향후 구현)
+        const userProfile = document.getElementById('userProfile');
+        if (userProfile) {
+            userProfile.addEventListener('click', () => {
+                // TODO: 마이페이지로 이동
+                console.log('마이페이지 이동 (향후 구현)');
+            });
+        }
+    }
+
+    /**
+     * 특강 리스트 로드
+     */
+    async loadLectures() {
+        const loadingState = document.getElementById('loadingState');
+        const emptyState = document.getElementById('emptyState');
+        const lectureList = document.getElementById('lectureList');
+
+        try {
+            // 실제로는 서버 API 호출
+            // const response = await fetch('/api/lectures');
+            // this.lectures = await response.json();
+
+            // 데모용 데이터
+            this.lectures = [
+                {
+                    id: 1,
+                    title: '생성형 AI 활용 가이드',
+                    description: 'ChatGPT, Claude 등 생성형 AI 도구를 활용한 실무 프로젝트',
+                    institution: '한국대학교 컴퓨터공학과',
+                    instructor: '김교수',
+                    date: '2024-03-15',
+                    time: '14:00 - 16:00',
+                    location: '온라인 (Zoom)',
+                    accessCode: 'ABC123',
+                    status: 'ongoing' // 진행중
+                },
+                {
+                    id: 2,
+                    title: '데이터 분석 기초',
+                    description: 'Python을 활용한 데이터 분석 및 시각화 기초 강의',
+                    institution: '서울대학교 통계학과',
+                    instructor: '이교수',
+                    date: '2024-03-20',
+                    time: '10:00 - 12:00',
+                    location: '본관 301호',
+                    accessCode: 'XYZ789',
+                    status: 'upcoming' // 예정됨
+                },
+                {
+                    id: 3,
+                    title: '웹 개발 실전',
+                    description: 'React와 Node.js를 활용한 풀스택 웹 개발',
+                    institution: '연세대학교 정보산업공학과',
+                    instructor: '박교수',
+                    date: '2024-03-25',
+                    time: '15:00 - 17:00',
+                    location: '공학관 205호',
+                    accessCode: 'DEF456',
+                    status: 'ended' // 종료됨
+                }
+            ];
+
+            // 로딩 상태 숨기기
+            if (loadingState) {
+                loadingState.style.display = 'none';
+            }
+
+            // 특강이 없는 경우
+            if (this.lectures.length === 0) {
+                if (emptyState) {
+                    emptyState.style.display = 'flex';
+                }
+                return;
+            }
+
+            // 특강 카드 렌더링
+            this.renderLectures();
+
+        } catch (error) {
+            console.error('특강 리스트 로드 실패:', error);
+            if (loadingState) {
+                loadingState.style.display = 'none';
+            }
+            if (emptyState) {
+                emptyState.style.display = 'flex';
+            }
+            this.showError('특강 목록을 불러오는데 실패했습니다.');
+        }
+    }
+
+    /**
+     * 특강 카드 렌더링
+     */
+    renderLectures() {
+        const lectureList = document.getElementById('lectureList');
+        if (!lectureList) return;
+
+        // 기존 카드 제거 (로딩 상태 제외)
+        const existingCards = lectureList.querySelectorAll('.lecture-card');
+        existingCards.forEach(card => card.remove());
+
+        // 특강 카드 생성
+        this.lectures.forEach(lecture => {
+            const card = this.createLectureCard(lecture);
+            lectureList.appendChild(card);
+        });
+    }
+
+    /**
+     * 특강 카드 생성
+     */
+    createLectureCard(lecture) {
+        const card = document.createElement('div');
+        card.className = 'lecture-card';
+        card.dataset.lectureId = lecture.id;
+
+        // 텍스트 말줄임 처리
+        const truncateText = (text, maxLength) => {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        };
+
+        // 상태 배지 생성
+        const badge = this.createStatusBadge(lecture.status || 'ongoing');
+
+        card.innerHTML = `
+            <div class="lecture-card-header">
+                <h3 class="lecture-title" title="${lecture.title}">${truncateText(lecture.title, 30)}</h3>
+                ${badge}
+            </div>
+            <div class="lecture-card-body">
+                <p class="lecture-description" title="${lecture.description}">${truncateText(lecture.description, 80)}</p>
+                <div class="lecture-info">
+                    <div class="info-item">
+                        <i class="fas fa-university"></i>
+                        <span>${lecture.institution}</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>${lecture.instructor}</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>${lecture.date} ${lecture.time}</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${lecture.location}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lecture-card-footer">
+                <div class="entry-code-section">
+                    <label for="entryCode_${lecture.id}" class="entry-code-label">
+                        입장 코드 <span class="required">*</span>
+                    </label>
+                    <div class="entry-code-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="entryCode_${lecture.id}" 
+                            class="entry-code-input" 
+                            placeholder="6자리 코드 입력" 
+                            maxlength="6" 
+                            pattern="[A-Za-z0-9]{6}"
+                            autocomplete="off"
+                            data-lecture-id="${lecture.id}"
+                        >
+                        <button class="btn-enter" data-lecture-id="${lecture.id}">
+                            <i class="fas fa-door-open"></i> 입장
+                        </button>
+                    </div>
+                    <small class="entry-code-hint">강사로부터 전달받은 6자리 Access Code를 입력하세요</small>
+                </div>
+            </div>
+        `;
+
+        // 입장 코드 입력 필드 이벤트
+        const entryCodeInput = card.querySelector('.entry-code-input');
+        if (entryCodeInput) {
+            // 대문자 변환 및 영숫자만 입력
+            entryCodeInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            });
+
+            // Enter 키로 입장
+            entryCodeInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.verifyEntryCodeFromCard(lecture, entryCodeInput.value.trim());
+                }
+            });
+        }
+
+        // 입장 버튼 이벤트
+        const enterBtn = card.querySelector('.btn-enter');
+        if (enterBtn) {
+            enterBtn.addEventListener('click', () => {
+                const code = entryCodeInput?.value.trim() || '';
+                this.verifyEntryCodeFromCard(lecture, code);
+            });
+        }
+
+        return card;
+    }
+
+    /**
+     * 입장 모달 표시
+     */
+    showEntryModal(lecture) {
+        if (!window.modalManager) {
+            this.showError('모달 시스템을 사용할 수 없습니다.');
+            return;
+        }
+
+        // 모달 HTML 생성
+        const modalContent = document.createElement('div');
+        modalContent.className = 'entry-modal-content';
+        modalContent.innerHTML = `
+            <div class="entry-modal-header">
+                <h3>${lecture.title}</h3>
+                <p class="entry-modal-subtitle">입장 코드를 입력하세요</p>
+            </div>
+            <div class="entry-modal-body">
+                <div class="form-group">
+                    <label for="entryCode">입장 코드 (6자리) <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="entryCode" name="entryCode" placeholder="6자리 코드 입력" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off">
+                    </div>
+                    <small class="form-hint">강사로부터 전달받은 6자리 Access Code를 입력하세요</small>
+                </div>
+            </div>
+        `;
+
+        // 모달 표시
+        window.modalManager.show({
+            type: 'info',
+            title: '특강 입장',
+            message: modalContent,
+            buttons: [
+                {
+                    label: '취소',
+                    action: null,
+                    style: 'secondary'
+                },
+                {
+                    label: '입장',
+                    action: () => this.verifyEntryCode(lecture),
+                    style: 'primary'
+                }
+            ],
+            closeOnBackdrop: true
+        });
+
+        // 입력 필드 포커스 및 이벤트 설정
+        setTimeout(() => {
+            const entryCodeInput = document.getElementById('entryCode');
+            if (entryCodeInput) {
+                entryCodeInput.focus();
+                
+                // 대문자 변환 및 영숫자만 입력
+                entryCodeInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                });
+
+                // Enter 키로 입장
+                entryCodeInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.verifyEntryCode(lecture);
+                    }
+                });
+            }
+        }, 100);
+    }
+
+    /**
+     * 입장 코드 검증
+     */
+    async verifyEntryCode(lecture) {
+        const entryCodeInput = document.getElementById('entryCode');
+        if (!entryCodeInput) return;
+
+        const inputCode = entryCodeInput.value.trim().toUpperCase();
+
+        // 입력 검증
+        if (!inputCode || inputCode.length !== 6) {
+            this.showError('6자리 입장 코드를 입력해주세요.');
+            return;
+        }
+
+        // 코드 검증 (실제로는 서버 API 호출)
+        try {
+            // const response = await fetch(`/api/lectures/${lecture.id}/verify`, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ code: inputCode })
+            // });
+            // const result = await response.json();
+
+            // 데모용 검증
+            const isValid = inputCode === lecture.accessCode.toUpperCase();
+
+            if (isValid) {
+                // 입장 성공 - 특강 대시보드로 이동
+                this.showSuccess('입장 코드가 확인되었습니다. 특강 대시보드로 이동합니다.');
+                
+                // 모달 닫기
+                window.modalManager.closeAll();
+                
+                // 특강 대시보드로 이동 (향후 구현)
+                setTimeout(() => {
+                    // TODO: 특강 대시보드 페이지로 이동
+                    // window.location.href = `dashboard.html?lectureId=${lecture.id}`;
+                    this.showInfo(`특강 대시보드로 이동합니다. (특강 ID: ${lecture.id})`);
+                }, 1000);
+            } else {
+                this.showError('입장 코드가 올바르지 않습니다. 다시 확인해주세요.');
+            }
+        } catch (error) {
+            console.error('코드 검증 실패:', error);
+            this.showError('코드 검증 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+    }
+
+    /**
+     * 로그아웃 처리
+     */
+    handleLogout() {
+        if (!window.modalManager) {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                this.performLogout();
+            }
+            return;
+        }
+
+        window.modalManager.confirm(
+            '로그아웃 하시겠습니까?',
+            () => {
+                this.performLogout();
+            },
+            null
+        );
+    }
+
+    /**
+     * 로그아웃 실행
+     */
+    performLogout() {
+        localStorage.removeItem('sandwitchUI_loggedIn');
+        localStorage.removeItem('sandwitchUI_userEmail');
+        localStorage.removeItem('sandwitchUI_userName');
+        localStorage.removeItem('sandwitchUI_rememberMe');
+        
+        // 로그인 페이지로 이동
+        window.location.href = 'index.html';
+    }
+
+    // 알림 메서드들
+    showError(message) {
+        if (!window.modalManager) {
+            alert(message);
+            return;
+        }
+        window.modalManager.error(message);
+    }
+
+    showSuccess(message) {
+        if (!window.modalManager) {
+            alert(message);
+            return;
+        }
+        window.modalManager.info(message);
+    }
+
+    showInfo(message) {
+        if (!window.modalManager) {
+            alert(message);
+            return;
+        }
+        window.modalManager.info(message);
+    }
+}
+
+// 대기실 매니저 초기화
+document.addEventListener('DOMContentLoaded', () => {
+    window.waitingRoomManager = new WaitingRoomManager();
+});
+

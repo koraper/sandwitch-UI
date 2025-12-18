@@ -17,8 +17,8 @@ class LoginManager {
         const rememberMe = localStorage.getItem('sandwitchUI_rememberMe') === 'true';
         
         if (isLoggedIn && rememberMe) {
-            // 자동 로그인 - 메인 앱 표시
-            this.showMainApp();
+            // 자동 로그인 - 메인 대기실로 이동
+            window.location.href = 'waiting-room.html';
         } else if (isLoggedIn && !rememberMe) {
             // 세션만 유지된 경우 (페이지 새로고침 시 로그아웃)
             localStorage.removeItem('sandwitchUI_loggedIn');
@@ -203,6 +203,10 @@ class LoginManager {
         localStorage.setItem('sandwitchUI_loggedIn', 'true');
         localStorage.setItem('sandwitchUI_userEmail', email);
         
+        // 사용자 이름 추출 (이메일에서)
+        const userName = email.split('@')[0];
+        localStorage.setItem('sandwitchUI_userName', userName);
+        
         if (rememberMe) {
             localStorage.setItem('sandwitchUI_rememberMe', 'true');
         } else {
@@ -210,11 +214,11 @@ class LoginManager {
         }
 
         // 성공 메시지 표시
-        this.showSuccess('로그인 성공! 메인 앱으로 이동합니다...');
+        this.showSuccess('로그인 성공! 대기실로 이동합니다...');
 
-        // 메인 앱 표시
+        // 메인 대기실로 이동
         setTimeout(() => {
-            this.showMainApp();
+            window.location.href = 'waiting-room.html';
         }, 500);
     }
 
