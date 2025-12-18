@@ -219,8 +219,8 @@ class ManagerDashboardManager {
                 name: '프롬프트 문제해결력',
                 nameEn: 'Prompt Problem Solving',
                 description: '프롬프트 작성 및 문제 해결 과정의 구조화 정도 평가\n"복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계"',
-                mode: 'evaluation', // 'learning' or 'evaluation'
-                status: 'done' // 'locked', 'open', 'done'
+                mode: 'learning', // 'learning' or 'evaluation' (기본값: learning)
+                status: 'locked' // 'locked', 'open', 'done' (기본값: locked)
             },
             {
                 id: 'dig',
@@ -229,7 +229,7 @@ class ManagerDashboardManager {
                 nameEn: 'Data Insight Generation',
                 description: '데이터를 AI로 분석하고 인사이트를 도출하는 능력\n"코드를 직접 실행하여 데이터를 검증하고, 근거 기반의 실질적인 해결책을 도출"',
                 mode: 'learning',
-                status: 'open'
+                status: 'locked'
             },
             {
                 id: 'gcc',
@@ -246,7 +246,7 @@ class ManagerDashboardManager {
                 name: '업무자동화·도구활용 능력',
                 nameEn: 'Work Flow Automation',
                 description: '반복 업무를 AI 및 자동화 도구로 설계하는 능력\n"업무 흐름을 구조화하여, 예외 상황에서도 오류 없이 작동하는 자동화 프로세스를 설계"',
-                mode: 'evaluation',
+                mode: 'learning',
                 status: 'locked'
             }
         ];
@@ -279,33 +279,29 @@ class ManagerDashboardManager {
         // 상태별 아이콘
         let statusIcon = '';
         let statusText = '';
+        let statusClass = '';
         if (card.status === 'locked') {
             statusIcon = '<i class="fas fa-lock"></i>';
             statusText = '잠금';
+            statusClass = 'status-locked';
         } else if (card.status === 'open') {
             statusIcon = '<i class="fas fa-unlock"></i>';
             statusText = '진행 가능';
+            statusClass = 'status-open';
         } else if (card.status === 'done') {
             statusIcon = '<i class="fas fa-check-circle"></i>';
             statusText = '완료';
+            statusClass = 'status-done';
         }
 
         // 모드 배지
-        const modeBadge = card.mode === 'learning'
-            ? '<span class="mode-badge mode-learning"><i class="fas fa-graduation-cap"></i> 학습 모드</span>'
-            : '<span class="mode-badge mode-evaluation"><i class="fas fa-clipboard-check"></i> 평가 모드</span>';
-
-        // 관리 버튼들 (강사 전용)
-        let actionButtons = '';
-        if (card.status === 'locked') {
-            actionButtons = `<button class="btn-unlock" data-competency-id="${card.id}"><i class="fas fa-unlock"></i> 잠금 해제</button>`;
-        } else if (card.status === 'open') {
-            actionButtons = `
-                <button class="btn-lock" data-competency-id="${card.id}"><i class="fas fa-lock"></i> 잠금</button>
-                <button class="btn-workspace" data-competency-id="${card.id}"><i class="fas fa-arrow-right"></i> 워크스페이스</button>
-            `;
-        } else if (card.status === 'done') {
-            actionButtons = `<button class="btn-view-results" data-competency-id="${card.id}"><i class="fas fa-chart-bar"></i> 결과 보기</button>`;
+        let modeBadge = '';
+        if (card.mode === 'learning') {
+            modeBadge = '<span class="mode-badge mode-learning"><i class="fas fa-graduation-cap"></i> 학습</span>';
+        } else if (card.mode === 'evaluation') {
+            modeBadge = '<span class="mode-badge mode-evaluation"><i class="fas fa-clipboard-check"></i> 평가</span>';
+        } else {
+            modeBadge = '<span class="mode-badge mode-unselected"><i class="fas fa-question"></i> 미선택</span>';
         }
 
         cardElement.innerHTML = `
@@ -314,121 +310,163 @@ class ManagerDashboardManager {
                     <div class="competency-code">${card.code}</div>
                     <div class="competency-code-fullname">${card.nameEn}</div>
                 </div>
-                ${modeBadge}
+                <div class="header-badges">
+                    <div class="mode-badge-indicator">${modeBadge}</div>
+                    <div class="status-indicator ${statusClass}">
+                        <span class="status-icon">${statusIcon}</span>
+                        <span class="status-text">${statusText}</span>
+                    </div>
+                </div>
             </div>
             <div class="competency-card-body">
                 <h3 class="competency-name">${card.name}</h3>
                 <p class="competency-description">${card.description}</p>
             </div>
-            <div class="competency-card-footer">
-                <div class="status-indicator">
-                    <span class="status-icon">${statusIcon}</span>
-                    <span class="status-text">${statusText}</span>
+            <div class="competency-card-divider"></div>
+            <div class="competency-mode-section">
+                <span class="mode-label">모드를 선택하세요</span>
+                <div class="mode-toggle-group">
+                    <button class="mode-toggle-btn ${card.mode === 'learning' ? 'active' : ''}" data-mode="learning" data-competency-id="${card.id}">
+                        <i class="fas fa-graduation-cap"></i> 학습 모드
+                    </button>
+                    <button class="mode-toggle-btn ${card.mode === 'evaluation' ? 'active' : ''}" data-mode="evaluation" data-competency-id="${card.id}">
+                        <i class="fas fa-clipboard-check"></i> 평가 모드
+                    </button>
                 </div>
-                <div class="manager-actions">
-                    ${actionButtons}
+            </div>
+            <div class="competency-status-section">
+                <span class="mode-label">상태를 선택하세요</span>
+                <div class="status-toggle-group">
+                    <button class="status-toggle-btn ${card.status === 'locked' ? 'active' : ''}" data-status="locked" data-competency-id="${card.id}">
+                        <i class="fas fa-lock"></i> 잠금(Locked)
+                    </button>
+                    <button class="status-toggle-btn ${card.status === 'open' ? 'active' : ''}" data-status="open" data-competency-id="${card.id}">
+                        <i class="fas fa-unlock"></i> 진행 가능(Open)
+                    </button>
+                    <button class="status-toggle-btn ${card.status === 'done' ? 'active' : ''}" data-status="done" data-competency-id="${card.id}">
+                        <i class="fas fa-check-circle"></i> 종료(Done)
+                    </button>
                 </div>
             </div>
         `;
 
-        // 잠금 해제 버튼 클릭 이벤트
-        const unlockBtn = cardElement.querySelector('.btn-unlock');
-        if (unlockBtn) {
-            unlockBtn.addEventListener('click', (e) => {
+        // 모드 토글 버튼 클릭 이벤트
+        const modeToggleBtns = cardElement.querySelectorAll('.mode-toggle-btn');
+        modeToggleBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                this.handleUnlock(card);
+                const newMode = btn.dataset.mode;
+                this.handleModeChange(card, newMode, cardElement);
             });
-        }
+        });
 
-        // 잠금 버튼 클릭 이벤트
-        const lockBtn = cardElement.querySelector('.btn-lock');
-        if (lockBtn) {
-            lockBtn.addEventListener('click', (e) => {
+        // 상태 토글 버튼 클릭 이벤트
+        const statusToggleBtns = cardElement.querySelectorAll('.status-toggle-btn');
+        statusToggleBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                this.handleLock(card);
+                const newStatus = btn.dataset.status;
+                this.handleStatusChange(card, newStatus, cardElement);
             });
-        }
-
-        // 워크스페이스 이동 버튼 클릭 이벤트
-        const workspaceBtn = cardElement.querySelector('.btn-workspace');
-        if (workspaceBtn) {
-            workspaceBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.handleWorkspaceClick(card);
-            });
-        }
-
-        // 결과 보기 버튼 클릭 이벤트
-        const viewResultsBtn = cardElement.querySelector('.btn-view-results');
-        if (viewResultsBtn) {
-            viewResultsBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.handleViewResults(card);
-            });
-        }
+        });
 
         return cardElement;
     }
 
     /**
-     * 잠금 해제 처리
+     * 모드 변경 처리
      */
-    handleUnlock(card) {
-        window.modalManager.confirm(
-            `"${card.name}" 역량을 학생들에게 활성화하시겠습니까?`,
-            () => {
-                // 상태 변경
-                const cardData = this.competencyCards.find(c => c.id === card.id);
-                if (cardData) {
-                    cardData.status = 'open';
-                }
-                
-                // UI 업데이트
-                this.renderCompetencyCards();
-                this.showInfo(`"${card.name}" 역량이 활성화되었습니다.`);
-            },
-            null
-        );
+    handleModeChange(card, newMode, cardElement) {
+        const modeText = newMode === 'learning' ? '학습 모드' : '평가 모드';
+        
+        // 상태 변경
+        const cardData = this.competencyCards.find(c => c.id === card.id);
+        if (cardData) {
+            cardData.mode = newMode;
+        }
+        
+        // 버튼 상태 업데이트
+        const toggleBtns = cardElement.querySelectorAll('.mode-toggle-btn');
+        toggleBtns.forEach(btn => {
+            if (btn.dataset.mode === newMode) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // 헤더 모드 배지 업데이트
+        const modeBadgeIndicator = cardElement.querySelector('.mode-badge-indicator');
+        if (modeBadgeIndicator) {
+            let modeBadge = '';
+            if (newMode === 'learning') {
+                modeBadge = '<span class="mode-badge mode-learning"><i class="fas fa-graduation-cap"></i> 학습</span>';
+            } else if (newMode === 'evaluation') {
+                modeBadge = '<span class="mode-badge mode-evaluation"><i class="fas fa-clipboard-check"></i> 평가</span>';
+            }
+            modeBadgeIndicator.innerHTML = modeBadge;
+        }
+        
+        this.showInfo(`"${card.name}" 역량이 ${modeText}로 변경되었습니다.`);
     }
 
     /**
-     * 잠금 처리
+     * 상태 변경 처리
      */
-    handleLock(card) {
-        window.modalManager.confirm(
-            `"${card.name}" 역량을 잠그시겠습니까?`,
-            () => {
-                // 상태 변경
-                const cardData = this.competencyCards.find(c => c.id === card.id);
-                if (cardData) {
-                    cardData.status = 'locked';
-                }
-                
-                // UI 업데이트
-                this.renderCompetencyCards();
-                this.showInfo(`"${card.name}" 역량이 잠금 처리되었습니다.`);
-            },
-            null
-        );
-    }
+    handleStatusChange(card, newStatus, cardElement) {
+        const statusTextMap = {
+            'locked': 'Locked (입장 불가)',
+            'open': 'Open (입장 허용)',
+            'done': 'Done (종료)'
+        };
+        const statusText = statusTextMap[newStatus];
+        
+        // 상태 변경
+        const cardData = this.competencyCards.find(c => c.id === card.id);
+        if (cardData) {
+            cardData.status = newStatus;
+        }
+        
+        // 버튼 상태 업데이트
+        const toggleBtns = cardElement.querySelectorAll('.status-toggle-btn');
+        toggleBtns.forEach(btn => {
+            if (btn.dataset.status === newStatus) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
 
-    /**
-     * 워크스페이스 이동 버튼 클릭 처리
-     */
-    handleWorkspaceClick(card) {
-        const modeText = card.mode === 'learning' ? '학습 모드' : '평가 모드';
-        this.showInfo(`워크스페이스로 이동합니다. (${card.name} - ${modeText})\n워크스페이스 페이지는 향후 구현 예정입니다.`);
-        // TODO: 워크스페이스 페이지로 이동
-        // window.location.href = `manager-workspace.html?lectureId=${this.lectureId}&competency=${card.id}`;
-    }
+        // 헤더 상태 표시 업데이트
+        const statusIndicator = cardElement.querySelector('.status-indicator');
+        if (statusIndicator) {
+            let statusIcon = '';
+            let statusLabel = '';
+            let statusClass = '';
+            if (newStatus === 'locked') {
+                statusIcon = '<i class="fas fa-lock"></i>';
+                statusLabel = '잠금';
+                statusClass = 'status-locked';
+            } else if (newStatus === 'open') {
+                statusIcon = '<i class="fas fa-unlock"></i>';
+                statusLabel = '진행 가능';
+                statusClass = 'status-open';
+            } else if (newStatus === 'done') {
+                statusIcon = '<i class="fas fa-check-circle"></i>';
+                statusLabel = '완료';
+                statusClass = 'status-done';
+            }
+            statusIndicator.className = `status-indicator ${statusClass}`;
+            statusIndicator.innerHTML = `
+                <span class="status-icon">${statusIcon}</span>
+                <span class="status-text">${statusLabel}</span>
+            `;
+        }
 
-    /**
-     * 결과 보기 처리
-     */
-    handleViewResults(card) {
-        this.showInfo(`"${card.name}" 역량 평가 결과를 확인합니다.\n결과 페이지는 향후 구현 예정입니다.`);
-        // TODO: 결과 페이지로 이동
-        // window.location.href = `manager-results.html?lectureId=${this.lectureId}&competency=${card.id}`;
+        // 카드 클래스 업데이트
+        cardElement.className = `competency-card competency-card-${newStatus}`;
+        
+        this.showInfo(`"${card.name}" 역량 상태가 ${statusText}로 변경되었습니다.`);
     }
 
     /**

@@ -2102,6 +2102,45 @@
     color: #92400e;
 }
 
+.mode-unselected {
+    background: #f3f4f6;
+    color: #9ca3af;
+}
+
+/* 헤더 배지 컨테이너 */
+.header-badges {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mode-badge-indicator .mode-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* 상태 배지 스타일 */
+.status-indicator.status-locked {
+    background: #f3f4f6;
+    color: #6b7280;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+}
+
+.status-indicator.status-open {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+}
+
+.status-indicator.status-done {
+    background: #ecfdf5;
+    color: #10b981;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+}
+
 .competency-card-body {
     flex: 1;
     margin-bottom: 1rem;
@@ -2324,6 +2363,183 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     color: #6366f1;
+}
+
+/* 역량 카드 구분선 */
+.competency-card-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 1rem 0;
+}
+
+/* 모드 변경 섹션 */
+.competency-mode-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    gap: 1rem;
+}
+
+.mode-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+/* 모드 토글 버튼 그룹 */
+.mode-toggle-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.mode-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-toggle-btn:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+}
+
+.mode-toggle-btn.active {
+    border-color: #6366f1;
+    background: #eef2ff;
+    color: #6366f1;
+}
+
+.mode-toggle-btn.active i {
+    color: #6366f1;
+}
+
+.mode-toggle-btn i {
+    font-size: 0.75rem;
+}
+
+/* 상태 선택 섹션 */
+.competency-status-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    gap: 1rem;
+}
+
+/* 상태 토글 버튼 그룹 */
+.status-toggle-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.status-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.status-toggle-btn:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+}
+
+/* Locked 상태 - 회색 */
+.status-toggle-btn[data-status="locked"].active {
+    border-color: #9ca3af;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.status-toggle-btn[data-status="locked"].active i {
+    color: #9ca3af;
+}
+
+/* Open 상태 - 파란색 */
+.status-toggle-btn[data-status="open"].active {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.status-toggle-btn[data-status="open"].active i {
+    color: #2563eb;
+}
+
+/* Done 상태 - 초록색 */
+.status-toggle-btn[data-status="done"].active {
+    border-color: #10b981;
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.status-toggle-btn[data-status="done"].active i {
+    color: #10b981;
+}
+
+.status-toggle-btn i {
+    font-size: 0.75rem;
+}
+
+/* 강사 대시보드 카드 헤더 수정 */
+/* 매니저 대시보드에서는 잠금 상태여도 비활성화하지 않음 */
+.manager-dashboard .competency-card-locked {
+    background: white;
+    cursor: default;
+    opacity: 1;
+}
+
+.manager-dashboard .competency-card-locked:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.manager-dashboard .competency-card-locked .competency-code {
+    color: #2563eb;
+}
+
+.manager-dashboard .competency-card-locked .competency-code-fullname {
+    color: #6b7280;
+}
+
+.manager-dashboard .competency-card-locked .competency-description {
+    color: #6b7280;
+}
+
+.manager-dashboard .competency-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.manager-dashboard .competency-card-footer {
+    padding-top: 0;
+}
+
+.manager-dashboard .competency-card-footer .manager-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 /* 대시보드 반응형 */
