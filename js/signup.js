@@ -366,6 +366,7 @@ class SignupManager {
 
     /**
      * 비밀번호 유효성 검사
+     * 요구사항: 영어 대문자 또는 소문자 + 숫자 + 특수문자 조합, 길이 8~50자
      */
     validatePassword(password) {
         if (password.length < 8) {
@@ -376,12 +377,9 @@ class SignupManager {
             return { isValid: false, message: '비밀번호는 최대 50자까지 입력 가능합니다.' };
         }
 
-        if (!/[A-Z]/.test(password)) {
-            return { isValid: false, message: '비밀번호는 영어 대문자를 포함해야 합니다.' };
-        }
-
-        if (!/[a-z]/.test(password)) {
-            return { isValid: false, message: '비밀번호는 영어 소문자를 포함해야 합니다.' };
+        // 영어 대문자 또는 소문자 검사 (둘 중 하나만 있어도 됨)
+        if (!/[A-Za-z]/.test(password)) {
+            return { isValid: false, message: '비밀번호는 영어 대문자 또는 소문자를 포함해야 합니다.' };
         }
 
         if (!/[0-9]/.test(password)) {
