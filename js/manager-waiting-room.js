@@ -107,10 +107,10 @@ class ManagerWaitingRoomManager {
             });
         }
 
-        // FAB 버튼 (특강 개설)
-        const fabCreateBtn = document.getElementById('fabCreateBtn');
-        if (fabCreateBtn) {
-            fabCreateBtn.addEventListener('click', () => this.showCreateModal());
+        // 특강 개설 버튼
+        const createLectureBtn = document.getElementById('createLectureBtn');
+        if (createLectureBtn) {
+            createLectureBtn.addEventListener('click', () => this.showCreateModal());
         }
 
         // 첫 특강 개설 버튼 (빈 상태)
@@ -463,14 +463,23 @@ class ManagerWaitingRoomManager {
         card.className = 'lecture-card manager-lecture-card';
         card.dataset.lectureId = lecture.id;
 
-        // 날짜 포맷팅
-        const formatDateTime = (dateStr) => {
+        // 날짜 포맷팅 (사용자 대기실과 동일한 형식)
+        const formatDate = (dateStr) => {
             const date = new Date(dateStr);
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${month}/${day} ${hours}:${minutes}`;
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+        
+        const formatTime = (startDateStr, endDateStr) => {
+            const startDate = new Date(startDateStr);
+            const endDate = new Date(endDateStr);
+            const startHours = String(startDate.getHours()).padStart(2, '0');
+            const startMinutes = String(startDate.getMinutes()).padStart(2, '0');
+            const endHours = String(endDate.getHours()).padStart(2, '0');
+            const endMinutes = String(endDate.getMinutes()).padStart(2, '0');
+            return `${startHours}:${startMinutes} - ${endHours}:${endMinutes}`;
         };
 
         // 상태 배지
@@ -490,7 +499,7 @@ class ManagerWaitingRoomManager {
                     </div>
                     <div class="info-item">
                         <i class="fas fa-calendar-alt"></i>
-                        <span>${formatDateTime(lecture.startDate)} ~ ${formatDateTime(lecture.endDate)}</span>
+                        <span>${formatDate(lecture.startDate)} ${formatTime(lecture.startDate, lecture.endDate)}</span>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-map-marker-alt"></i>
