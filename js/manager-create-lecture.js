@@ -136,7 +136,6 @@ class ManagerCreateLectureManager {
      * 특강 생성 처리
      */
     async handleCreateLecture() {
-        const form = document.getElementById('createLectureForm');
         const submitBtn = document.getElementById('submitBtn');
 
         // 폼 데이터 수집
@@ -148,7 +147,7 @@ class ManagerCreateLectureManager {
             endDate: document.getElementById('endDate').value,
             location: document.getElementById('location').value.trim(),
             description: document.getElementById('description').value.trim(),
-            showStudentId: document.getElementById('showStudentId').checked
+            showStudentId: true  // 학번은 항상 표시 (필수 입력 사항)
         };
 
         // 필수값 검증

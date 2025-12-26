@@ -3062,12 +3062,10 @@
 
 .form-section {
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e1e4e8;
 }
 
-.form-section:last-child {
+.form-section:last-of-type {
     padding-bottom: 0;
-    border-bottom: none;
 }
 
 .form-section-title {
