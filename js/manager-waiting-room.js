@@ -107,16 +107,16 @@ class ManagerWaitingRoomManager {
             });
         }
 
-        // 특강 개설 버튼
+        // 특강 개설 버튼 (페이지 이동)
         const createLectureBtn = document.getElementById('createLectureBtn');
         if (createLectureBtn) {
-            createLectureBtn.addEventListener('click', () => this.showCreateModal());
+            createLectureBtn.addEventListener('click', () => this.goToCreatePage());
         }
 
         // 첫 특강 개설 버튼 (빈 상태)
         const createFirstBtn = document.getElementById('createFirstBtn');
         if (createFirstBtn) {
-            createFirstBtn.addEventListener('click', () => this.showCreateModal());
+            createFirstBtn.addEventListener('click', () => this.goToCreatePage());
         }
 
         // 모달 관련 이벤트
@@ -198,12 +198,18 @@ class ManagerWaitingRoomManager {
         const lectureList = document.getElementById('lectureList');
 
         try {
-            // 실제로는 서버 API 호출 (본인이 개설한 특강만 조회)
-            // const response = await fetch('/api/manager/lectures');
-            // this.lectures = await response.json();
-
-            // 데모용 데이터 (매니저가 개설한 특강)
-            this.lectures = [
+            // LocalStorage에서 저장된 특강 불러오기
+            const stored = localStorage.getItem('sandwitchUI_managerLectures');
+            if (stored) {
+                try {
+                    this.lectures = JSON.parse(stored);
+                } catch (e) {
+                    console.error('저장된 데이터 파싱 실패:', e);
+                    this.lectures = [];
+                }
+            } else {
+                // 데모용 데이터 (매니저가 개설한 특강)
+                this.lectures = [
                 {
                     id: 1,
                     title: '생성형 AI 활용 가이드',
@@ -289,6 +295,7 @@ class ManagerWaitingRoomManager {
                     showStudentId: false
                 }
             ];
+            }
 
             // 로딩 상태 숨기기
             if (loadingState) {
@@ -846,6 +853,13 @@ class ManagerWaitingRoomManager {
     enterDashboard(lecture) {
         // 매니저는 코드 입력 없이 바로 대시보드 입장
         window.location.href = `manager-dashboard.html?lectureId=${lecture.id}`;
+    }
+
+    /**
+     * 특강 개설 페이지로 이동
+     */
+    goToCreatePage() {
+        window.location.href = 'manager-create-lecture.html';
     }
 
     /**
