@@ -1,0 +1,167 @@
+{
+  "competency_meta": {
+    "code": "PPS",
+    "name_kr": "프롬프트 문제해결능력",
+    "name_en": "Prompt Problem Solving",
+    "description": "복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계하는 능력",
+    "total_max_score": 250
+  },
+  "rubric_items": [
+    {
+      "item_id": "PPS_ACI_01",
+      "type": "ACI",
+      "name": "구조화 설계 (Structure)",
+      "keyword": "structure",
+      "max_score": 70,
+      "description": "맥락과 제약조건을 포함하여 프롬프트를 구조적으로 작성했는가?",
+      "validation_logic": {
+        "method": "contains_components",
+        "threshold": "all_match",
+        "required_components": [
+          {
+            "key": "Role",
+            "name_kr": "역할/페르소나",
+            "description": "내가 원하는 LLM의 역할이나 페르소나를 명확히 정의했는가?",
+            "detection_hint": [
+              "너는",
+              "역할",
+              "Role",
+              "Act as",
+              "You are"
+            ]
+          },
+          {
+            "key": "Context",
+            "name_kr": "상황/맥락",
+            "description": "문제 해결을 위한 배경 상황이나 관련 정보를 충분히 제공했는가?",
+            "detection_hint": [
+              "상황",
+              "배경",
+              "Context",
+              "Background",
+              "조건"
+            ]
+          },
+          {
+            "key": "Constraint",
+            "name_kr": "제약 조건",
+            "description": "결과물이 따라야 할 제한 사항(분량, 금지어 등)을 명시했는가?",
+            "detection_hint": [
+              "제약",
+              "제한",
+              "Constraint",
+              "Rule",
+              "지켜야 할",
+              "주의"
+            ]
+          },
+          {
+            "key": "Format",
+            "name_kr": "출력 형식",
+            "description": "원하는 결과물의 형태(표, 리스트, 코드 등)를 구체적으로 지정했는가?",
+            "detection_hint": [
+              "형식",
+              "포맷",
+              "Format",
+              "Output",
+              "표로",
+              "JSON"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "item_id": "PPS_ACI_02",
+      "type": "ACI",
+      "name": "사고 연쇄 (Chain of Thought)",
+      "keyword": "thought",
+      "max_score": 60,
+      "description": "단계별 추론을 지시하거나 예시(Few-shot)를 제공했는가?",
+      "validation_logic": {
+        "method": "keyword_or_pattern",
+        "condition": "at_least_one",
+        "keywords": [
+          "Step-by-step",
+          "단계별",
+          "차례대로",
+          "Example:",
+          "예시:"
+        ]
+      }
+    },
+    {
+      "item_id": "PPS_ACI_03",
+      "type": "ACI",
+      "name": "반복 개선 (Refinement)",
+      "keyword": "refinement",
+      "max_score": 60,
+      "description": "1차 답변 후 구체적인 수정 지시를 통해 결과를 개선했는가?",
+      "validation_logic": {
+        "method": "conversation_flow_check",
+        "target_turn": "N+1",
+        "exclude_condition": "simple_retry",
+        "keywords": [
+          "수정",
+          "변경",
+          "빼고",
+          "추가"
+        ]
+      }
+    },
+    {
+      "item_id": "PPS_ACI_04",
+      "type": "ACI",
+      "name": "출력 정합성 (Fidelity)",
+      "keyword": "fidelity",
+      "max_score": 60,
+      "description": "요청한 형식, 글자 수, 필수 키워드 등 제약조건을 준수했는가?",
+      "validation_logic": {
+        "method": "output_parsing",
+        "checks": [
+          {
+            "type": "format",
+            "rule": "is_json OR is_markdown_table"
+          },
+          {
+            "type": "constraint",
+            "rule": "length <= limit"
+          },
+          {
+            "type": "keyword",
+            "rule": "keyword in output"
+          }
+        ]
+      }
+    },
+    {
+      "item_id": "PPS_AES_01",
+      "type": "AES",
+      "name": "[환각] 팩트체크",
+      "keyword": "FactCheck",
+      "penalty_score": -30,
+      "description": "AI 답변의 사실 여부를 검증하는 절차를 수행하지 않았거나 환각이 발생함",
+      "validation_logic": {
+        "method": "fact_verification",
+        "trigger": "hallucination_detected"
+      }
+    },
+    {
+      "item_id": "PPS_AES_02",
+      "type": "AES",
+      "name": "[검증] 출처/근거 요구",
+      "keyword": "SourceBasis",
+      "penalty_score": -10,
+      "description": "답변에 대한 명확한 출처나 근거를 요구하지 않음",
+      "validation_logic": {
+        "method": "missing_request",
+        "keywords": [
+          "출처",
+          "근거",
+          "reference",
+          "source"
+        ]
+      }
+    }
+  ]
+}
