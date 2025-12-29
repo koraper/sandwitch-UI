@@ -195,7 +195,7 @@ class DashboardManager {
                 nameEn: 'Prompt Problem Solving',
                 description: '프롬프트 작성 및 문제 해결 과정의 구조화 정도 평가\n"복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계"',
                 mode: 'evaluation', // 'learning' or 'evaluation'
-                status: 'done' // 'locked', 'open', 'done'
+                status: 'open' // 'locked', 'open', 'done'
             },
             {
                 id: 'dig',
@@ -328,10 +328,7 @@ class DashboardManager {
         }
 
         if (card.status === 'open') {
-            const modeText = card.mode === 'learning' ? '학습 모드' : '평가 모드';
-            this.showInfo(`워크스페이스로 이동합니다. (${card.name} - ${modeText})\n워크스페이스 페이지는 향후 구현 예정입니다.`);
-            // TODO: 워크스페이스 페이지로 이동
-            // window.location.href = `workspace.html?lectureId=${this.lectureId}&competency=${card.id}`;
+            this.navigateToWorkspace(card);
         }
     }
 
@@ -339,10 +336,28 @@ class DashboardManager {
      * 워크스페이스 이동 버튼 클릭 처리
      */
     handleWorkspaceClick(card) {
-        const modeText = card.mode === 'learning' ? '학습 모드' : '평가 모드';
-        this.showInfo(`워크스페이스로 이동합니다. (${card.name} - ${modeText})\n워크스페이스 페이지는 향후 구현 예정입니다.`);
-        // TODO: 워크스페이스 페이지로 이동
-        // window.location.href = `workspace.html?lectureId=${this.lectureId}&competency=${card.id}`;
+        this.navigateToWorkspace(card);
+    }
+
+    /**
+     * 워크스페이스로 이동
+     */
+    navigateToWorkspace(card) {
+        const mode = card.mode === 'learning' ? '학습모드' : '평가모드';
+        const competencyCode = card.code || card.id.toUpperCase();
+        
+        // URL 파라미터 구성
+        const params = new URLSearchParams({
+            competency: competencyCode,
+            mode: mode
+        });
+        
+        if (this.lectureId) {
+            params.append('lectureId', this.lectureId);
+        }
+        
+        // 워크스페이스 페이지로 이동
+        window.location.href = `workspace.html?${params.toString()}`;
     }
 
     /**

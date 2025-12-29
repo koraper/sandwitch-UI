@@ -15,7 +15,7 @@
   },
   "evaluationCriteria": [
     {
-      "category": "AES 평가요소",
+      "category": "AES 평가 요소",
       "description": "안전성 및 검증 (Accuracy, Ethics, Safety)",
       "elements": [
         {
@@ -171,7 +171,7 @@
     "aci": 250
   },
   "scoringNotes": {
-    "penaltySystem": "AES 평가요소는 위반 시 감점 방식으로 적용됩니다.",
+    "penaltySystem": "AES 평가 요소는 위반 시 감점 방식으로 적용됩니다.",
     "bonusSystem": "ACI 평가요소는 획득 점수 방식으로 적용됩니다."
   }
 }

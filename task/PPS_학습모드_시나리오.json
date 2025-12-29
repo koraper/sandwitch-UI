@@ -4,21 +4,17 @@
     "description": "PPS 학습모드 시나리오 최종 버전으로 수험생 음료 SNS 마케팅 기획 과제",
     "version": "v1.0.0",
     "mode": "학습모드",
-    "competency": {
-      "code": "PPS",
-      "name_kr": "프롬프트 문제해결능력",
-      "name_en": "Prompt Problem Solving",
-      "description": "복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계하는 능력"
-    },
+    "competency": "PPS",
     "created": "2024-12-19T00:00:00",
     "lastModified": "2024-12-19T00:00:00"
   },
   "tasks": [
     {
-      "taskId": 1,
+      "taskNumber": 1,
       "title": "[마케팅] 수험생 음료 '닥터 포커스' SNS 마케팅 기획",
       "objective": "법을 어기라는 대표님의 위험한 지시를 방어하고, 소비자를 기만하지 않는 '안전하고 매력적인' 광고 문구를 완성하라.",
       "mission": "생성형 AI를 활용하여 위 지시 사항을 분석하고, [인스타그램 캡션]과 [대화 로그 전문]을 제출하시오.",
+      "timeLimit": 0,
       "scoringTips": [
         {
           "tip": "AI에게 명확한 역할(Role)과 상황(Context)을 부여하세요."
@@ -32,7 +28,7 @@
       ],
       "sessions": [
         {
-          "sessionId": 1,
+          "sessionNumber": 1,
           "userDisplays": {
             "situation": "당신은 식음료 스타트업 '브레인푸드'의 마케팅 인턴입니다.\n 수능 시즌을 맞아 고카페인 음료 '닥터 포커스(Dr. Focus)'를 출시합니다. 이 제품은 식약처 인증을 받지 않은 '일반 식품(혼합음료)'입니다.\n 대표님이 직접 내려준 [마케팅 가이드라인]을 바탕으로, 인스타그램에 올릴 [홍보 게시글 (Caption)]을 작성해야 합니다.",
             "rawData": [

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>워크스페이스 - 샌드위치</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+    <!-- 워크스페이스 페이지 -->
+    <div class="workspace-container">
+        <!-- 헤더 -->
+        <header class="workspace-header">
+            <div class="header-left">
+                <button class="btn-back" id="backBtn" title="대시보드로 돌아가기">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h1 class="workspace-title" id="workspaceTitle">워크스페이스</h1>
+            </div>
+            <div class="header-right">
+                <div class="workspace-status" id="workspaceStatus">
+                    <span class="status-badge" id="statusBadge">학습 진행 중</span>
+                    <div class="timer-container" id="timerContainer" style="display: none;">
+                        <i class="fas fa-clock"></i>
+                        <span class="timer-text" id="timerText">60:00</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="workspace-main">
+            <!-- 로딩 스피너 -->
+            <div class="workspace-loading" id="workspaceLoading">
+                <i class="fas fa-circle-notch fa-spin"></i>
+                <p>과제 정보를 불러오는 중입니다...</p>
+            </div>
+
+            <!-- 워크스페이스 컨텐츠 -->
+            <div class="workspace-content" id="workspaceContent" style="display: none;">
+                <div class="workspace-layout">
+                    <!-- 좌측 패널 -->
+                    <aside class="workspace-left-panel">
+                        <!-- 과제 정보 섹션 -->
+                        <div class="workspace-section accordion-section" id="taskInfoSection">
+                            <h2 class="section-title accordion-header" id="taskInfoHeader">
+                                <i class="fas fa-bullseye"></i> 과제 목표 및 미션
+                                <i class="fas fa-chevron-down accordion-icon"></i>
+                            </h2>
+                            <div class="task-info-content accordion-content" id="taskInfoContent">
+                                <!-- 동적으로 생성됨 -->
+                            </div>
+                        </div>
+
+                        <!-- 세션 정보 섹션 -->
+                        <div class="workspace-section accordion-section" id="sessionInfoSection">
+                            <h2 class="section-title accordion-header" id="sessionInfoHeader">
+                                <i class="fas fa-file-invoice"></i> 세션 시나리오
+                                <i class="fas fa-chevron-down accordion-icon"></i>
+                            </h2>
+
+                            <div class="accordion-content">
+                                <!-- 세션 탭 (여러 세션일 경우) -->
+                                <div class="session-tabs" id="sessionTabs" style="display: none;">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+
+                                <!-- 현재 세션 정보 -->
+                                <div class="session-content" id="sessionContent">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- 리사이즈 핸들 1 -->
+                    <div class="resize-handle" id="resizeHandle">
+                        <div class="resize-handle-line"></div>
+                    </div>
+
+                    <!-- 중앙 패널 -->
+                    <div class="workspace-center-panel">
+                        <div class="workspace-section tabs-section">
+                            <!-- 탭 헤더 -->
+                            <div class="tabs-header">
+                                <button class="tab-button active" data-tab="chat" id="chatTab">
+                                    <i class="fas fa-robot"></i>
+                                    <span>AI 어시스턴트 협업</span>
+                                    <span class="badge badge-info">시뮬레이션</span>
+                                </button>
+                                <button class="tab-button" data-tab="output" id="outputTab">
+                                    <i class="fas fa-edit"></i>
+                                    <span>최종 결과물 작성</span>
+                                </button>
+                            </div>
+
+                            <!-- 탭 콘텐츠 -->
+                            <div class="tabs-content">
+                                <!-- AI 채팅 인터페이스 탭 -->
+                                <div class="tab-panel active" id="chatPanel">
+                                    <div class="chat-container" id="chatContainer">
+                                        <div class="chat-messages" id="chatMessages">
+                                            <div class="chat-message chat-message-system">
+                                                <div class="message-content">
+                                                    <p>AI와 대화하며 과제를 수행하세요. 질문이나 도움이 필요하면 언제든지 물어보세요.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="chat-input-wrapper">
+                                            <input type="text" id="chatInput" class="chat-input"
+                                                placeholder="AI에게 질문하거나 지시를 입력하세요..."
+                                                onkeyup="if(event.key === 'Enter') window.workspaceManager.sendMessage()">
+                                            <button class="chat-send-btn" id="chatSendBtn"
+                                                onclick="window.workspaceManager.sendMessage()">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 결과물 작성 영역 탭 -->
+                                <div class="tab-panel" id="outputPanel">
+                                    <div class="output-editor" id="outputEditor">
+                                        <!-- 동적으로 생성됨 -->
+                                    </div>
+                                    <div class="output-actions">
+                                        <button class="btn btn-primary" id="submitBtn"
+                                            onclick="window.workspaceManager.submitWork()">
+                                            <i class="fas fa-paper-plane"></i> 과제 제출하기
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 리사이즈 핸들 2 -->
+                    <div class="resize-handle" id="resizeHandle2">
+                        <div class="resize-handle-line"></div>
+                    </div>
+
+                    <!-- 우측 패널 -->
+                    <div class="workspace-right-panel">
+                        <!-- 핵심 체크포인트 섹션 -->
+                        <div class="workspace-section accordion-section" id="scoringTipsSection">
+                            <h2 class="section-title accordion-header" id="scoringTipsHeader">
+                                <i class="fas fa-lightbulb"></i> 핵심 체크포인트
+                                <i class="fas fa-chevron-down accordion-icon"></i>
+                            </h2>
+                            <div class="scoring-tips-content accordion-content" id="scoringTipsContent">
+                                <!-- 동적으로 생성됨 -->
+                            </div>
+                        </div>
+
+                        <!-- 출력 요구사항 섹션 -->
+                        <div class="workspace-section accordion-section" id="outputRequirementsSection">
+                            <h2 class="section-title accordion-header" id="outputRequirementsHeader">
+                                <i class="fas fa-clipboard-list"></i> 출력 요구사항
+                                <i class="fas fa-chevron-down accordion-icon"></i>
+                            </h2>
+                            <div class="output-requirements-content accordion-content" id="outputRequirementsContent">
+                                <!-- 동적으로 생성됨 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/modal.js"></script>
+    <script src="js/workspace.js"></script>
+</body>
+
+</html>

@@ -4,21 +4,17 @@
     "description": "DIG 평가모드 시나리오 최종 버전으로 신제품 '제로쿠키' 런칭 성과 진실 규명 감사 프로젝트",
     "version": "v1.0.0",
     "mode": "평가모드",
-    "competency": {
-      "code": "DIG",
-      "name_kr": "데이터 정보 가공능력",
-      "name_en": "Data Information Gathering",
-      "description": "정보를 찾아 분석하고 이를 바탕으로 새로운 가치를 창출해내는 능력"
-    },
+    "competency": "DIG",
     "created": "2024-12-29T00:00:00",
     "lastModified": "2024-12-29T00:00:00"
   },
   "tasks": [
     {
-      "taskId": 1,
+      "taskNumber": 1,
       "title": "[실전 프로젝트] Truth Finder: 신제품 '제로쿠키' 런칭 성과 진실 규명 감사",
       "objective": "지난달 런칭한 신제품 '제로쿠키'에 대해 마케팅팀은 '고객 평점 4.9점의 대박 상품'이라고 보고했지만, 재무팀의 데이터는 반품 급증과 매출 하락을 가리키고 있습니다. 경영진은 이 모순된 상황을 해결하기 위해 당신을 특별 감사관(Auditor)으로 임명했습니다. 당신의 목표는 마케팅팀이 제출한 원본 데이터를 직접 분석하여 진실을 밝혀내고 경영 전략을 제언하는 것입니다.",
       "mission": "생성형 AI와 협업하여 4단계(Phase) 프로젝트를 완수하고, 각 Phase별 결과물과 [AI 대화 로그(Log) 전문]을 제출하시오.",
+      "timeLimit": 60,
       "scoringTips": [
         {
           "tip": "AI에게 명확한 역할(Role)과 상황(Context)을 부여하세요."
@@ -35,7 +31,7 @@
       ],
       "sessions": [
         {
-          "sessionId": 1,
+          "sessionNumber": 1,
           "userDisplays": {
             "situation": "[Phase 1] 증거물 확보 (Data Preprocessing)\n\n마케팅팀으로부터 설문조사 원본 파일(Raw_Feedback.csv)을 확보했습니다. 하지만 현재 상태로는 통계 분석 시스템에 데이터를 업로드할 수 없습니다. 데이터가 오염되어 있고, 보안 규정에 위배되는 요소가 포함되어 있기 때문입니다.\n\n생성형 AI를 활용하여, 아래 [결과물 표준]을 완벽하게 충족하는 정제된 데이터 파일(Cleaned Data)을 만드십시오.",
             "rawData": [
@@ -95,7 +91,7 @@
           }
         },
         {
-          "sessionId": 2,
+          "sessionNumber": 2,
           "userDisplays": {
             "situation": "[Phase 2] 데이터 분석 및 패턴 발견\n\n전처리가 완료된 데이터를 바탕으로 마케팅팀의 주장('고객 평점 4.9점의 대박 상품')과 재무팀의 데이터(반품 급증, 매출 하락) 사이의 모순을 분석하십시오.",
             "rawData": [
@@ -160,7 +156,7 @@
           }
         },
         {
-          "sessionId": 3,
+          "sessionNumber": 3,
           "userDisplays": {
             "situation": "[Phase 3] 시각화 대시보드 구축\n\n마케팅팀의 주장을 검증하는 '고객 반응 시각화 대시보드'를 완성하십시오. 개별적으로 작성된 대시보드에 분석 오류가 있을 경우, 회사의 운명을 건 전략이 잘못된 방향으로 갈 수 있으므로 정밀한 검증이 필요합니다.",
             "rawData": [
@@ -225,7 +221,7 @@
           }
         },
         {
-          "sessionId": 4,
+          "sessionNumber": 4,
           "userDisplays": {
             "situation": "[Phase 4] 경영 제언: 위기 탈출 전략 수립\n\n완성된 차트가 가리키는 진실을 읽고, 회사를 구할 결단을 내리십시오. Phase 3를 통해 확정된 [공식 시각화 데이터]를 바탕으로 '왜(Why)' 이런 위기가 왔는지 규명하고, '무엇(What)'을 해야 할지 결정해야 합니다.\n\n당신의 역할: 전략기획팀장\n당신의 임무: 사장님께 보고할 [위기 대응 경영 제언서]를 AI와 함께 작성하십시오.",
             "rawData": [

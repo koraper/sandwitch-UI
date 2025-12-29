@@ -629,21 +629,16 @@ class CreateAssignmentManager {
             description: formData.get('docDescription') || '',
             version: formData.get('docVersion') || 'v1.0.0',
             mode: formData.get('docMode') || '',
-            competency: {
-                code: formData.get('competencyCode') || '',
-                name_kr: formData.get('competencyNameKr') || '',
-                name_en: formData.get('competencyNameEn') || '',
-                description: formData.get('competencyDescription') || ''
-            },
+            competency: formData.get('competencyCode') || '',
             created: now,
             lastModified: now
         };
 
         // 과제 정보
-        const taskId = parseInt(formData.get('taskId')) || 1;
+        // taskId는 DB에서 자동 할당되므로 기본값 1 사용
         const timeLimit = parseInt(formData.get('timeLimit')) || 0;
         data.tasks = [{
-            taskId: taskId,
+            taskId: 1,
             title: formData.get('taskTitle') || '',
             objective: formData.get('taskObjective') || '',
             mission: formData.get('taskMission') || '',
@@ -782,7 +777,7 @@ class CreateAssignmentManager {
         }
 
         // 필수 필드 검증
-        if (!data.docMetadata.title || !data.docMetadata.competency.code) {
+        if (!data.docMetadata.title || !data.docMetadata.competency) {
             this.showError('필수 필드를 모두 입력해주세요.');
             return;
         }
@@ -792,7 +787,7 @@ class CreateAssignmentManager {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${data.docMetadata.competency.code}_${data.docMetadata.mode}_시나리오.json`;
+        a.download = `${data.docMetadata.competency}_${data.docMetadata.mode}_시나리오.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -814,7 +809,7 @@ class CreateAssignmentManager {
         }
 
         // 필수 필드 검증
-        if (!data.docMetadata.title || !data.docMetadata.competency.code || !data.tasks[0].title) {
+        if (!data.docMetadata.title || !data.docMetadata.competency || !data.tasks[0].title) {
             this.showError('필수 필드를 모두 입력해주세요.');
             return;
         }
