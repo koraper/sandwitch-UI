@@ -7,6 +7,9 @@ class CreateAssignmentManager {
     }
 
     init() {
+        // URL 파라미터에서 역량 정보 읽기
+        this.loadFromUrlParams();
+
         // 이벤트 리스너 설정
         this.setupEventListeners();
 
@@ -15,6 +18,52 @@ class CreateAssignmentManager {
 
         // 초기 JSON 미리보기 업데이트
         this.updateJsonPreview();
+    }
+
+    /**
+     * URL 파라미터에서 역량 정보 로드
+     */
+    loadFromUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const competencyCode = urlParams.get('competencyCode');
+        const competencyNameKr = urlParams.get('competencyNameKr');
+        const competencyNameEn = urlParams.get('competencyNameEn');
+        const competencyDescription = urlParams.get('competencyDescription');
+        const mode = urlParams.get('mode');
+
+        if (competencyCode) {
+            const competencyCodeSelect = document.getElementById('competencyCode');
+            if (competencyCodeSelect) {
+                // 옵션 찾기 및 선택
+                const option = Array.from(competencyCodeSelect.options).find(
+                    opt => opt.value === competencyCode
+                );
+                if (option) {
+                    competencyCodeSelect.value = competencyCode;
+                    // change 이벤트 트리거하여 자동 입력 실행
+                    competencyCodeSelect.dispatchEvent(new Event('change'));
+                } else {
+                    // 옵션이 없으면 직접 입력
+                    const nameKrInput = document.getElementById('competencyNameKr');
+                    const nameEnInput = document.getElementById('competencyNameEn');
+                    const descriptionTextarea = document.getElementById('competencyDescription');
+                    
+                    if (nameKrInput && competencyNameKr) nameKrInput.value = competencyNameKr;
+                    if (nameEnInput && competencyNameEn) nameEnInput.value = competencyNameEn;
+                    if (descriptionTextarea && competencyDescription) {
+                        descriptionTextarea.value = competencyDescription;
+                    }
+                }
+            }
+        }
+
+        if (mode) {
+            const docModeSelect = document.getElementById('docMode');
+            if (docModeSelect) {
+                docModeSelect.value = mode;
+            }
+        }
     }
 
     /**
