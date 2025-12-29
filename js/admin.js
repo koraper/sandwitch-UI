@@ -79,78 +79,123 @@ class AdminManager {
      * 과제 관리 컨텐츠 렌더링
      */
     renderAssignmentsContent() {
-        const assignments = [
+        // 기본 목업 데이터
+        const defaultAssignments = [
             {
-                id: 1,
+                id: 'ASG001',
                 title: '생성형 AI 활용 프로젝트',
                 description: 'ChatGPT를 활용한 실무 프로젝트 과제',
-                status: 'active',
-                deadline: '2025-12-31',
-                submissions: 24,
-                totalStudents: 30
+                competencyCode: 'PPS',
+                version: '1.2.0',
+                lastModified: '2025-12-18 14:30'
             },
             {
-                id: 2,
+                id: 'ASG002',
                 title: '데이터 분석 기초 과제',
                 description: 'Python을 활용한 데이터 분석 및 시각화',
-                status: 'pending',
-                deadline: '2026-01-15',
-                submissions: 0,
-                totalStudents: 25
+                competencyCode: 'DIG',
+                version: '2.0.1',
+                lastModified: '2025-12-17 09:15'
             },
             {
-                id: 3,
+                id: 'ASG003',
                 title: '웹 개발 실전 과제',
                 description: 'React와 Node.js를 활용한 풀스택 웹 개발',
-                status: 'completed',
-                deadline: '2025-12-10',
-                submissions: 32,
-                totalStudents: 32
+                competencyCode: 'GCC',
+                version: '1.5.3',
+                lastModified: '2025-12-16 16:45'
             },
             {
-                id: 4,
+                id: 'ASG004',
                 title: '머신러닝 입문 과제',
                 description: 'Scikit-learn과 TensorFlow를 활용한 머신러닝 기초',
-                status: 'completed',
-                deadline: '2025-12-05',
-                submissions: 28,
-                totalStudents: 28
+                competencyCode: 'WFA',
+                version: '1.0.0',
+                lastModified: '2025-12-15 11:20'
             }
         ];
 
-        const statusBadge = (status) => {
-            const statusMap = {
-                'active': '<span class="status-badge active">진행중</span>',
-                'pending': '<span class="status-badge pending">대기중</span>',
-                'completed': '<span class="status-badge completed">완료</span>'
+        // LocalStorage에서 저장된 과제 불러오기
+        const savedAssignments = JSON.parse(localStorage.getItem('sandwitchUI_assignments') || '[]');
+        
+        // 저장된 과제를 표시 형식으로 변환
+        const savedAssignmentsFormatted = savedAssignments.map(assignment => {
+            const taskTitle = assignment.tasks && assignment.tasks.length > 0 
+                ? assignment.tasks[0].title 
+                : assignment.docMetadata?.title || '제목 없음';
+            const description = assignment.docMetadata?.description || '';
+            const competencyCode = assignment.docMetadata?.competency?.code || '';
+            const version = assignment.docMetadata?.version || '1.0.0';
+            const lastModified = assignment.lastModified 
+                ? new Date(assignment.lastModified).toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                : '';
+
+            return {
+                id: assignment.id || 'ASG000',
+                title: taskTitle,
+                description: description,
+                competencyCode: competencyCode,
+                version: version.replace('v', ''),
+                lastModified: lastModified,
+                isSaved: true,
+                data: assignment
             };
-            return statusMap[status] || '';
+        });
+
+        // 기본 데이터와 저장된 데이터 병합 (저장된 데이터를 앞에 표시)
+        const assignments = [...savedAssignmentsFormatted, ...defaultAssignments];
+
+        const formatDate = (dateStr) => {
+            if (!dateStr) return '';
+            try {
+                const date = new Date(dateStr);
+                return date.toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return dateStr;
+            }
         };
 
-        const tableRows = assignments.map(assignment => `
+        const tableRows = assignments.length > 0 ? assignments.map(assignment => `
             <tr>
                 <td>
                     <strong>${assignment.title}</strong><br>
-                    <small style="color: #6b7280;">${assignment.description}</small>
+                    <small style="color: #6b7280;">${assignment.description || ''}</small>
                 </td>
-                <td>${statusBadge(assignment.status)}</td>
-                <td>${assignment.deadline}</td>
-                <td>${assignment.submissions} / ${assignment.totalStudents}</td>
+                <td>${assignment.id}</td>
+                <td>
+                    <span class="status-badge" style="background: #e0e7ff; color: #4338ca; font-weight: 600;">
+                        ${assignment.competencyCode || '-'}
+                    </span>
+                </td>
+                <td>v${assignment.version || '1.0.0'}</td>
+                <td>${formatDate(assignment.lastModified)}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-action btn-view">
+                        <button class="btn-action btn-view" ${assignment.isSaved ? `onclick="window.adminManager.viewAssignment('${assignment.id}')"` : ''}>
                             <i class="fas fa-eye"></i> 보기
                         </button>
-                        <button class="btn-action btn-edit">
+                        <button class="btn-action btn-edit" ${assignment.isSaved ? `onclick="window.adminManager.editAssignment('${assignment.id}')"` : ''}>
                             <i class="fas fa-edit"></i> 수정
                         </button>
-                        <button class="btn-action btn-delete">
+                        <button class="btn-action btn-delete" ${assignment.isSaved ? `onclick="window.adminManager.deleteAssignment('${assignment.id}')"` : ''}>
                             <i class="fas fa-trash"></i> 삭제
                         </button>
                     </div>
                 </td>
             </tr>
-        `).join('');
+        `).join('') : '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #6b7280;">등록된 과제가 없습니다.</td></tr>';
 
         return `
             <div class="content-section">
@@ -158,17 +203,18 @@ class AdminManager {
                     <h2 class="content-section-title">
                         <i class="fas fa-tasks"></i> 과제 관리
                     </h2>
-                    <button class="btn btn-primary">
+                    <a href="create-assignment.html" class="btn btn-primary">
                         <i class="fas fa-plus"></i> 새 과제 생성
-                    </button>
+                    </a>
                 </div>
                 <table class="admin-table">
                     <thead>
                         <tr>
                             <th>과제명</th>
-                            <th>상태</th>
-                            <th>마감일</th>
-                            <th>제출 현황</th>
+                            <th>과제 ID</th>
+                            <th>핵심 역량 코드</th>
+                            <th>버전</th>
+                            <th>최종 수정일</th>
                             <th>작업</th>
                         </tr>
                     </thead>
@@ -178,6 +224,68 @@ class AdminManager {
                 </table>
             </div>
         `;
+    }
+
+    /**
+     * 과제 보기
+     */
+    viewAssignment(assignmentId) {
+        const assignments = JSON.parse(localStorage.getItem('sandwitchUI_assignments') || '[]');
+        const assignment = assignments.find(a => a.id === assignmentId);
+        
+        if (assignment) {
+            const jsonString = JSON.stringify(assignment, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${assignment.docMetadata?.competency?.code || 'ASSIGNMENT'}_${assignment.docMetadata?.mode || 'MODE'}_시나리오.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    }
+
+    /**
+     * 과제 수정
+     */
+    editAssignment(assignmentId) {
+        // 수정 기능은 추후 구현
+        this.showInfo('수정 기능은 준비 중입니다.');
+    }
+
+    /**
+     * 과제 삭제
+     */
+    deleteAssignment(assignmentId) {
+        if (!window.modalManager) {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                this.performDelete(assignmentId);
+            }
+            return;
+        }
+
+        window.modalManager.confirm(
+            '정말 삭제하시겠습니까?',
+            () => {
+                this.performDelete(assignmentId);
+            },
+            null
+        );
+    }
+
+    /**
+     * 과제 삭제 실행
+     */
+    performDelete(assignmentId) {
+        const assignments = JSON.parse(localStorage.getItem('sandwitchUI_assignments') || '[]');
+        const filtered = assignments.filter(a => a.id !== assignmentId);
+        localStorage.setItem('sandwitchUI_assignments', JSON.stringify(filtered));
+        
+        // 목록 새로고침
+        this.loadMenuContent('assignments');
+        this.showInfo('과제가 삭제되었습니다.');
     }
 
     /**
@@ -518,6 +626,17 @@ class AdminManager {
                 </div>
             </div>
         `;
+    }
+
+    /**
+     * 정보 메시지 표시
+     */
+    showInfo(message) {
+        if (window.modalManager) {
+            window.modalManager.info(message);
+        } else {
+            alert(message);
+        }
     }
 }
 

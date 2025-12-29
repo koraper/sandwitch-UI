@@ -17,6 +17,12 @@ body.has-main-app {
     overflow: auto;
 }
 
+body.full-page-body {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+}
+
 /* 로그인 페이지 */
 .login-container {
     display: flex;
@@ -932,8 +938,12 @@ body.has-main-app {
 .admin-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+}
+
+.admin-container.full-page {
+    height: auto;
+    overflow: visible;
 }
 
 .admin-header {
@@ -989,7 +999,10 @@ body.has-main-app {
 .admin-main {
     display: flex;
     flex: 1;
-    overflow: hidden;
+}
+
+.full-page .admin-main {
+    overflow: visible;
 }
 
 /* 사이드바 스타일 */
@@ -1052,6 +1065,10 @@ body.has-main-app {
     background: #f8f9fa;
 }
 
+.full-page .admin-content {
+    overflow-y: visible;
+}
+
 .content-wrapper {
     padding: 2rem;
     max-width: 1400px;
@@ -1087,6 +1104,32 @@ body.has-main-app {
 
 .content-section-title i {
     color: #667eea;
+}
+
+.content-section-header .btn,
+.content-section-header a.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.content-section-header .btn-primary,
+.content-section-header a.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.content-section-header .btn-primary:hover,
+.content-section-header a.btn-primary:hover {
+    background: #5568d3;
 }
 
 /* 테이블 스타일 */
@@ -1309,5 +1352,494 @@ body.has-main-app {
     .sidebar-menu-link {
         padding: 0.75rem 1rem;
         white-space: nowrap;
+    }
+}
+
+/* 새 과제 생성 페이지 폼 스타일 */
+.btn-back {
+    padding: 0.5rem 1rem;
+    background: #f3f4f6;
+    color: #374151;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    margin-left: 1rem;
+}
+
+.btn-back:hover {
+    background: #e5e7eb;
+}
+
+.assignment-form {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 탭 스타일 */
+.form-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid #e1e4e8;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+}
+
+.form-tab {
+    padding: 0.875rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #6b7280;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    position: relative;
+    bottom: -2px;
+}
+
+.form-tab:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.form-tab.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+    font-weight: 600;
+}
+
+.form-tab i {
+    font-size: 1rem;
+}
+
+.form-tab-content {
+    display: none;
+}
+
+.form-tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e1e4e8;
+}
+
+.form-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section-title i {
+    color: #667eea;
+}
+
+.form-section-description {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f0f4ff;
+    border-left: 4px solid #667eea;
+    border-radius: 4px;
+}
+
+.form-section-description p {
+    margin: 0;
+    color: #374151;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #9ca3af;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #d1d5db;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.subsection-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.form-subsection-content {
+    margin-bottom: 1.5rem;
+}
+
+.form-subsection-content:last-child {
+    margin-bottom: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.form-group .required {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input[readonly],
+.form-group textarea[readonly] {
+    background: #f8f9fa;
+    color: #374151;
+    cursor: not-allowed;
+}
+
+.form-group input[readonly]:focus,
+.form-group textarea[readonly]:focus {
+    border-color: #d1d5db;
+    box-shadow: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* 동적 필드 스타일 */
+.dynamic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dynamic-item {
+    background: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.dynamic-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.dynamic-item-label {
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.btn-add,
+.btn-add-small {
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-add-small {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.btn-add:hover,
+.btn-add-small:hover {
+    background: #5568d3;
+}
+
+.btn-remove,
+.btn-remove-small {
+    padding: 0.375rem 0.75rem;
+    background: #fee2e2;
+    color: #991b1b;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: all 0.2s;
+}
+
+.btn-remove-small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.btn-remove:hover,
+.btn-remove-small:hover {
+    background: #fecaca;
+}
+
+/* 세션 스타일 */
+.sessions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.session-item {
+    background: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e1e4e8;
+}
+
+.session-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.form-subsection {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e1e4e8;
+}
+
+.form-subsection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.form-subsection-header h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+/* 원본 데이터 스타일 */
+.raw-data-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.raw-data-item {
+    background: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.raw-data-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.raw-data-label {
+    font-weight: 500;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* JSON 미리보기 스타일 */
+.json-preview-container {
+    background: #1e293b;
+    border-radius: 6px;
+    padding: 1rem;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.json-preview {
+    color: #e2e8f0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 폼 액션 버튼 */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 2rem 0;
+    border-top: 2px solid #e1e4e8;
+    margin-top: 2rem;
+}
+
+.form-actions .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-actions .btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.form-actions .btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.form-actions .btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.form-actions .btn-primary:hover {
+    background: #5568d3;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .form-tabs {
+        gap: 0.25rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .form-tab {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .form-tab i {
+        font-size: 0.875rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-section {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .btn {
+        width: 100%;
     }
 }
