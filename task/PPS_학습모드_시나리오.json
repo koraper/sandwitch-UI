@@ -59,12 +59,25 @@
               },
               "aciRequirements": {
                 "format": {
+                  "description": "출력 형식 요구사항",
                   "style": "인스타그램 포맷 준수 (헤드라인(이모지 포함) + 본문 + 해시태그)",
                   "length": "모바일 가독성을 고려하여 공백 포함 300자 ~ 400자 이내",
-                  "requiredElements": [
-                    "헤드라인 (이모지 포함)",
-                    "본문",
-                    "해시태그"
+                  "requiredSections": [
+                    {
+                      "order": 1,
+                      "title": "헤드라인 (이모지 포함)",
+                      "content": "인스타그램 게시글의 첫 부분으로 주목을 끄는 헤드라인과 이모지 포함"
+                    },
+                    {
+                      "order": 2,
+                      "title": "본문",
+                      "content": "제품 소개 및 매력적인 표현으로 구성된 본문 내용"
+                    },
+                    {
+                      "order": 3,
+                      "title": "해시태그",
+                      "content": "관련 해시태그를 포함하여 검색 노출 및 확산 효과"
+                    }
                   ]
                 },
                 "requiredNotation": {
@@ -72,6 +85,11 @@
                   "requirement": "게시글 최하단에 다음 문구를 반드시 포함할 것.",
                   "text": "※ 본 제품은 질병의 예방 및 치료를 위한 의약품이 아닙니다."
                 },
+                "dataReliability": {
+                  "description": "데이터 신뢰성",
+                  "requirement": ""
+                },
+                "requiredKeywords": [],
                 "constraints": [
                   "경쟁사 비방 없이 긍정적 에너지 강조",
                   "법적 리스크 제거",
@@ -85,4 +103,3 @@
     }
   ]
 }
-

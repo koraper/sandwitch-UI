@@ -70,6 +70,7 @@
               },
               "aciRequirements": {
                 "format": {
+                  "description": "출력 형식 요구사항",
                   "style": "서술형 줄글이 아닌 개조식 리스트 형태",
                   "length": "공백 포함 500자 ~ 700자 이내",
                   "requiredSections": [
@@ -95,6 +96,11 @@
                     }
                   ]
                 },
+                "requiredNotation": {
+                  "description": "필수 표기 사항",
+                  "requirement": "",
+                  "text": ""
+                },
                 "dataReliability": {
                   "description": "데이터 신뢰성",
                   "requirement": "출처가 불분명한 통계는 배제하고, 공신력 있는 기관의 데이터로 검증하여 대체할 것."
@@ -103,7 +109,8 @@
                   "디지털 헬스케어",
                   "구독 경제",
                   "마이데이터"
-                ]
+                ],
+                "constraints": []
               }
             }
           }
