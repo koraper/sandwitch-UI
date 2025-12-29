@@ -13,6 +13,12 @@ class CreateAssignmentManager {
         // 이벤트 리스너 설정
         this.setupEventListeners();
 
+        // 초기 모드에 따른 제한 시간 설정
+        const docModeSelect = document.getElementById('docMode');
+        if (docModeSelect && docModeSelect.value) {
+            this.handleModeChange(docModeSelect);
+        }
+
         // 초기 빈 상태 표시
         this.updateEmptyStates();
 
@@ -62,6 +68,8 @@ class CreateAssignmentManager {
             const docModeSelect = document.getElementById('docMode');
             if (docModeSelect) {
                 docModeSelect.value = mode;
+                // 모드 변경 이벤트 트리거하여 제한 시간 자동 설정
+                docModeSelect.dispatchEvent(new Event('change'));
             }
         }
     }
@@ -95,6 +103,14 @@ class CreateAssignmentManager {
                 this.switchTab(tabName);
             });
         });
+
+        // 모드 선택 시 제한 시간 자동 설정
+        const docModeSelect = document.getElementById('docMode');
+        if (docModeSelect) {
+            docModeSelect.addEventListener('change', (e) => {
+                this.handleModeChange(e.target);
+            });
+        }
 
         // 역량 코드 선택 시 자동 입력
         const competencyCodeSelect = document.getElementById('competencyCode');
@@ -135,6 +151,32 @@ class CreateAssignmentManager {
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => this.downloadJson());
         }
+    }
+
+    /**
+     * 모드 변경 처리
+     */
+    handleModeChange(selectElement) {
+        const mode = selectElement.value;
+        const timeLimitInput = document.getElementById('timeLimit');
+        
+        if (!timeLimitInput) return;
+        
+        if (mode === '학습모드') {
+            // 학습모드: 제한없음 (0)
+            timeLimitInput.value = '0';
+            timeLimitInput.disabled = true;
+        } else if (mode === '평가모드') {
+            // 평가모드: 60분(기본값)
+            timeLimitInput.value = '60';
+            timeLimitInput.disabled = false;
+        } else {
+            // 모드 미선택 시
+            timeLimitInput.disabled = false;
+        }
+        
+        // JSON 미리보기 업데이트
+        this.updateJsonPreview();
     }
 
     /**
@@ -599,11 +641,13 @@ class CreateAssignmentManager {
 
         // 과제 정보
         const taskId = parseInt(formData.get('taskId')) || 1;
+        const timeLimit = parseInt(formData.get('timeLimit')) || 0;
         data.tasks = [{
             taskId: taskId,
             title: formData.get('taskTitle') || '',
             objective: formData.get('taskObjective') || '',
             mission: formData.get('taskMission') || '',
+            timeLimit: timeLimit,
             scoringTips: [],
             sessions: []
         }];

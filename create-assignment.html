@@ -86,6 +86,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label for="timeLimit">제한 시간 (분) <span class="json-key">[tasks[].timeLimit]</span></label>
+                                    <input type="number" id="timeLimit" name="timeLimit" min="0" value="60" placeholder="제한 시간을 입력하세요">
+                                    <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
+                                </div>
+                                <div class="form-group">
                                     <label for="competencyCode">역량 코드 <span class="json-key">[docMetadata.competency.code]</span> <span class="required">*</span></label>
                                     <select id="competencyCode" name="competencyCode" required>
                                         <option value="">선택하세요</option>
