@@ -3,6 +3,7 @@ class CreateAssignmentManager {
     constructor() {
         this.scoringTipCount = 0;
         this.sessionCount = 0;
+        this.modalScoringTipCount = 0;
         // tasks 배열: 여러 과제를 저장
         this.tasks = [];
         // 현재 선택된 과제 인덱스 (null = 선택 안됨)
@@ -136,6 +137,21 @@ class CreateAssignmentManager {
         if (addScoringTipBtn) {
             addScoringTipBtn.addEventListener('click', () => this.addScoringTip());
         }
+
+        // 모달 내 채점 팁 추가 버튼
+        const modalAddScoringTipBtn = document.getElementById('modalAddScoringTipBtn');
+        if (modalAddScoringTipBtn) {
+            modalAddScoringTipBtn.addEventListener('click', () => this.addModalScoringTip());
+        }
+
+        // 모달 탭 전환 이벤트
+        const modalTabs = document.querySelectorAll('.modal-tab');
+        modalTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.modalTab;
+                this.switchModalTab(tabName);
+            });
+        });
 
         // 세션 추가 버튼
         const addSessionBtn = document.getElementById('addSessionBtn');
@@ -309,8 +325,17 @@ class CreateAssignmentManager {
         if (modalTaskTitle) modalTaskTitle.value = '';
         if (modalTaskObjective) modalTaskObjective.value = '';
         if (modalTaskMission) modalTaskMission.value = '';
-        if (modalTimeLimit) modalTimeLimit.value = '60';
         if (taskModalTitle) taskModalTitle.innerHTML = '<i class="fas fa-plus-circle"></i> 새 과제 추가';
+
+        // 모드에 따른 제한 시간 설정
+        this.setModalTimeLimitByMode(modalTimeLimit);
+
+        // 모달 내 채점 팁 초기화
+        this.clearModalScoringTips();
+        this.modalScoringTipCount = 0;
+
+        // 모달 탭 초기화
+        this.resetModalTabs();
 
         // 모달 표시
         modal.classList.remove('modal-hide');
@@ -329,13 +354,54 @@ class CreateAssignmentManager {
         document.getElementById('modalTaskTitle').value = task.title || '';
         document.getElementById('modalTaskObjective').value = task.objective || '';
         document.getElementById('modalTaskMission').value = task.mission || '';
-        document.getElementById('modalTimeLimit').value = task.timeLimit || 60;
         document.getElementById('taskModalTitle').innerHTML = '<i class="fas fa-edit"></i> 과제 편집';
+
+        // 모드에 따른 제한 시간 설정 (편집 시에도 모드에 따라 제어)
+        const modalTimeLimit = document.getElementById('modalTimeLimit');
+        this.setModalTimeLimitByMode(modalTimeLimit, task.timeLimit);
+
+        // 모달 내 채점 팁 로드
+        this.clearModalScoringTips();
+        this.modalScoringTipCount = 0;
+        if (task.scoringTips && task.scoringTips.length > 0) {
+            task.scoringTips.forEach((tipData) => {
+                this.addModalScoringTip(tipData.tip || '');
+            });
+        }
+
+        // 모달 탭 초기화
+        this.resetModalTabs();
 
         // 모달 표시
         const modal = document.getElementById('taskModal');
         modal.classList.add('modal-show');
         modal.classList.remove('modal-hide');
+    }
+
+    /**
+     * 모드에 따른 모달 제한 시간 필드 설정
+     * @param {HTMLElement} timeLimitInput - 제한 시간 입력 요소
+     * @param {number} existingValue - 기존 값 (편집 시)
+     */
+    setModalTimeLimitByMode(timeLimitInput, existingValue = null) {
+        if (!timeLimitInput) return;
+
+        const docModeSelect = document.getElementById('docMode');
+        const currentMode = docModeSelect ? docModeSelect.value : '';
+
+        if (currentMode === '학습모드') {
+            // 학습모드: 0으로 고정, 비활성화
+            timeLimitInput.value = '0';
+            timeLimitInput.disabled = true;
+            timeLimitInput.style.backgroundColor = '#f3f4f6';
+            timeLimitInput.style.cursor = 'not-allowed';
+        } else {
+            // 평가모드: 기본값 60분, 활성화
+            timeLimitInput.value = existingValue !== null ? existingValue : '60';
+            timeLimitInput.disabled = false;
+            timeLimitInput.style.backgroundColor = '';
+            timeLimitInput.style.cursor = '';
+        }
     }
 
     /**
@@ -349,6 +415,107 @@ class CreateAssignmentManager {
         }
         modal.classList.remove('modal-show');
         modal.classList.add('modal-hide');
+    }
+
+    /**
+     * 모달 탭 전환
+     */
+    switchModalTab(tabName) {
+        // 탭 버튼 활성화 상태 변경
+        const tabs = document.querySelectorAll('.modal-tab');
+        tabs.forEach(tab => {
+            if (tab.dataset.modalTab === tabName) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        // 탭 컨텐츠 표시/숨김
+        const contents = document.querySelectorAll('.modal-tab-content');
+        contents.forEach(content => {
+            if (content.id === `modal-tab-${tabName}`) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+    }
+
+    /**
+     * 모달 탭 초기화 (첫 번째 탭으로)
+     */
+    resetModalTabs() {
+        this.switchModalTab('task-info');
+    }
+
+    /**
+     * 모달 내 채점 팁 초기화
+     */
+    clearModalScoringTips() {
+        const container = document.getElementById('modalScoringTipsContainer');
+        const emptyState = document.getElementById('modalScoringTipsEmpty');
+        if (container) container.innerHTML = '';
+        if (emptyState) emptyState.style.display = 'block';
+    }
+
+    /**
+     * 모달 내 채점 팁 추가
+     */
+    addModalScoringTip(tipValue = '') {
+        this.modalScoringTipCount = (this.modalScoringTipCount || 0) + 1;
+        const container = document.getElementById('modalScoringTipsContainer');
+        const emptyState = document.getElementById('modalScoringTipsEmpty');
+        
+        if (!container) return;
+
+        const tipId = `modalScoringTip_${this.modalScoringTipCount}`;
+        const tipElement = document.createElement('div');
+        tipElement.className = 'modal-scoring-tip-item';
+        tipElement.dataset.tipId = tipId;
+        tipElement.innerHTML = `
+            <div class="modal-scoring-tip-header">
+                <span class="modal-scoring-tip-label">팁 ${this.modalScoringTipCount}</span>
+                <button type="button" class="btn-remove-small" onclick="window.createAssignmentManager.removeModalScoringTip(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <textarea name="${tipId}" rows="2" placeholder="채점 팁을 입력하세요." class="modal-scoring-tip-input">${this.escapeHtml(tipValue)}</textarea>
+        `;
+
+        container.appendChild(tipElement);
+        if (emptyState) emptyState.style.display = 'none';
+    }
+
+    /**
+     * 모달 내 채점 팁 삭제
+     */
+    removeModalScoringTip(button) {
+        const item = button.closest('.modal-scoring-tip-item');
+        if (item) {
+            item.remove();
+            
+            const container = document.getElementById('modalScoringTipsContainer');
+            const emptyState = document.getElementById('modalScoringTipsEmpty');
+            if (container && emptyState && container.children.length === 0) {
+                emptyState.style.display = 'block';
+            }
+        }
+    }
+
+    /**
+     * 모달 내 채점 팁 수집
+     */
+    collectModalScoringTips() {
+        const tips = [];
+        const inputs = document.querySelectorAll('#modalScoringTipsContainer .modal-scoring-tip-input');
+        inputs.forEach(input => {
+            const tip = input.value.trim();
+            if (tip) {
+                tips.push({ tip });
+            }
+        });
+        return tips;
     }
 
     /**
@@ -367,6 +534,9 @@ class CreateAssignmentManager {
             return;
         }
 
+        // 모달 내 채점 팁 수집
+        const scoringTips = this.collectModalScoringTips();
+
         if (editIndex === -1) {
             // 새 과제 추가
             const newTask = {
@@ -375,7 +545,7 @@ class CreateAssignmentManager {
                 objective: objective,
                 mission: mission,
                 timeLimit: timeLimit,
-                scoringTips: [],
+                scoringTips: scoringTips,
                 sessions: []
             };
             this.tasks.push(newTask);
@@ -387,6 +557,7 @@ class CreateAssignmentManager {
                 this.tasks[editIndex].objective = objective;
                 this.tasks[editIndex].mission = mission;
                 this.tasks[editIndex].timeLimit = timeLimit;
+                this.tasks[editIndex].scoringTips = scoringTips;
                 this.selectedTaskIndex = editIndex;
             }
         }

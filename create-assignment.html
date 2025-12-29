@@ -373,29 +373,58 @@
                 <form id="taskModalForm" class="task-modal-form">
                     <input type="hidden" id="editTaskIndex" value="-1">
 
-                    <div class="form-group">
-                        <label for="modalTaskTitle">과제 제목 <span class="required">*</span></label>
-                        <input type="text" id="modalTaskTitle" required
-                            placeholder="예: [기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획">
+                    <!-- 모달 탭 네비게이션 -->
+                    <div class="modal-tabs">
+                        <button type="button" class="modal-tab active" data-modal-tab="task-info">
+                            <i class="fas fa-file-alt"></i> 과제 정보
+                        </button>
+                        <button type="button" class="modal-tab" data-modal-tab="scoring-tips">
+                            <i class="fas fa-lightbulb"></i> 채점 팁
+                        </button>
                     </div>
 
-                    <div class="form-group">
-                        <label for="modalTaskObjective">목표 <span class="required">*</span></label>
-                        <textarea id="modalTaskObjective" rows="3" required
-                            placeholder="과제의 목표를 입력하세요."></textarea>
+                    <!-- 과제 정보 탭 -->
+                    <div class="modal-tab-content active" id="modal-tab-task-info">
+                        <div class="form-group">
+                            <label for="modalTaskTitle">과제 제목 <span class="required">*</span></label>
+                            <input type="text" id="modalTaskTitle" required
+                                placeholder="예: [기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalTaskObjective">목표 <span class="required">*</span></label>
+                            <textarea id="modalTaskObjective" rows="3" required
+                                placeholder="과제의 목표를 입력하세요."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalTaskMission">미션 <span class="required">*</span></label>
+                            <textarea id="modalTaskMission" rows="3" required
+                                placeholder="과제의 미션을 입력하세요."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalTimeLimit">제한 시간 (분)</label>
+                            <input type="number" id="modalTimeLimit" min="0" value="60"
+                                placeholder="제한 시간을 입력하세요">
+                            <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="modalTaskMission">미션 <span class="required">*</span></label>
-                        <textarea id="modalTaskMission" rows="3" required
-                            placeholder="과제의 미션을 입력하세요."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="modalTimeLimit">제한 시간 (분)</label>
-                        <input type="number" id="modalTimeLimit" min="0" value="60"
-                            placeholder="제한 시간을 입력하세요">
-                        <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
+                    <!-- 채점 팁 탭 -->
+                    <div class="modal-tab-content" id="modal-tab-scoring-tips">
+                        <div class="modal-scoring-tips-header">
+                            <p class="modal-tab-description">과제 채점 시 참고할 팁을 입력하세요.</p>
+                            <button type="button" class="btn-add-small" id="modalAddScoringTipBtn">
+                                <i class="fas fa-plus"></i> 팁 추가
+                            </button>
+                        </div>
+                        <div id="modalScoringTipsContainer" class="modal-scoring-tips-container">
+                            <!-- 동적으로 추가됨 -->
+                        </div>
+                        <div class="empty-state-small" id="modalScoringTipsEmpty">
+                            <p>채점 팁이 없습니다. "팁 추가" 버튼을 클릭하여 추가하세요.</p>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -5134,8 +5134,10 @@
 
 #taskModal .task-modal-container {
     position: relative;
-    width: 90%;
-    max-width: 600px;
+    width: 95%;
+    max-width: 900px;
+    height: auto;
+    min-height: 700px;
     max-height: 90vh;
     margin: 5vh auto;
     background: white;
@@ -5181,7 +5183,14 @@
 #taskModal .modal-body {
     padding: 1.5rem;
     overflow-y: auto;
-    flex: 1;
+    height: 500px;
+    flex-shrink: 0;
+}
+
+#taskModal .task-modal-form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 #taskModal .task-modal-form .form-group {
@@ -5230,4 +5239,164 @@
     border-top: 1px solid #e5e7eb;
     background: #f9fafb;
     border-radius: 0 0 12px 12px;
+}
+
+/* 모달 탭 스타일 */
+.modal-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0;
+}
+
+.modal-tab {
+    padding: 0.75rem 1.25rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.modal-tab:hover {
+    color: #374151;
+    background: #f9fafb;
+}
+
+.modal-tab.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.modal-tab i {
+    font-size: 0.875rem;
+}
+
+/* 모달 탭 컨텐츠 */
+.modal-tab-content {
+    display: none;
+    height: calc(100% - 3rem);
+    min-height: 400px;
+    flex: 1;
+}
+
+.modal-tab-content.active {
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.2s ease-in;
+}
+
+/* 채점 팁 탭 전용 스타일 */
+#modal-tab-scoring-tips {
+    overflow: hidden;
+}
+
+#modal-tab-scoring-tips .modal-scoring-tips-header {
+    flex-shrink: 0;
+}
+
+#modal-tab-scoring-tips .modal-scoring-tips-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.modal-tab-description {
+    margin: 0 0 1rem 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.modal-scoring-tips-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* 모달 내 채점 팁 섹션 (이전 스타일 제거) */
+.modal-scoring-tips-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.modal-scoring-tips-section .form-subsection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.modal-scoring-tips-section .form-subsection-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-scoring-tips-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.modal-scoring-tip-item {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.modal-scoring-tip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.modal-scoring-tip-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.modal-scoring-tip-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.modal-scoring-tip-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.empty-state-small {
+    text-align: center;
+    padding: 1rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.empty-state-small p {
+    margin: 0;
 }
