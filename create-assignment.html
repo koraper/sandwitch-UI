@@ -73,7 +73,7 @@
                     <div class="content-section-header">
                         <div class="header-title-group">
                             <h1 class="content-section-title">
-                                <i class="fas fa-plus-circle"></i> 새 과제 생성
+                                <i class="fas fa-plus-circle"></i> 새 과제 생성 (PPS)
                             </h1>
                             <p class="content-section-description">
                                 새로운 과제를 생성하고, 메타데이터, 과제 정보, 채점 팁, 세션 정보를 설정하세요.
@@ -88,7 +88,7 @@
                                 <i class="fas fa-file-alt"></i>메타데이터
                             </button>
                             <button type="button" class="form-tab" data-tab="task">
-                                <i class="fas fa-tasks"></i> 과제 정보
+                                <i class="fas fa-tasks"></i> 과제 목록
                             </button>
                             <button type="button" class="form-tab" data-tab="scoring">
                                 <i class="fas fa-lightbulb"></i> 채점 팁
@@ -126,17 +126,18 @@
                                     <div class="form-group">
                                         <label for="docMode">모드 <span class="json-key">[docMetadata.mode]</span> <span
                                                 class="required">*</span></label>
-                                        <select id="docMode" name="docMode" required>
+                                        <select id="docMode" name="docMode" required disabled>
                                             <option value="">선택하세요</option>
                                             <option value="학습모드">학습모드</option>
                                             <option value="평가모드">평가모드</option>
                                         </select>
+                                        <small class="form-hint">모드는 변경할 수 없습니다.</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="competencyCode">역량 코드 <span
                                                 class="json-key">[docMetadata.competency]</span> <span
                                                 class="required">*</span></label>
-                                        <select id="competencyCode" name="competencyCode" required>
+                                        <select id="competencyCode" name="competencyCode" required disabled>
                                             <option value="">선택하세요</option>
                                             <option value="PPS" data-name-kr="프롬프트 문제해결력"
                                                 data-name-en="Prompt Problem Solving"
@@ -155,41 +156,87 @@
                                                 data-description="반복 업무를 AI 및 자동화 도구로 설계하는 능력. 업무 흐름을 구조화하여, 예외 상황에서도 오류 없이 작동하는 자동화 프로세스를 설계">
                                                 WFA - 업무자동화·도구활용 능력</option>
                                         </select>
+                                        <small class="form-hint">역량 코드는 변경할 수 없습니다.</small>
+                                    </div>
+                                </div>
+
+                                <!-- 과제 목록 섹션 -->
+                                <div class="form-subsection">
+                                    <div class="form-subsection-header">
+                                        <h4><i class="fas fa-tasks"></i> 과제 목록</h4>
+                                        <button type="button" class="btn-add" id="addTaskBtn">
+                                            <i class="fas fa-plus"></i> 과제 추가
+                                        </button>
+                                    </div>
+                                    <div class="tasks-table-container">
+                                        <table class="tasks-table" id="tasksTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>과제 제목</th>
+                                                    <th>세션수</th>
+                                                    <th>작업</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tasksTableBody">
+                                                <!-- 동적으로 추가됨 -->
+                                            </tbody>
+                                        </table>
+                                        <div class="empty-state" id="tasksEmpty">
+                                            <i class="fas fa-inbox"></i>
+                                            <p>등록된 과제가 없습니다. "과제 추가" 버튼을 클릭하여 추가하세요.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 과제 정보 섹션 -->
+                        <!-- 과제 목록 탭 -->
                         <div class="form-tab-content" id="tab-task">
                             <div class="form-section">
-                                <div class="form-grid">
-                                    <div class="form-group full-width">
-                                        <label for="taskTitle">과제 제목 <span class="json-key">[tasks[].title]</span> <span
-                                                class="required">*</span></label>
-                                        <input type="text" id="taskTitle" name="taskTitle" required
-                                            placeholder="예: [기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획">
-                                        <small class="form-hint">과제의 제목을 입력하세요. 카테고리나 유형을 대괄호로 표시할 수 있습니다.</small>
+                                <!-- 선택된 과제 정보 표시 -->
+                                <div class="selected-task-info" id="selectedTaskInfo" style="display: none;">
+                                    <div class="selected-task-header">
+                                        <h3><i class="fas fa-edit"></i> 과제 편집: <span id="selectedTaskTitle">-</span></h3>
                                     </div>
-                                    <div class="form-group full-width">
-                                        <label for="taskObjective">목표 <span class="json-key">[tasks[].objective]</span>
-                                            <span class="required">*</span></label>
-                                        <textarea id="taskObjective" name="taskObjective" rows="4" required
-                                            placeholder="과제의 목표를 입력하세요. 예: 법을 어기라는 대표님의 지시를 방어하고, 투자자가 안심할 수 있는 합법적이고 윤리적인 기획서를 완성하라."></textarea>
-                                        <small class="form-hint">이 과제를 통해 달성하고자 하는 목표를 명확하게 기술하세요.</small>
-                                    </div>
-                                    <div class="form-group full-width">
-                                        <label for="taskMission">미션 <span class="json-key">[tasks[].mission]</span>
-                                            <span class="required">*</span></label>
-                                        <textarea id="taskMission" name="taskMission" rows="4" required
-                                            placeholder="과제의 미션을 입력하세요. 예: 생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오."></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="timeLimit">제한 시간 (분) <span
-                                                class="json-key">[tasks[].timeLimit]</span></label>
-                                        <input type="number" id="timeLimit" name="timeLimit" min="0" value="60"
-                                            placeholder="제한 시간을 입력하세요">
-                                        <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
+                                </div>
+
+                                <!-- 과제 선택 안내 -->
+                                <div class="empty-state" id="noTaskSelected">
+                                    <i class="fas fa-mouse-pointer"></i>
+                                    <p>편집할 과제를 선택하세요.</p>
+                                    <small>메타데이터 탭의 과제 목록에서 과제를 선택하거나, "과제 추가" 버튼을 클릭하여 새 과제를 만드세요.</small>
+                                </div>
+
+                                <!-- 과제 편집 폼 -->
+                                <div class="task-edit-form" id="taskEditForm" style="display: none;">
+                                    <div class="form-grid">
+                                        <div class="form-group full-width">
+                                            <label for="taskTitle">과제 제목 <span class="json-key">[tasks[].title]</span> <span
+                                                    class="required">*</span></label>
+                                            <input type="text" id="taskTitle" name="taskTitle" required
+                                                placeholder="예: [기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획">
+                                            <small class="form-hint">과제의 제목을 입력하세요. 카테고리나 유형을 대괄호로 표시할 수 있습니다.</small>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="taskObjective">목표 <span class="json-key">[tasks[].objective]</span>
+                                                <span class="required">*</span></label>
+                                            <textarea id="taskObjective" name="taskObjective" rows="4" required
+                                                placeholder="과제의 목표를 입력하세요. 예: 법을 어기라는 대표님의 지시를 방어하고, 투자자가 안심할 수 있는 합법적이고 윤리적인 기획서를 완성하라."></textarea>
+                                            <small class="form-hint">이 과제를 통해 달성하고자 하는 목표를 명확하게 기술하세요.</small>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label for="taskMission">미션 <span class="json-key">[tasks[].mission]</span>
+                                                <span class="required">*</span></label>
+                                            <textarea id="taskMission" name="taskMission" rows="4" required
+                                                placeholder="과제의 미션을 입력하세요. 예: 생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오."></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="timeLimit">제한 시간 (분) <span
+                                                    class="json-key">[tasks[].timeLimit]</span></label>
+                                            <input type="number" id="timeLimit" name="timeLimit" min="0" value="60"
+                                                placeholder="제한 시간을 입력하세요">
+                                            <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -198,23 +245,39 @@
                         <!-- 채점 팁 섹션 -->
                         <div class="form-tab-content" id="tab-scoring">
                             <div class="form-section">
-                                <div class="form-section-header">
-                                    <h2 class="form-section-title">
-                                        <i class="fas fa-lightbulb"></i> 채점 팁
-                                    </h2>
-                                    <button type="button" class="btn-add" id="addScoringTipBtn">
-                                        <i class="fas fa-plus"></i> 팁 추가
-                                    </button>
+                                <!-- 선택된 과제 정보 -->
+                                <div class="selected-task-banner" id="scoringTaskBanner" style="display: none;">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span id="scoringTaskName">-</span>
                                 </div>
-                                <div class="form-section-description">
-                                    <p>학습자가 과제를 수행할 때 참고할 수 있는 채점 팁을 추가하세요. 각 팁은 채점 기준과 평가 포인트를 안내합니다.</p>
+
+                                <!-- 과제 미선택 안내 -->
+                                <div class="empty-state" id="scoringNoTaskSelected">
+                                    <i class="fas fa-mouse-pointer"></i>
+                                    <p>먼저 과제를 선택해주세요.</p>
+                                    <small>메타데이터 탭의 과제 목록에서 과제를 선택하세요.</small>
                                 </div>
-                                <div id="scoringTipsContainer" class="dynamic-list">
-                                    <!-- 동적으로 추가됨 -->
-                                </div>
-                                <div class="empty-state" id="scoringTipsEmpty" style="display: none;">
-                                    <i class="fas fa-info-circle"></i>
-                                    <p>채점 팁이 없습니다. "팁 추가" 버튼을 클릭하여 추가하세요.</p>
+
+                                <!-- 채점 팁 폼 -->
+                                <div id="scoringTipsForm" style="display: none;">
+                                    <div class="form-section-header">
+                                        <h2 class="form-section-title">
+                                            <i class="fas fa-lightbulb"></i> 채점 팁
+                                        </h2>
+                                        <button type="button" class="btn-add" id="addScoringTipBtn">
+                                            <i class="fas fa-plus"></i> 팁 추가
+                                        </button>
+                                    </div>
+                                    <div class="form-section-description">
+                                        <p>학습자가 과제를 수행할 때 참고할 수 있는 채점 팁을 추가하세요. 각 팁은 채점 기준과 평가 포인트를 안내합니다.</p>
+                                    </div>
+                                    <div id="scoringTipsContainer" class="dynamic-list">
+                                        <!-- 동적으로 추가됨 -->
+                                    </div>
+                                    <div class="empty-state" id="scoringTipsEmpty" style="display: none;">
+                                        <i class="fas fa-info-circle"></i>
+                                        <p>채점 팁이 없습니다. "팁 추가" 버튼을 클릭하여 추가하세요.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -222,23 +285,39 @@
                         <!-- 세션 정보 섹션 -->
                         <div class="form-tab-content" id="tab-sessions">
                             <div class="form-section">
-                                <div class="form-section-header">
-                                    <h2 class="form-section-title">
-                                        <i class="fas fa-comments"></i> 세션 정보
-                                    </h2>
-                                    <button type="button" class="btn-add" id="addSessionBtn">
-                                        <i class="fas fa-plus"></i> 세션 추가
-                                    </button>
+                                <!-- 선택된 과제 정보 -->
+                                <div class="selected-task-banner" id="sessionsTaskBanner" style="display: none;">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span id="sessionsTaskName">-</span>
                                 </div>
-                                <div class="form-section-description">
-                                    <p>학습자가 과제를 수행할 때 사용할 세션 정보를 추가하세요. 각 세션은 상황 설명, 원본 데이터, 출력 요구사항을 포함합니다.</p>
+
+                                <!-- 과제 미선택 안내 -->
+                                <div class="empty-state" id="sessionsNoTaskSelected">
+                                    <i class="fas fa-mouse-pointer"></i>
+                                    <p>먼저 과제를 선택해주세요.</p>
+                                    <small>메타데이터 탭의 과제 목록에서 과제를 선택하세요.</small>
                                 </div>
-                                <div id="sessionsContainer" class="sessions-container">
-                                    <!-- 동적으로 추가됨 -->
-                                </div>
-                                <div class="empty-state" id="sessionsEmpty" style="display: none;">
-                                    <i class="fas fa-info-circle"></i>
-                                    <p>세션이 없습니다. "세션 추가" 버튼을 클릭하여 추가하세요.</p>
+
+                                <!-- 세션 정보 폼 -->
+                                <div id="sessionsForm" style="display: none;">
+                                    <div class="form-section-header">
+                                        <h2 class="form-section-title">
+                                            <i class="fas fa-comments"></i> 세션 정보
+                                        </h2>
+                                        <button type="button" class="btn-add" id="addSessionBtn">
+                                            <i class="fas fa-plus"></i> 세션 추가
+                                        </button>
+                                    </div>
+                                    <div class="form-section-description">
+                                        <p>학습자가 과제를 수행할 때 사용할 세션 정보를 추가하세요. 각 세션은 상황 설명, 원본 데이터, 출력 요구사항을 포함합니다.</p>
+                                    </div>
+                                    <div id="sessionsContainer" class="sessions-container">
+                                        <!-- 동적으로 추가됨 -->
+                                    </div>
+                                    <div class="empty-state" id="sessionsEmpty" style="display: none;">
+                                        <i class="fas fa-info-circle"></i>
+                                        <p>세션이 없습니다. "세션 추가" 버튼을 클릭하여 추가하세요.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -275,6 +354,59 @@
                     </form>
                 </div>
             </main>
+        </div>
+    </div>
+
+    <!-- 과제 추가/편집 모달 -->
+    <div id="taskModal" class="modal modal-hide">
+        <div class="modal-overlay"></div>
+        <div class="modal-container task-modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="taskModalTitle">
+                    <i class="fas fa-plus-circle"></i> 새 과제 추가
+                </h3>
+                <button type="button" class="modal-close" onclick="window.createAssignmentManager.closeTaskModal()" title="닫기">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="taskModalForm" class="task-modal-form">
+                    <input type="hidden" id="editTaskIndex" value="-1">
+
+                    <div class="form-group">
+                        <label for="modalTaskTitle">과제 제목 <span class="required">*</span></label>
+                        <input type="text" id="modalTaskTitle" required
+                            placeholder="예: [기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modalTaskObjective">목표 <span class="required">*</span></label>
+                        <textarea id="modalTaskObjective" rows="3" required
+                            placeholder="과제의 목표를 입력하세요."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modalTaskMission">미션 <span class="required">*</span></label>
+                        <textarea id="modalTaskMission" rows="3" required
+                            placeholder="과제의 미션을 입력하세요."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modalTimeLimit">제한 시간 (분)</label>
+                        <input type="number" id="modalTimeLimit" min="0" value="60"
+                            placeholder="제한 시간을 입력하세요">
+                        <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="window.createAssignmentManager.closeTaskModal()">
+                    취소
+                </button>
+                <button type="button" class="btn btn-primary" onclick="window.createAssignmentManager.saveTaskModal()">
+                    <i class="fas fa-save"></i> 저장
+                </button>
+            </div>
         </div>
     </div>
 
