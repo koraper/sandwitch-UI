@@ -2,7 +2,7 @@
 class AdminManager {
     constructor() {
         this.currentMenu = 'assignments';
-        
+
         // 공통 테이블 상태 관리
         this.tableStates = {
             assignments: {
@@ -40,10 +40,10 @@ class AdminManager {
                 filterStatus: ''
             }
         };
-        
+
         // 이전 버전 호환성을 위한 alias
         this.assignmentState = this.tableStates.assignments;
-        
+
         this.init();
     }
 
@@ -51,8 +51,32 @@ class AdminManager {
         // 이벤트 리스너 설정
         this.setupEventListeners();
 
+        // 현재 URL에 따라 메뉴 활성 상태 설정
+        this.updateActiveMenuByURL();
+
         // 초기 컨텐츠 로드
         this.loadMenuContent(this.currentMenu);
+    }
+
+    /**
+     * 현재 URL에 따라 사이드바 메뉴 활성 상태 업데이트
+     */
+    updateActiveMenuByURL() {
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+
+        navItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href) {
+                // 현재 페이지와 링크가 일치하거나, 새 과제 생성 페이지인 경우 과제 관리 활성화
+                if (currentPath.includes(href) ||
+                    (currentPath.includes('create-assignment') && href.includes('admin.html') && item.textContent.includes('과제 관리'))) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            }
+        });
     }
 
     /**
@@ -163,19 +187,20 @@ class AdminManager {
 
         // LocalStorage에서 저장된 과제 불러오기
         const savedAssignments = JSON.parse(localStorage.getItem('sandwitchUI_assignments') || '[]');
-        
+
         // 저장된 과제를 표시 형식으로 변환
         const savedAssignmentsFormatted = savedAssignments.map(assignment => {
-            const taskTitle = assignment.tasks && assignment.tasks.length > 0 
-                ? assignment.tasks[0].title 
+            const taskTitle = assignment.tasks && assignment.tasks.length > 0
+                ? assignment.tasks[0].title
                 : assignment.docMetadata?.title || '제목 없음';
             const description = assignment.docMetadata?.description || '';
             const competencyCode = assignment.docMetadata?.competency?.code || '';
             const version = assignment.docMetadata?.version || '1.0.0';
-            const lastModifiedTimestamp = assignment.lastModified 
+            const mode = assignment.docMetadata?.mode || '학습모드';
+            const lastModifiedTimestamp = assignment.lastModified
                 ? new Date(assignment.lastModified).getTime()
                 : 0;
-            const lastModified = assignment.lastModified 
+            const lastModified = assignment.lastModified
                 ? new Date(assignment.lastModified).toLocaleString('ko-KR', {
                     year: 'numeric',
                     month: '2-digit',
@@ -191,6 +216,7 @@ class AdminManager {
                 description: description,
                 competencyCode: competencyCode,
                 version: version.replace('v', ''),
+                mode: mode,
                 lastModified: lastModified,
                 lastModifiedTimestamp: lastModifiedTimestamp,
                 isSaved: true,
@@ -216,7 +242,7 @@ class AdminManager {
         if (!searchQuery || searchQuery.trim() === '') {
             return items;
         }
-        
+
         const query = searchQuery.toLowerCase().trim();
         return items.filter(item => {
             return searchFields.some(field => {
@@ -237,7 +263,7 @@ class AdminManager {
         return [...items].sort((a, b) => {
             let valueA, valueB;
             const type = columnTypes[column] || 'string';
-            
+
             if (type === 'number') {
                 valueA = parseFloat(a[column]) || 0;
                 valueB = parseFloat(b[column]) || 0;
@@ -248,7 +274,7 @@ class AdminManager {
                 valueA = (a[column] || '').toString().toLowerCase();
                 valueB = (b[column] || '').toString().toLowerCase();
             }
-            
+
             if (direction === 'asc') {
                 return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
             } else {
@@ -313,7 +339,7 @@ class AdminManager {
         const state = this.tableStates[tableType];
         state.searchQuery = '';
         state.currentPage = 1;
-        
+
         // 각 테이블 타입별 필터 초기화
         if (tableType === 'assignments') {
             state.filterYear = '';
@@ -329,7 +355,7 @@ class AdminManager {
             state.filterRole = '';
             state.filterStatus = '';
         }
-        
+
         this.loadMenuContent(tableType);
     }
 
@@ -338,15 +364,15 @@ class AdminManager {
      */
     filterByDate(items, year, month, dateField) {
         if (!year && !month) return items;
-        
+
         return items.filter(item => {
             const timestamp = item[dateField + 'Timestamp'] || item[dateField];
             if (!timestamp) return false;
-            
+
             const date = new Date(timestamp);
             const itemYear = date.getFullYear().toString();
             const itemMonth = (date.getMonth() + 1).toString().padStart(2, '0');
-            
+
             if (year && month) {
                 return itemYear === year && itemMonth === month;
             } else if (year) {
@@ -417,9 +443,9 @@ class AdminManager {
         const state = this.tableStates[tableType];
         const isActive = state.sortColumn === column;
         const direction = state.sortDirection;
-        
+
         if (isActive) {
-            return direction === 'asc' 
+            return direction === 'asc'
                 ? '<i class="fas fa-sort-up sort-icon active"></i>'
                 : '<i class="fas fa-sort-down sort-icon active"></i>';
         }
@@ -431,11 +457,11 @@ class AdminManager {
      */
     renderPaginationFor(tableType, totalItems, currentPage, itemsPerPage) {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
-        
+
         if (totalPages <= 1) return '';
 
         let paginationHtml = '<div class="pagination">';
-        
+
         // 이전 버튼
         paginationHtml += `
             <button class="pagination-btn ${currentPage === 1 ? 'disabled' : ''}" 
@@ -449,7 +475,7 @@ class AdminManager {
         const maxVisiblePages = 5;
         let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
         let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-        
+
         if (endPage - startPage + 1 < maxVisiblePages) {
             startPage = Math.max(1, endPage - maxVisiblePages + 1);
         }
@@ -489,7 +515,7 @@ class AdminManager {
         `;
 
         paginationHtml += '</div>';
-        
+
         // 페이지 정보
         const startItem = (currentPage - 1) * itemsPerPage + 1;
         const endItem = Math.min(currentPage * itemsPerPage, totalItems);
@@ -601,27 +627,27 @@ class AdminManager {
      */
     renderAssignmentsContent() {
         const state = this.assignmentState;
-        const { searchQuery, sortColumn, sortDirection, currentPage, itemsPerPage, 
-                filterYear, filterMonth, filterCompetencyCode } = state;
+        const { searchQuery, sortColumn, sortDirection, currentPage, itemsPerPage,
+            filterYear, filterMonth, filterCompetencyCode } = state;
 
         // 모든 과제 가져오기
         let assignments = this.getAllAssignments();
-        
+
         // 검색 필터링
         assignments = this.filterAssignments(assignments, searchQuery);
-        
+
         // 연도/월 필터링
         assignments = this.filterByDate(assignments, filterYear, filterMonth, 'lastModified');
-        
+
         // 역량 코드 필터링
         assignments = this.filterByField(assignments, 'competencyCode', filterCompetencyCode);
-        
+
         // 전체 개수 저장 (페이지네이션용)
         const totalItems = assignments.length;
-        
+
         // 정렬
         assignments = this.sortAssignments(assignments, sortColumn, sortDirection);
-        
+
         // 페이지네이션
         const paginatedAssignments = this.paginateAssignments(assignments, currentPage, itemsPerPage);
 
@@ -645,24 +671,25 @@ class AdminManager {
         const yearOptions = this.getYearOptions();
         const monthOptions = this.getMonthOptions();
         const competencyOptions = this.getCompetencyCodeOptions();
-        
+
         // 활성 필터 개수
         const activeFilterCount = [filterYear, filterMonth, filterCompetencyCode].filter(f => f).length;
 
         const tableRows = paginatedAssignments.length > 0 ? paginatedAssignments.map(assignment => `
             <tr>
                 <td>
-                    <strong>${assignment.title}</strong><br>
-                    <small style="color: #6b7280;">${assignment.description || ''}</small>
+                    <div class="assignment-title-cell">
+                        <strong>${assignment.title}</strong>
+                        ${assignment.description ? `<small class="assignment-description">${assignment.description}</small>` : ''}
+                    </div>
                 </td>
-                <td>${assignment.id}</td>
                 <td>
                     <span class="status-badge" style="background: #e0e7ff; color: #4338ca; font-weight: 600;">
                         ${assignment.competencyCode || '-'}
                     </span>
                 </td>
+                <td>${assignment.mode || '학습모드'}</td>
                 <td>v${assignment.version || '1.0.0'}</td>
-                <td>${formatDate(assignment.lastModified)}</td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn-action btn-view" ${assignment.isSaved ? `onclick="window.adminManager.viewAssignment('${assignment.id}')"` : ''}>
@@ -677,39 +704,42 @@ class AdminManager {
                     </div>
                 </td>
             </tr>
-        `).join('') : '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #6b7280;">검색 결과가 없습니다.</td></tr>';
+        `).join('') : '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #6b7280;">검색 결과가 없습니다.</td></tr>';
 
         return `
             <div class="content-section">
                 <div class="content-section-header">
-                    <h2 class="content-section-title">
-                        <i class="fas fa-tasks"></i> 과제 관리
-                    </h2>
-                    <button class="btn btn-primary" onclick="window.adminManager.showCreateAssignmentModal()">
-                        <i class="fas fa-plus"></i> 새 과제 생성
-                    </button>
+                    <div class="header-title-group">
+                        <h2 class="content-section-title">
+                            <i class="fas fa-tasks"></i> 과제 관리
+                        </h2>
+                        <p class="content-section-description">
+                            등록된 과제를 관리하고, 검색, 필터, 정렬 기능을 통해 원하는 과제를 빠르게 찾을 수 있습니다.
+                        </p>
+                    </div>
                 </div>
-                
+
                 <!-- 검색 및 필터 섹션 -->
                 <div class="search-section">
-                    <!-- 검색 입력 -->
-                    <div class="search-input-wrapper">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" 
-                               id="assignmentSearchInput"
-                               class="search-input" 
-                               placeholder="제목, 설명, 과제 ID로 검색... (Enter로 검색)"
-                               value="${searchQuery}"
-                               onkeyup="if(event.key === 'Enter') window.adminManager.handleAssignmentSearch(this.value)">
-                    </div>
+                    <div class="search-section-left">
+                        <!-- 검색 입력 -->
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text"
+                                   id="assignmentSearchInput"
+                                   class="search-input"
+                                   placeholder="제목, 설명으로 검색..."
+                                   value="${searchQuery}"
+                                   onkeyup="if(event.key === 'Enter') window.adminManager.handleAssignmentSearch(this.value)">
+                            ${searchQuery ? `
+                                <button class="search-clear-btn" onclick="window.adminManager.handleAssignmentSearch('')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                     
                     <!-- 필터 그룹 -->
                     <div class="filter-group">
-                        <div class="filter-label">
-                            <i class="fas fa-filter"></i> 필터
-                            ${activeFilterCount > 0 ? `<span class="filter-count">${activeFilterCount}</span>` : ''}
-                        </div>
-                        
                         <!-- 연도 필터 -->
                         <div class="filter-item">
                             <select id="filterYear" 
@@ -747,44 +777,35 @@ class AdminManager {
                         </div>
                         
                         <!-- 필터 초기화 -->
-                        ${activeFilterCount > 0 || searchQuery ? `
+                        ${activeFilterCount > 0 ? `
                             <button class="filter-reset-btn" onclick="window.adminManager.resetFilters('assignments')">
                                 <i class="fas fa-undo"></i> 초기화
                             </button>
                         ` : ''}
                     </div>
                     
-                    <!-- 검색/필터 결과 정보 -->
-                    ${searchQuery || activeFilterCount > 0 ? `
-                        <div class="search-result-info">
-                            ${searchQuery ? `<strong>"${searchQuery}"</strong> ` : ''}
-                            ${activeFilterCount > 0 ? `<span class="filter-tags">
-                                ${filterYear ? `<span class="filter-tag">${filterYear}년</span>` : ''}
-                                ${filterMonth ? `<span class="filter-tag">${monthOptions.find(m => m.value === filterMonth)?.label}</span>` : ''}
-                                ${filterCompetencyCode ? `<span class="filter-tag">${filterCompetencyCode}</span>` : ''}
-                            </span>` : ''}
-                            검색 결과: <span class="result-count">${totalItems}개</span>
-                        </div>
-                    ` : ''}
+                    </div>
+
+                    <!-- 새 과제 생성 버튼 -->
+                    <button class="btn btn-primary btn-create-assignment" onclick="window.adminManager.showCreateAssignmentModal()">
+                        <i class="fas fa-plus"></i> 새 과제 생성
+                    </button>
                 </div>
 
                 <table class="admin-table sortable-table">
                     <thead>
                         <tr>
                             <th class="sortable-header" onclick="window.adminManager.handleAssignmentSort('title')">
-                                과제명 ${this.renderSortIcon('title')}
-                            </th>
-                            <th class="sortable-header" onclick="window.adminManager.handleAssignmentSort('id')">
-                                과제 ID ${this.renderSortIcon('id')}
+                                제목 ${this.renderSortIcon('title')}
                             </th>
                             <th class="sortable-header" onclick="window.adminManager.handleAssignmentSort('competencyCode')">
-                                핵심 역량 코드 ${this.renderSortIcon('competencyCode')}
+                                역량 코드 ${this.renderSortIcon('competencyCode')}
+                            </th>
+                            <th class="sortable-header" onclick="window.adminManager.handleAssignmentSort('mode')">
+                                모드 ${this.renderSortIcon('mode')}
                             </th>
                             <th class="sortable-header" onclick="window.adminManager.handleAssignmentSort('version')">
                                 버전 ${this.renderSortIcon('version')}
-                            </th>
-                            <th class="sortable-header" onclick="window.adminManager.handleAssignmentSort('lastModified')">
-                                최종 수정일 ${this.renderSortIcon('lastModified')}
                             </th>
                             <th>작업</th>
                         </tr>
@@ -808,7 +829,7 @@ class AdminManager {
     viewAssignment(assignmentId) {
         const assignments = JSON.parse(localStorage.getItem('sandwitchUI_assignments') || '[]');
         const assignment = assignments.find(a => a.id === assignmentId);
-        
+
         if (assignment) {
             const jsonString = JSON.stringify(assignment, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
@@ -858,7 +879,7 @@ class AdminManager {
         const assignments = JSON.parse(localStorage.getItem('sandwitchUI_assignments') || '[]');
         const filtered = assignments.filter(a => a.id !== assignmentId);
         localStorage.setItem('sandwitchUI_assignments', JSON.stringify(filtered));
-        
+
         // 목록 새로고침
         this.loadMenuContent('assignments');
         this.showInfo('과제가 삭제되었습니다.');
@@ -970,7 +991,7 @@ class AdminManager {
 
         // LocalStorage에서 저장된 특강 불러오기
         const savedLectures = JSON.parse(localStorage.getItem('sandwitchUI_lectures') || '[]');
-        
+
         return [...savedLectures, ...defaultLectures];
     }
 
@@ -983,20 +1004,20 @@ class AdminManager {
 
         // 모든 특강 가져오기
         let lectures = this.getAllLectures();
-        
+
         // 검색 필터링
         lectures = this.filterItems(lectures, searchQuery, ['title', 'instructor', 'institution', 'location', 'status']);
-        
+
         // 전체 개수 저장
         const totalItems = lectures.length;
-        
+
         // 정렬
         const columnTypes = {
             date: 'timestamp',
             participants: 'number'
         };
         lectures = this.sortItems(lectures, sortColumn, sortDirection, columnTypes);
-        
+
         // 페이지네이션
         const paginatedLectures = this.paginateItems(lectures, currentPage, itemsPerPage);
 
@@ -1217,7 +1238,7 @@ class AdminManager {
 
         // LocalStorage에서 저장된 사용자 불러오기
         const savedUsers = JSON.parse(localStorage.getItem('sandwitchUI_users') || '[]');
-        
+
         return [...savedUsers, ...defaultUsers];
     }
 
@@ -1230,19 +1251,19 @@ class AdminManager {
 
         // 모든 사용자 가져오기
         let users = this.getAllUsers();
-        
+
         // 검색 필터링
         users = this.filterItems(users, searchQuery, ['name', 'email', 'roleLabel', 'status']);
-        
+
         // 전체 개수 저장
         const totalItems = users.length;
-        
+
         // 정렬
         const columnTypes = {
             joinDate: 'timestamp'
         };
         users = this.sortItems(users, sortColumn, sortDirection, columnTypes);
-        
+
         // 페이지네이션
         const paginatedUsers = this.paginateItems(users, currentPage, itemsPerPage);
 
@@ -1256,7 +1277,7 @@ class AdminManager {
         };
 
         const statusBadge = (status) => {
-            return status === 'active' 
+            return status === 'active'
                 ? '<span class="status-badge active">활성</span>'
                 : '<span class="status-badge inactive">비활성</span>';
         };
@@ -1488,24 +1509,16 @@ class AdminManager {
                     </label>
                     <div class="competency-grid-modal" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
                         ${competencies.map(comp => `
-                            <div class="competency-card-modal" 
+                            <div class="competency-card-modal"
                                  data-competency-code="${comp.code}"
                                  style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; cursor: pointer; transition: all 0.2s;">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-                                    <div>
-                                        <div style="font-size: 1.25rem; font-weight: 700; color: #2563eb; letter-spacing: 0.1em; margin-bottom: 0.25rem;">
-                                            ${comp.code}
-                                        </div>
-                                        <div style="font-size: 0.875rem; color: #6b7280; font-weight: 500;">
-                                            ${comp.name_kr}
-                                        </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="font-size: 1.25rem; font-weight: 700; color: #2563eb; letter-spacing: 0.1em;">
+                                        ${comp.code}
                                     </div>
                                     <div class="competency-check" style="width: 24px; height: 24px; border: 2px solid #d1d5db; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
                                         <i class="fas fa-check" style="display: none; color: white; font-size: 0.75rem;"></i>
                                     </div>
-                                </div>
-                                <div style="font-size: 0.875rem; color: #6b7280; line-height: 1.5;">
-                                    ${comp.description}
                                 </div>
                             </div>
                         `).join('')}
@@ -1575,7 +1588,7 @@ class AdminManager {
                     action: () => {
                         const selectedCard = modalBody.querySelector('.competency-card-modal.selected');
                         const selectedMode = modalBody.querySelector('input[name="assignmentMode"]:checked');
-                        
+
                         if (!selectedCard || !selectedMode) {
                             window.modalManager.error('모드와 핵심 역량을 모두 선택해주세요.');
                             return false; // 모달 닫지 않음

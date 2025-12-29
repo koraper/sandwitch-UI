@@ -12,32 +12,58 @@
     <link rel="stylesheet" href="css/components.css">
 </head>
 
-<body class="full-page-body">
+<body>
     <!-- 새 과제 생성 페이지 -->
-    <div class="admin-container full-page">
+    <div class="admin-container">
         <!-- 헤더 -->
         <header class="admin-header">
             <div class="header-left">
-                <a href="admin.html" class="logo">
+                <a href="indexmanager.html" class="logo">
                     <i class="fas fa-hamburger"></i> 샌드위치
                 </a>
-                <button class="btn-back" onclick="window.location.href='admin.html'">
-                    <i class="fas fa-arrow-left"></i> 뒤로가기
-                </button>
-            </div>
-            <div class="header-center">
-                <h1 class="admin-title">새 과제 생성</h1>
             </div>
             <div class="header-right">
-                <!-- 헤더 우측 영역 -->
+                <div class="user-info">
+                    <span class="user-name"><i class="fas fa-user-shield"></i> 관리자</span>
+                </div>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> 로그아웃
+                </button>
             </div>
         </header>
 
         <!-- 메인 컨텐츠 영역 -->
         <div class="admin-main">
-            <!-- 컨텐츠 영역 (사이드바 없이 전체 너비) -->
-            <main class="admin-content" style="width: 100%;">
+            <!-- 사이드바 -->
+            <aside class="admin-sidebar">
+                <nav class="sidebar-nav">
+                    <a href="admin.html" class="nav-item active">
+                        <i class="fas fa-tasks"></i> 과제 관리
+                    </a>
+                    <a href="admin.html" class="nav-item">
+                        <i class="fas fa-chalkboard-teacher"></i> 특강 관리
+                    </a>
+                    <a href="admin.html" class="nav-item">
+                        <i class="fas fa-users"></i> 사용자 관리
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- 컨텐츠 영역 -->
+            <main class="admin-content">
                 <div class="content-wrapper">
+                    <!-- 페이지 헤더 -->
+                    <div class="content-section-header">
+                        <div class="header-title-group">
+                            <h1 class="content-section-title">
+                                <i class="fas fa-plus-circle"></i> 새 과제 생성
+                            </h1>
+                            <p class="content-section-description">
+                                새로운 과제를 생성하고, 메타데이터, 과제 정보, 채점 팁, 세션 정보를 설정하세요.
+                            </p>
+                        </div>
+                    </div>
+
                     <form id="assignmentForm" class="assignment-form">
                         <!-- 탭 네비게이션 -->
                         <div class="form-tabs">
@@ -62,40 +88,57 @@
                         <div class="form-tab-content active" id="tab-metadata">
                             <div class="form-section">
                                 <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="docTitle">제목 <span class="json-key">[docMetadata.title]</span> <span class="required">*</span></label>
-                                    <input type="text" id="docTitle" name="docTitle" required
-                                        placeholder="예: 서일대학교 특강 - PPS 평가모드 시나리오">
-                                </div>
-                                <div class="form-group">
-                                    <label for="docDescription">설명 <span class="json-key">[docMetadata.description]</span></label>
-                                    <textarea id="docDescription" name="docDescription" rows="3"
-                                        placeholder="문서에 대한 설명을 입력하세요"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="docVersion">버전 <span class="json-key">[docMetadata.version]</span> <span class="required">*</span></label>
-                                    <input type="text" id="docVersion" name="docVersion" required placeholder="예: v1.0.0"
-                                        value="v1.0.0">
-                                </div>
-                                <div class="form-group">
-                                    <label for="docMode">모드 <span class="json-key">[docMetadata.mode]</span> <span class="required">*</span></label>
-                                    <select id="docMode" name="docMode" required>
-                                        <option value="">선택하세요</option>
-                                        <option value="학습모드">학습모드</option>
-                                        <option value="평가모드">평가모드</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="competencyCode">역량 코드 <span class="json-key">[docMetadata.competency]</span> <span class="required">*</span></label>
-                                    <select id="competencyCode" name="competencyCode" required>
-                                        <option value="">선택하세요</option>
-                                        <option value="PPS" data-name-kr="프롬프트 문제해결력" data-name-en="Prompt Problem Solving" data-description="복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계하는 능력">PPS - 프롬프트 문제해결력</option>
-                                        <option value="DIG" data-name-kr="데이터 기반 통찰력" data-name-en="Data Insight Generation" data-description="데이터를 AI로 분석하고 인사이트를 도출하는 능력. 코드를 직접 실행하여 데이터를 검증하고, 근거 기반의 실질적인 해결책을 도출">DIG - 데이터 기반 통찰력</option>
-                                        <option value="GCC" data-name-kr="생성형 콘텐츠 제작 능력" data-name-en="Generative Content Creation" data-description="텍스트/이미지/영상 생성 능력. 상황과 목적에 완벽히 부합하는 결과물을 생성하고, 스타일을 정교하게 최적화">GCC - 생성형 콘텐츠 제작 능력</option>
-                                        <option value="WFA" data-name-kr="업무자동화·도구활용 능력" data-name-en="Work Flow Automation" data-description="반복 업무를 AI 및 자동화 도구로 설계하는 능력. 업무 흐름을 구조화하여, 예외 상황에서도 오류 없이 작동하는 자동화 프로세스를 설계">WFA - 업무자동화·도구활용 능력</option>
-                                    </select>
-                                    <small class="form-hint">역량 코드만 선택하면 됩니다. 역량명과 설명은 JSON에 포함되지 않습니다.</small>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="docTitle">제목 <span class="json-key">[docMetadata.title]</span> <span
+                                                class="required">*</span></label>
+                                        <input type="text" id="docTitle" name="docTitle" required
+                                            placeholder="예: 서일대학교 특강 - PPS 평가모드 시나리오">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="docDescription">설명 <span
+                                                class="json-key">[docMetadata.description]</span></label>
+                                        <textarea id="docDescription" name="docDescription" rows="3"
+                                            placeholder="문서에 대한 설명을 입력하세요"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="docVersion">버전 <span class="json-key">[docMetadata.version]</span>
+                                            <span class="required">*</span></label>
+                                        <input type="text" id="docVersion" name="docVersion" required
+                                            placeholder="예: v1.0.0" value="v1.0.0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="docMode">모드 <span class="json-key">[docMetadata.mode]</span> <span
+                                                class="required">*</span></label>
+                                        <select id="docMode" name="docMode" required>
+                                            <option value="">선택하세요</option>
+                                            <option value="학습모드">학습모드</option>
+                                            <option value="평가모드">평가모드</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="competencyCode">역량 코드 <span
+                                                class="json-key">[docMetadata.competency]</span> <span
+                                                class="required">*</span></label>
+                                        <select id="competencyCode" name="competencyCode" required>
+                                            <option value="">선택하세요</option>
+                                            <option value="PPS" data-name-kr="프롬프트 문제해결력"
+                                                data-name-en="Prompt Problem Solving"
+                                                data-description="복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계하는 능력">PPS
+                                                - 프롬프트 문제해결력</option>
+                                            <option value="DIG" data-name-kr="데이터 기반 통찰력"
+                                                data-name-en="Data Insight Generation"
+                                                data-description="데이터를 AI로 분석하고 인사이트를 도출하는 능력. 코드를 직접 실행하여 데이터를 검증하고, 근거 기반의 실질적인 해결책을 도출">
+                                                DIG - 데이터 기반 통찰력</option>
+                                            <option value="GCC" data-name-kr="생성형 콘텐츠 제작 능력"
+                                                data-name-en="Generative Content Creation"
+                                                data-description="텍스트/이미지/영상 생성 능력. 상황과 목적에 완벽히 부합하는 결과물을 생성하고, 스타일을 정교하게 최적화">
+                                                GCC - 생성형 콘텐츠 제작 능력</option>
+                                            <option value="WFA" data-name-kr="업무자동화·도구활용 능력"
+                                                data-name-en="Work Flow Automation"
+                                                data-description="반복 업무를 AI 및 자동화 도구로 설계하는 능력. 업무 흐름을 구조화하여, 예외 상황에서도 오류 없이 작동하는 자동화 프로세스를 설계">
+                                                WFA - 업무자동화·도구활용 능력</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -110,24 +153,29 @@
                                 </div>
                                 <div class="form-grid">
                                     <div class="form-group">
-                                        <label for="timeLimit">제한 시간 (분) <span class="json-key">[tasks[].timeLimit]</span></label>
-                                        <input type="number" id="timeLimit" name="timeLimit" min="0" value="60" placeholder="제한 시간을 입력하세요">
+                                        <label for="timeLimit">제한 시간 (분) <span
+                                                class="json-key">[tasks[].timeLimit]</span></label>
+                                        <input type="number" id="timeLimit" name="timeLimit" min="0" value="60"
+                                            placeholder="제한 시간을 입력하세요">
                                         <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
                                     </div>
                                     <div class="form-group full-width">
-                                        <label for="taskTitle">과제 제목 <span class="json-key">[tasks[].title]</span> <span class="required">*</span></label>
+                                        <label for="taskTitle">과제 제목 <span class="json-key">[tasks[].title]</span> <span
+                                                class="required">*</span></label>
                                         <input type="text" id="taskTitle" name="taskTitle" required
                                             placeholder="예: [기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획">
                                         <small class="form-hint">과제의 제목을 입력하세요. 카테고리나 유형을 대괄호로 표시할 수 있습니다.</small>
                                     </div>
                                     <div class="form-group full-width">
-                                        <label for="taskObjective">목표 <span class="json-key">[tasks[].objective]</span> <span class="required">*</span></label>
+                                        <label for="taskObjective">목표 <span class="json-key">[tasks[].objective]</span>
+                                            <span class="required">*</span></label>
                                         <textarea id="taskObjective" name="taskObjective" rows="4" required
                                             placeholder="과제의 목표를 입력하세요. 예: 법을 어기라는 대표님의 지시를 방어하고, 투자자가 안심할 수 있는 합법적이고 윤리적인 기획서를 완성하라."></textarea>
                                         <small class="form-hint">이 과제를 통해 달성하고자 하는 목표를 명확하게 기술하세요.</small>
                                     </div>
                                     <div class="form-group full-width">
-                                        <label for="taskMission">미션 <span class="json-key">[tasks[].mission]</span> <span class="required">*</span></label>
+                                        <label for="taskMission">미션 <span class="json-key">[tasks[].mission]</span>
+                                            <span class="required">*</span></label>
                                         <textarea id="taskMission" name="taskMission" rows="4" required
                                             placeholder="과제의 미션을 입력하세요. 예: 생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오."></textarea>
                                         <small class="form-hint">학습자가 수행해야 할 구체적인 미션을 기술하세요.</small>
@@ -220,8 +268,21 @@
     </div>
 
     <script src="js/modal.js"></script>
+    <script src="js/admin.js"></script>
     <script src="js/create-assignment.js"></script>
+    <script>
+        // 사이드바 메뉴 활성화 (새 과제 생성 페이지)
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            navItems.forEach(item => {
+                if (item.textContent.includes('과제 관리')) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
-

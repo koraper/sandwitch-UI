@@ -978,7 +978,7 @@ body.full-page-body {
 .admin-header .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #2563eb;
+    color: #333;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1005,6 +1005,55 @@ body.full-page-body {
 .admin-header .header-right {
     display: flex;
     gap: 0.5rem;
+    align-items: center;
+}
+
+/* 헤더 사용자 정보 및 로그아웃 버튼 */
+.user-info {
+    padding: 0.5rem 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-name i {
+    color: #667eea;
+    font-size: 1rem;
+}
+
+.btn-logout {
+    padding: 0.5rem 1rem;
+    background: #000000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-logout:hover {
+    background: #333333;
+    transform: translateY(-1px);
+}
+
+.btn-logout i {
+    font-size: 0.9rem;
 }
 
 .admin-main {
@@ -1097,10 +1146,23 @@ body.full-page-body {
 .content-section-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
     border-bottom: 2px solid #e1e4e8;
+    gap: 2rem;
+}
+
+/* 2열 헤더 타이틀 그룹 */
+.header-title-group {
+    flex: 1;
+}
+
+.content-section-description {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.5;
 }
 
 .content-section-title {
@@ -1141,6 +1203,24 @@ body.full-page-body {
 .content-section-header .btn-primary:hover,
 .content-section-header a.btn-primary:hover {
     background: #5568d3;
+}
+
+/* 과제 제목 셀 스타일 */
+.assignment-title-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.assignment-description {
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* 테이블 스타일 */
@@ -1974,6 +2054,30 @@ body.full-page-body {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: nowrap;
+}
+
+.search-section-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+    min-width: 0;
+    justify-content: space-between;
+}
+
+.search-section-left .search-input-wrapper {
+    flex: 1;
+    max-width: none;
+}
+
+.btn-create-assignment {
+    flex-shrink: 0;
+    align-self: center;
 }
 
 .search-input-wrapper {
@@ -1981,22 +2085,42 @@ body.full-page-body {
     align-items: center;
     gap: 0.75rem;
     position: relative;
+    min-width: 200px;
+}
+
+/* 필터 그룹을 우측으로 정렬 */
+.search-section-left .filter-group {
+    width: auto;
+    flex-shrink: 0;
 }
 
 .search-input-wrapper .search-icon {
     color: #94a3b8;
     font-size: 1rem;
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .search-input {
-    flex: 1;
+    width: 100%;
     padding: 0.75rem 1rem;
-    padding-left: 0.5rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 0.95rem;
     background: white;
     transition: all 0.2s;
+}
+
+.search-input-wrapper .search-clear-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .search-input:focus {
@@ -2067,9 +2191,6 @@ body.full-page-body {
     flex-direction: row !important;
     align-items: center;
     gap: 0.75rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e2e8f0;
     flex-wrap: nowrap !important;
     overflow-x: auto;
     width: 100%;
