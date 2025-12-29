@@ -191,12 +191,12 @@ body.full-page-body {
     transition: all 0.2s;
 }
 
-.checkbox-container input:checked + .checkmark {
+.checkbox-container input:checked+.checkmark {
     background: #667eea;
     border-color: #667eea;
 }
 
-.checkbox-container input:checked + .checkmark::after {
+.checkbox-container input:checked+.checkmark::after {
     content: '✓';
     color: white;
     font-size: 0.7rem;
@@ -620,7 +620,7 @@ body.full-page-body {
     background: white;
     border-bottom: 1px solid #e1e4e8;
     height: 70px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .header-left {
@@ -762,7 +762,7 @@ body.full-page-body {
 
 .component-item:hover {
     border-color: #2563eb;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .component-item:active {
@@ -828,7 +828,7 @@ body.full-page-body {
     background: #fff;
     border: 1px solid #e1e4e8;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
@@ -1126,6 +1126,24 @@ body.full-page-body {
 }
 
 .full-page .admin-content {
+    overflow-y: visible;
+}
+
+/* 스크롤 없는 페이지 (새 과제 생성 페이지 등) */
+.no-scroll-page .admin-container {
+    height: auto;
+    min-height: 100vh;
+}
+
+.no-scroll-page .admin-main {
+    overflow: visible;
+}
+
+.no-scroll-page .admin-sidebar {
+    overflow: visible;
+}
+
+.no-scroll-page .admin-content {
     overflow-y: visible;
 }
 
@@ -1469,6 +1487,9 @@ body.full-page-body {
 .assignment-form {
     max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 200px);
 }
 
 /* 탭 스타일 */
@@ -1477,7 +1498,6 @@ body.full-page-body {
     gap: 0.5rem;
     border-bottom: 2px solid #e1e4e8;
     margin-bottom: 2rem;
-    overflow-x: auto;
 }
 
 .form-tab {
@@ -1518,8 +1538,30 @@ body.full-page-body {
 }
 
 .form-tab-content.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
     animation: fadeIn 0.3s ease-in;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.form-tab-content.active::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-tab-content.active::-webkit-scrollbar-track {
+    background: #f9fafb;
+}
+
+.form-tab-content.active::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.form-tab-content.active::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
 }
 
 @keyframes fadeIn {
@@ -1527,6 +1569,7 @@ body.full-page-body {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1685,6 +1728,11 @@ body.full-page-body {
 .form-group textarea {
     resize: vertical;
     min-height: 80px;
+}
+
+/* 역량 코드 선택 필드 아래 여백 */
+.form-group:has(#competencyCode) {
+    margin-bottom: 2.5rem;
 }
 
 /* 동적 필드 스타일 */
@@ -1959,8 +2007,7 @@ body.full-page-body {
     background: #1e293b;
     border-radius: 6px;
     padding: 1rem;
-    max-height: 500px;
-    overflow: auto;
+    overflow: visible;
 }
 
 .json-preview {
@@ -1980,7 +2027,8 @@ body.full-page-body {
     gap: 1rem;
     padding: 2rem 0;
     border-top: 2px solid #e1e4e8;
-    margin-top: 2rem;
+    margin-top: auto;
+    flex-shrink: 0;
 }
 
 .form-actions .btn {
@@ -2196,7 +2244,7 @@ body.full-page-body {
     width: 100%;
 }
 
-.filter-group > * {
+.filter-group>* {
     display: inline-flex;
     flex-shrink: 0;
 }
