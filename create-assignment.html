@@ -37,15 +37,32 @@
             <!-- 사이드바 -->
             <aside class="admin-sidebar">
                 <nav class="sidebar-nav">
-                    <a href="admin.html" class="nav-item active">
-                        <i class="fas fa-tasks"></i> 과제 관리
-                    </a>
-                    <a href="admin.html" class="nav-item">
-                        <i class="fas fa-chalkboard-teacher"></i> 특강 관리
-                    </a>
-                    <a href="admin.html" class="nav-item">
-                        <i class="fas fa-users"></i> 사용자 관리
-                    </a>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="admin.html" class="sidebar-menu-link active" data-menu="assignments">
+                                <i class="fas fa-tasks"></i>
+                                <span>과제 관리</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="admin.html" class="sidebar-menu-link" data-menu="lectures">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <span>특강 관리</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="admin.html" class="sidebar-menu-link" data-menu="users">
+                                <i class="fas fa-users"></i>
+                                <span>사용자 관리</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="admin.html" class="sidebar-menu-link" data-menu="settings">
+                                <i class="fas fa-cog"></i>
+                                <span>환경 설정</span>
+                            </a>
+                        </li>
+                    </ul>
                 </nav>
             </aside>
 
@@ -68,7 +85,7 @@
                         <!-- 탭 네비게이션 -->
                         <div class="form-tabs">
                             <button type="button" class="form-tab active" data-tab="metadata">
-                                <i class="fas fa-file-alt"></i> 과제 메타데이터
+                                <i class="fas fa-file-alt"></i>메타데이터
                             </button>
                             <button type="button" class="form-tab" data-tab="task">
                                 <i class="fas fa-tasks"></i> 과제 정보
@@ -84,7 +101,7 @@
                             </button>
                         </div>
 
-                        <!-- 과제 메타데이터 섹션 -->
+                        <!-- 메타데이터 섹션 -->
                         <div class="form-tab-content active" id="tab-metadata">
                             <div class="form-section">
                                 <div class="form-grid">
@@ -146,19 +163,7 @@
                         <!-- 과제 정보 섹션 -->
                         <div class="form-tab-content" id="tab-task">
                             <div class="form-section">
-                                <div class="form-section-header">
-                                    <h2 class="form-section-title">
-                                        <i class="fas fa-tasks"></i> 과제 정보
-                                    </h2>
-                                </div>
                                 <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="timeLimit">제한 시간 (분) <span
-                                                class="json-key">[tasks[].timeLimit]</span></label>
-                                        <input type="number" id="timeLimit" name="timeLimit" min="0" value="60"
-                                            placeholder="제한 시간을 입력하세요">
-                                        <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
-                                    </div>
                                     <div class="form-group full-width">
                                         <label for="taskTitle">과제 제목 <span class="json-key">[tasks[].title]</span> <span
                                                 class="required">*</span></label>
@@ -178,7 +183,13 @@
                                             <span class="required">*</span></label>
                                         <textarea id="taskMission" name="taskMission" rows="4" required
                                             placeholder="과제의 미션을 입력하세요. 예: 생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오."></textarea>
-                                        <small class="form-hint">학습자가 수행해야 할 구체적인 미션을 기술하세요.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="timeLimit">제한 시간 (분) <span
+                                                class="json-key">[tasks[].timeLimit]</span></label>
+                                        <input type="number" id="timeLimit" name="timeLimit" min="0" value="60"
+                                            placeholder="제한 시간을 입력하세요">
+                                        <small class="form-hint">학습모드: 제한없음(0), 평가모드: 60분(기본값)</small>
                                     </div>
                                 </div>
                             </div>
@@ -273,7 +284,7 @@
     <script>
         // 사이드바 메뉴 활성화 (새 과제 생성 페이지)
         document.addEventListener('DOMContentLoaded', () => {
-            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            const navItems = document.querySelectorAll('.sidebar-menu-link');
             navItems.forEach(item => {
                 if (item.textContent.includes('과제 관리')) {
                     item.classList.add('active');

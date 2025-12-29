@@ -1487,9 +1487,6 @@ body.full-page-body {
 .assignment-form {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 200px);
 }
 
 /* 탭 스타일 */
@@ -1538,30 +1535,8 @@ body.full-page-body {
 }
 
 .form-tab-content.active {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
+    display: block;
     animation: fadeIn 0.3s ease-in;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.form-tab-content.active::-webkit-scrollbar {
-    width: 8px;
-}
-
-.form-tab-content.active::-webkit-scrollbar-track {
-    background: #f9fafb;
-}
-
-.form-tab-content.active::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 4px;
-}
-
-.form-tab-content.active::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
 }
 
 @keyframes fadeIn {
@@ -1581,6 +1556,7 @@ body.full-page-body {
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     padding: 2rem;
+    padding-top: 1.5rem;
     margin-bottom: 2rem;
 }
 
@@ -1732,6 +1708,34 @@ body.full-page-body {
 
 /* 역량 코드 선택 필드 아래 여백 */
 .form-group:has(#competencyCode) {
+    margin-bottom: 2.5rem;
+}
+
+/* 과제 정보 탭의 제한 시간 필드 아래 여백 */
+.form-group:has(#timeLimit) {
+    margin-bottom: 2.5rem;
+}
+
+/* 채점 팁 탭의 동적 리스트 아래 여백 */
+#tab-scoring .form-section {
+    margin-bottom: 2.5rem;
+}
+
+#tab-scoring .dynamic-list {
+    margin-bottom: 2.5rem;
+}
+
+#tab-scoring .dynamic-item:last-child {
+    margin-bottom: 0;
+}
+
+/* 세션 정보 탭의 세션 컨테이너 아래 여백 */
+#tab-sessions .form-section {
+    margin-bottom: 2.5rem;
+}
+
+/* JSON 미리보기 탭의 미리보기 컨테이너 아래 여백 */
+#tab-preview .form-section {
     margin-bottom: 2.5rem;
 }
 
@@ -2027,8 +2031,7 @@ body.full-page-body {
     gap: 1rem;
     padding: 2rem 0;
     border-top: 2px solid #e1e4e8;
-    margin-top: auto;
-    flex-shrink: 0;
+    margin-top: 2rem;
 }
 
 .form-actions .btn {
