@@ -1,0 +1,181 @@
+{
+  "docMetadata": {
+    "targetTaskId": 1,
+    "title": "PPS 평가모드 채점 기준표",
+    "description": "프롬프트 문제해결능력(PPS) 평가모드 채점 기준표",
+    "version": "v1.0.0",
+    "competency": {
+      "code": "PPS",
+      "name_kr": "프롬프트 문제해결능력",
+      "name_en": "Prompt Problem Solving",
+      "description": "복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계하는 능력"
+    },
+    "created": "2024-12-19T00:00:00",
+    "lastModified": "2024-12-19T00:00:00"
+  },
+  "evaluationCriteria": [
+    {
+      "category": "AES 평가요소",
+      "description": "안전성 및 검증 (Accuracy, Ethics, Safety)",
+      "elements": [
+        {
+          "element": "환각 (거짓 정보탐지)",
+          "points": 30,
+          "penalty": true,
+          "description": "AI 답변의 사실 여부를 검증하는 절차를 수행하지 않았거나 환각이 발생함",
+          "checklist": [
+            {
+              "item": "팩트 체크",
+              "details": [
+                "앱으로 '불면증 100% 완치'가 가능하다는 주장이 허위(Hallucination)임을 인지하고 삭제했는가?",
+                "'20대 92.5% 환자'라는 블로그 통계가 과장된 거짓 정보임을 인지하고 배제했는가?"
+              ]
+            }
+          ]
+        },
+        {
+          "element": "검증 (출처 및 근거 요구)",
+          "points": 10,
+          "penalty": true,
+          "description": "답변에 대한 명확한 출처나 근거를 요구하지 않음",
+          "checklist": [
+            {
+              "item": "규정(Law) 근거 확인",
+              "details": [
+                "수정의 근거로 '의료법(과장광고 금지)' 및 '개인정보보호법(동의 없는 수집 금지)' 준수를 명시했는가?"
+              ]
+            },
+            {
+              "item": "데이터(Data) 출처 확인",
+              "details": [
+                "대체할 데이터의 출처로 '건강보험심사평가원'이나 '통계청' 등 공신력 있는 기관을 구체적으로 요구(Grounding)했는가?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "ACI 평가요소",
+      "description": "AI 협업 능력 (AI Collaboration Intelligence)",
+      "elements": [
+        {
+          "element": "구조화 설계",
+          "points": 70,
+          "penalty": false,
+          "description": "맥락과 제약조건을 포함하여 프롬프트를 구조적으로 작성했는가? [R.C.C.F 적용]",
+          "checklist": [
+            "Role: 기획자/준법감시인",
+            "Context: 투자 제안",
+            "Constraint: 법적 준수(윤리), 개조식",
+            "Format: 기획서(구성요건)"
+          ],
+          "validationLogic": {
+            "method": "contains_components",
+            "threshold": "all_match",
+            "requiredComponents": [
+              {
+                "key": "Role",
+                "name_kr": "역할/페르소나",
+                "description": "내가 원하는 LLM의 역할이나 페르소나를 명확히 정의했는가?"
+              },
+              {
+                "key": "Context",
+                "name_kr": "상황/맥락",
+                "description": "문제 해결을 위한 배경 상황이나 관련 정보를 충분히 제공했는가?"
+              },
+              {
+                "key": "Constraint",
+                "name_kr": "제약 조건",
+                "description": "결과물이 따라야 할 제한 사항(분량, 금지어 등)을 명시했는가?"
+              },
+              {
+                "key": "Format",
+                "name_kr": "출력 형식",
+                "description": "원하는 결과물의 형태(표, 리스트, 코드 등)를 구체적으로 지정했는가?"
+              }
+            ]
+          }
+        },
+        {
+          "element": "사고 연쇄",
+          "points": 60,
+          "penalty": false,
+          "description": "단계별 추론을 지시하거나 예시(Few-shot)를 제공했는가? [Step-by-step / Example]",
+          "checklist": [
+            "AI에게 단순히 정답만 요구하지 말고 '어떤 과정을 거쳐서 그 결론에 도달했는지를 명시적으로 지시했는가 여부"
+          ],
+          "validationLogic": {
+            "method": "keyword_or_pattern",
+            "condition": "at_least_one",
+            "keywords": [
+              "Step-by-step",
+              "단계별",
+              "차례대로",
+              "Example:",
+              "예시:"
+            ]
+          }
+        },
+        {
+          "element": "반복 개선",
+          "points": 60,
+          "penalty": false,
+          "description": "1차 답변 후 구체적인 수정 지시를 통해 결과를 개선했는가? [Refine]",
+          "checklist": [
+            "사용자가 AI의 답변을 맹신하지 않고, 주도적으로 비판하고 수정했는가 여부"
+          ],
+          "validationLogic": {
+            "method": "conversation_flow_check",
+            "target_turn": "N+1",
+            "exclude_condition": "simple_retry",
+            "keywords": [
+              "수정",
+              "변경",
+              "빼고",
+              "추가"
+            ]
+          }
+        },
+        {
+          "element": "출력 정합성",
+          "points": 60,
+          "penalty": false,
+          "description": "요청한 형식, 글자 수, 필수 키워드 등 제약조건을 준수했는가? [Constraint 준수]",
+          "checklist": [
+            "분량(500~700자), 형식(개조식), 필수 키워드 3개 포함 여부"
+          ],
+          "validationLogic": {
+            "method": "output_parsing",
+            "checks": [
+              {
+                "type": "format",
+                "rule": "is_json OR is_markdown_table"
+              },
+              {
+                "type": "constraint",
+                "rule": "length <= limit"
+              },
+              {
+                "type": "keyword",
+                "rule": "keyword in output"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "totalPoints": {
+    "aes": 100,
+    "aci": 250
+  },
+  "pointBreakdown": {
+    "aes": 40,
+    "aci": 250
+  },
+  "scoringNotes": {
+    "penaltySystem": "AES 평가요소는 위반 시 감점 방식으로 적용됩니다.",
+    "bonusSystem": "ACI 평가요소는 획득 점수 방식으로 적용됩니다."
+  }
+}
