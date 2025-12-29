@@ -1130,6 +1130,13 @@ body.full-page-body {
 }
 
 /* 스크롤 없는 페이지 (새 과제 생성 페이지 등) */
+body.no-scroll-page {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .no-scroll-page .admin-container {
     height: auto;
     min-height: 100vh;
@@ -1145,6 +1152,7 @@ body.full-page-body {
 
 .no-scroll-page .admin-content {
     overflow-y: visible;
+    overflow-x: hidden;
 }
 
 .content-wrapper {
