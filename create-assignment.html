@@ -42,7 +42,7 @@
                         <!-- 탭 네비게이션 -->
                         <div class="form-tabs">
                             <button type="button" class="form-tab active" data-tab="metadata">
-                                <i class="fas fa-file-alt"></i> 문서 메타데이터
+                                <i class="fas fa-file-alt"></i> 과제 메타데이터
                             </button>
                             <button type="button" class="form-tab" data-tab="task">
                                 <i class="fas fa-tasks"></i> 과제 정보
@@ -58,27 +58,27 @@
                             </button>
                         </div>
 
-                        <!-- 문서 메타데이터 섹션 -->
+                        <!-- 과제 메타데이터 섹션 -->
                         <div class="form-tab-content active" id="tab-metadata">
                             <div class="form-section">
                                 <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="docTitle">제목 <span class="required">*</span></label>
+                                    <label for="docTitle">제목 <span class="json-key">[docMetadata.title]</span> <span class="required">*</span></label>
                                     <input type="text" id="docTitle" name="docTitle" required
                                         placeholder="예: 서일대학교 특강 - PPS 평가모드 시나리오">
                                 </div>
                                 <div class="form-group">
-                                    <label for="docDescription">설명</label>
+                                    <label for="docDescription">설명 <span class="json-key">[docMetadata.description]</span></label>
                                     <textarea id="docDescription" name="docDescription" rows="3"
                                         placeholder="문서에 대한 설명을 입력하세요"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="docVersion">버전 <span class="required">*</span></label>
+                                    <label for="docVersion">버전 <span class="json-key">[docMetadata.version]</span> <span class="required">*</span></label>
                                     <input type="text" id="docVersion" name="docVersion" required placeholder="예: v1.0.0"
                                         value="v1.0.0">
                                 </div>
                                 <div class="form-group">
-                                    <label for="docMode">모드 <span class="required">*</span></label>
+                                    <label for="docMode">모드 <span class="json-key">[docMetadata.mode]</span> <span class="required">*</span></label>
                                     <select id="docMode" name="docMode" required>
                                         <option value="">선택하세요</option>
                                         <option value="학습모드">학습모드</option>
@@ -86,7 +86,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="competencyCode">역량 코드 <span class="required">*</span></label>
+                                    <label for="competencyCode">역량 코드 <span class="json-key">[docMetadata.competency.code]</span> <span class="required">*</span></label>
                                     <select id="competencyCode" name="competencyCode" required>
                                         <option value="">선택하세요</option>
                                         <option value="PPS" data-name-kr="프롬프트 문제해결력" data-name-en="Prompt Problem Solving" data-description="복잡한 문제를 해결하기 위해 AI에게 논리적이고 체계적인 지시(프롬프트)를 설계하는 능력">PPS - 프롬프트 문제해결력</option>
@@ -96,17 +96,17 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="competencyNameKr">역량명 (한글) <span class="required">*</span></label>
+                                    <label for="competencyNameKr">역량명 (한글) <span class="json-key">[docMetadata.competency.name_kr]</span> <span class="required">*</span></label>
                                     <input type="text" id="competencyNameKr" name="competencyNameKr" required
                                         placeholder="역량 코드 선택 시 자동 입력" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="competencyNameEn">역량명 (영문) <span class="required">*</span></label>
+                                    <label for="competencyNameEn">역량명 (영문) <span class="json-key">[docMetadata.competency.name_en]</span> <span class="required">*</span></label>
                                     <input type="text" id="competencyNameEn" name="competencyNameEn" required
                                         placeholder="역량 코드 선택 시 자동 입력" readonly>
                                 </div>
                                 <div class="form-group full-width">
-                                    <label for="competencyDescription">역량 설명 <span class="required">*</span></label>
+                                    <label for="competencyDescription">역량 설명 <span class="json-key">[docMetadata.competency.description]</span> <span class="required">*</span></label>
                                     <textarea id="competencyDescription" name="competencyDescription" rows="2" required
                                         placeholder="역량 코드 선택 시 자동 입력" readonly></textarea>
                                 </div>
@@ -124,24 +124,24 @@
                                 </div>
                                 <div class="form-grid">
                                     <div class="form-group">
-                                        <label for="taskId">과제 ID</label>
+                                        <label for="taskId">과제 ID <span class="json-key">[tasks[].taskId]</span></label>
                                         <input type="number" id="taskId" name="taskId" min="1" value="1" readonly>
                                         <small class="form-hint">과제를 구분하는 고유 번호입니다. (자동 생성)</small>
                                     </div>
                                     <div class="form-group full-width">
-                                        <label for="taskTitle">과제 제목 <span class="required">*</span></label>
+                                        <label for="taskTitle">과제 제목 <span class="json-key">[tasks[].title]</span> <span class="required">*</span></label>
                                         <input type="text" id="taskTitle" name="taskTitle" required
                                             placeholder="예: [기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획">
                                         <small class="form-hint">과제의 제목을 입력하세요. 카테고리나 유형을 대괄호로 표시할 수 있습니다.</small>
                                     </div>
                                     <div class="form-group full-width">
-                                        <label for="taskObjective">목표 <span class="required">*</span></label>
+                                        <label for="taskObjective">목표 <span class="json-key">[tasks[].objective]</span> <span class="required">*</span></label>
                                         <textarea id="taskObjective" name="taskObjective" rows="4" required
                                             placeholder="과제의 목표를 입력하세요. 예: 법을 어기라는 대표님의 지시를 방어하고, 투자자가 안심할 수 있는 합법적이고 윤리적인 기획서를 완성하라."></textarea>
                                         <small class="form-hint">이 과제를 통해 달성하고자 하는 목표를 명확하게 기술하세요.</small>
                                     </div>
                                     <div class="form-group full-width">
-                                        <label for="taskMission">미션 <span class="required">*</span></label>
+                                        <label for="taskMission">미션 <span class="json-key">[tasks[].mission]</span> <span class="required">*</span></label>
                                         <textarea id="taskMission" name="taskMission" rows="4" required
                                             placeholder="과제의 미션을 입력하세요. 예: 생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오."></textarea>
                                         <small class="form-hint">학습자가 수행해야 할 구체적인 미션을 기술하세요.</small>

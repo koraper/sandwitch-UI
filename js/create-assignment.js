@@ -122,6 +122,29 @@ class CreateAssignmentManager {
     }
 
     /**
+     * 출력 요구사항 서브 탭 전환
+     */
+    switchOutputTab(sessionId, tabType) {
+        const sessionItem = document.querySelector(`.session-item[data-session-id="${sessionId}"]`);
+        if (!sessionItem) return;
+
+        // 모든 서브 탭 버튼 비활성화
+        const tabButtons = sessionItem.querySelectorAll('.output-req-tab');
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+
+        // 모든 서브 탭 컨텐츠 숨기기
+        const tabContents = sessionItem.querySelectorAll('.output-req-content');
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // 선택된 탭 활성화
+        const selectedButton = sessionItem.querySelector(`[data-output-tab="${tabType}_${sessionId}"]`);
+        const selectedContent = sessionItem.querySelector(`#output-${tabType}_${sessionId}`);
+
+        if (selectedButton) selectedButton.classList.add('active');
+        if (selectedContent) selectedContent.classList.add('active');
+    }
+
+    /**
      * 탭 전환
      */
     switchTab(tabName) {
@@ -171,6 +194,7 @@ class CreateAssignmentManager {
                 </button>
             </div>
             <div class="form-group">
+                <label>팁 <span class="json-key">[tasks[].scoringTips[].tip]</span></label>
                 <textarea name="${tipId}" rows="3" placeholder="채점 팁을 입력하세요. 예: AI에게 명확한 역할(Role)과 상황(Context)을 부여하세요." class="scoring-tip-input"></textarea>
             </div>
         `;
@@ -218,21 +242,21 @@ class CreateAssignmentManager {
         sessionElement.dataset.sessionId = sessionId;
         sessionElement.innerHTML = `
             <div class="session-header">
-                <h3 class="session-title">세션 ${sessionId}</h3>
+                <h3 class="session-title">세션 ${sessionId} <span class="json-key">[tasks[].sessions[]]</span></h3>
                 <button type="button" class="btn-remove" onclick="window.createAssignmentManager.removeSession(this);">
                     <i class="fas fa-times"></i> 세션 삭제
                 </button>
             </div>
             
             <div class="form-group">
-                <label>상황 설명 <span class="required">*</span></label>
+                <label>상황 설명 <span class="json-key">[tasks[].sessions[].userDisplays.situation]</span> <span class="required">*</span></label>
                 <textarea name="session_${sessionId}_situation" rows="5" required placeholder="학습자에게 제공할 상황 설명을 입력하세요. 예: 당신은 헬스케어 스타트업 'P-Lab'의 기획자(PM)입니다..."></textarea>
                 <small class="form-hint">학습자가 과제를 수행할 때 필요한 배경 정보와 상황을 설명하세요.</small>
             </div>
 
             <div class="form-subsection">
                 <div class="form-subsection-header">
-                    <h4><i class="fas fa-database"></i> 원본 데이터</h4>
+                    <h4><i class="fas fa-database"></i> 원본 데이터 <span class="json-key">[tasks[].sessions[].userDisplays.rawData[]]</span></h4>
                     <button type="button" class="btn-add-small" onclick="window.createAssignmentManager.addRawData(${sessionId})">
                         <i class="fas fa-plus"></i> 데이터 추가
                     </button>
@@ -244,42 +268,120 @@ class CreateAssignmentManager {
 
             <div class="form-subsection">
                 <div class="form-subsection-header">
-                    <h4><i class="fas fa-clipboard-check"></i> 출력 요구사항</h4>
+                    <h4><i class="fas fa-clipboard-check"></i> 출력 요구사항 <span class="json-key">[tasks[].sessions[].userDisplays.outputRequirements]</span></h4>
                 </div>
                 
-                <div class="form-subsection-content">
-                    <h5 class="subsection-title">AES 요구사항</h5>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label>AES 요구사항 - 설명</label>
-                            <input type="text" name="session_${sessionId}_aes_description" placeholder="예: AES 검증 (법적/사회적 리스크 관리)">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>AES 요구사항 - 요구사항</label>
-                            <textarea name="session_${sessionId}_aes_requirement" rows="3" placeholder="예: 대표님의 지시 중 AES평가 요소에 위배되는 사항을 찾아내어, 수정할 것."></textarea>
+                <!-- 출력 요구사항 서브 탭 -->
+                <div class="output-req-tabs">
+                    <button type="button" class="output-req-tab active" data-output-tab="aes_${sessionId}" onclick="window.createAssignmentManager.switchOutputTab(${sessionId}, 'aes')">
+                        <i class="fas fa-shield-alt"></i> AES 요구사항
+                    </button>
+                    <button type="button" class="output-req-tab" data-output-tab="aci_${sessionId}" onclick="window.createAssignmentManager.switchOutputTab(${sessionId}, 'aci')">
+                        <i class="fas fa-file-alt"></i> ACI 요구사항
+                    </button>
+                </div>
+
+                <!-- AES 요구사항 탭 컨텐츠 -->
+                <div class="output-req-content active" id="output-aes_${sessionId}">
+                    <div class="form-subsection-content">
+                        <h5 class="subsection-title">AES 요구사항 <span class="json-key">[...aesRequirements]</span></h5>
+                        <p class="form-section-description">AES(Accuracy, Ethics, Safety) - 정확성, 윤리, 안전 관련 요구사항을 정의합니다.</p>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>설명 <span class="json-key">[...aesRequirements.description]</span></label>
+                                <input type="text" name="session_${sessionId}_aes_description" placeholder="예: AES 검증 (법적/사회적 리스크 관리)">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>요구사항 <span class="json-key">[...aesRequirements.requirement]</span></label>
+                                <textarea name="session_${sessionId}_aes_requirement" rows="4" placeholder="예: 대표님의 지시 중 AES평가 요소에 위배되는 사항을 찾아내어, 수정할 것."></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-subsection-content">
-                    <h5 class="subsection-title">ACI 요구사항</h5>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>ACI 형식 - 스타일</label>
-                            <input type="text" name="session_${sessionId}_aci_style" placeholder="예: 서술형 줄글이 아닌 개조식 리스트 형태">
+                <!-- ACI 요구사항 탭 컨텐츠 -->
+                <div class="output-req-content" id="output-aci_${sessionId}">
+                    <div class="form-subsection-content">
+                        <h5 class="subsection-title">ACI 요구사항 <span class="json-key">[...aciRequirements]</span></h5>
+                        <p class="form-section-description">ACI(Accuracy, Completeness, Integrity) - 출력 형식, 구조, 데이터 신뢰성 관련 요구사항을 정의합니다.</p>
+                        
+                        <!-- 형식 (format) -->
+                        <div class="aci-section">
+                            <h6><i class="fas fa-align-left"></i> 형식 <span class="json-key">[...aciRequirements.format]</span></h6>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>형식 설명 <span class="json-key">[...format.description]</span></label>
+                                    <input type="text" name="session_${sessionId}_format_description" placeholder="예: 출력 형식 요구사항" value="출력 형식 요구사항">
+                                </div>
+                                <div class="form-group">
+                                    <label>스타일 <span class="json-key">[...format.style]</span></label>
+                                    <input type="text" name="session_${sessionId}_aci_style" placeholder="예: 서술형 줄글이 아닌 개조식 리스트 형태">
+                                </div>
+                                <div class="form-group">
+                                    <label>길이 <span class="json-key">[...format.length]</span></label>
+                                    <input type="text" name="session_${sessionId}_aci_length" placeholder="예: 공백 포함 500자 ~ 700자 이내">
+                                </div>
+                            </div>
+                            
+                            <!-- 필수 섹션 (구성 요소) -->
+                            <div class="required-sections-wrapper">
+                                <div class="form-subsection-header">
+                                    <h6><i class="fas fa-list-ol"></i> 필수 섹션 (구성 요소) <span class="json-key">[...format.requiredSections[]]</span></h6>
+                                    <button type="button" class="btn-add-small" onclick="window.createAssignmentManager.addRequiredSection(${sessionId})">
+                                        <i class="fas fa-plus"></i> 구성 요소 추가
+                                    </button>
+                                </div>
+                                <div class="required-sections-container" id="requiredSectionsContainer_${sessionId}">
+                                    <!-- 동적으로 추가됨 -->
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>ACI 형식 - 길이</label>
-                            <input type="text" name="session_${sessionId}_aci_length" placeholder="예: 공백 포함 500자 ~ 700자 이내">
+                        
+                        <!-- 필수 표기 사항 -->
+                        <div class="aci-section">
+                            <h6><i class="fas fa-tag"></i> 필수 표기 사항 <span class="json-key">[...aciRequirements.requiredNotation]</span></h6>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>설명 <span class="json-key">[...requiredNotation.description]</span></label>
+                                    <input type="text" name="session_${sessionId}_notation_description" placeholder="예: 필수 표기 사항" value="필수 표기 사항">
+                                </div>
+                                <div class="form-group">
+                                    <label>요구사항 <span class="json-key">[...requiredNotation.requirement]</span></label>
+                                    <input type="text" name="session_${sessionId}_notation_requirement" placeholder="예: 출처 표기 필수">
+                                </div>
+                                <div class="form-group">
+                                    <label>텍스트 <span class="json-key">[...requiredNotation.text]</span></label>
+                                    <input type="text" name="session_${sessionId}_notation_text" placeholder="예: [출처: OOO]">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group full-width">
-                            <label>데이터 신뢰성 요구사항</label>
-                            <textarea name="session_${sessionId}_data_reliability" rows="2" placeholder="예: 출처가 불분명한 통계는 배제하고, 공신력 있는 기관의 데이터로 검증하여 대체할 것."></textarea>
+
+                        <!-- 데이터 신뢰성 -->
+                        <div class="aci-section">
+                            <h6><i class="fas fa-check-circle"></i> 데이터 신뢰성 <span class="json-key">[...aciRequirements.dataReliability]</span></h6>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>요구사항 <span class="json-key">[...dataReliability.requirement]</span></label>
+                                    <textarea name="session_${sessionId}_data_reliability" rows="2" placeholder="예: 출처가 불분명한 통계는 배제하고, 공신력 있는 기관의 데이터로 검증하여 대체할 것."></textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group full-width">
-                            <label>필수 키워드 (쉼표로 구분)</label>
-                            <input type="text" name="session_${sessionId}_keywords" placeholder="예: 디지털 헬스케어, 구독 경제, 마이데이터">
-                            <small class="form-hint">출력물에 반드시 포함되어야 하는 키워드를 쉼표로 구분하여 입력하세요.</small>
+
+                        <!-- 필수 키워드 & 제약 조건 -->
+                        <div class="aci-section">
+                            <h6><i class="fas fa-key"></i> 키워드 및 제약 조건</h6>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>필수 키워드 <span class="json-key">[...aciRequirements.requiredKeywords]</span></label>
+                                    <input type="text" name="session_${sessionId}_keywords" placeholder="예: 디지털 헬스케어, 구독 경제, 마이데이터">
+                                    <small class="form-hint">출력물에 반드시 포함되어야 하는 키워드를 쉼표로 구분하여 입력하세요.</small>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>제약 조건 <span class="json-key">[...aciRequirements.constraints]</span></label>
+                                    <input type="text" name="session_${sessionId}_constraints" placeholder="예: 특정 단어 사용 금지, 형식 제한 등">
+                                    <small class="form-hint">제약 조건이 있으면 쉼표로 구분하여 입력하세요. 없으면 비워두세요.</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -337,17 +439,17 @@ class CreateAssignmentManager {
             </div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>출처</label>
+                    <label>출처 <span class="json-key">[...rawData[].source]</span></label>
                     <input type="text" name="${rawDataId}_source" placeholder="예: 대표님의 메모">
                     <small class="form-hint">원본 데이터의 출처를 입력하세요.</small>
                 </div>
                 <div class="form-group full-width">
-                    <label>내용 (줄바꿈으로 구분)</label>
+                    <label>내용 <span class="json-key">[...rawData[].content]</span></label>
                     <textarea name="${rawDataId}_content" rows="5" placeholder="각 줄에 내용을 입력하세요. 예:&#10;1. 김 PM, 우리 앱 이름은 '꿀잠'이야...&#10;2. 마케팅 핵심: 우리 앱 쓰면..."></textarea>
                     <small class="form-hint">원본 데이터의 내용을 줄바꿈으로 구분하여 입력하세요.</small>
                 </div>
                 <div class="form-group full-width">
-                    <label>리스크 (줄바꿈으로 구분)</label>
+                    <label>리스크 <span class="json-key">[...rawData[].risks]</span></label>
                     <textarea name="${rawDataId}_risks" rows="3" placeholder="각 줄에 리스크를 입력하세요. 예:&#10;의료법 위반 가능성 (과장 광고)&#10;개인정보보호법 위반 가능성"></textarea>
                     <small class="form-hint">이 원본 데이터에 포함된 법적, 윤리적 리스크를 입력하세요.</small>
                 </div>
@@ -370,6 +472,56 @@ class CreateAssignmentManager {
     }
 
     /**
+     * 필수 섹션 (구성 요소) 추가
+     */
+    addRequiredSection(sessionId) {
+        const container = document.getElementById(`requiredSectionsContainer_${sessionId}`);
+        if (!container) return;
+
+        const sectionId = `reqSection_${sessionId}_${Date.now()}`;
+        const sectionCount = container.children.length + 1;
+        const sectionElement = document.createElement('div');
+        sectionElement.className = 'required-section-item';
+        sectionElement.dataset.sectionId = sectionId;
+        sectionElement.innerHTML = `
+            <div class="required-section-header">
+                <span class="required-section-label">구성 요소 ${sectionCount}</span>
+                <button type="button" class="btn-remove-small" onclick="window.createAssignmentManager.removeRequiredSection(this);">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>순서 <span class="json-key">[...requiredSections[].order]</span></label>
+                    <input type="number" name="${sectionId}_order" min="1" value="${sectionCount}" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>제목 <span class="json-key">[...requiredSections[].title]</span></label>
+                    <input type="text" name="${sectionId}_title" placeholder="예: 헤드라인 (이모지 포함)">
+                </div>
+                <div class="form-group full-width">
+                    <label>내용 <span class="json-key">[...requiredSections[].content]</span></label>
+                    <input type="text" name="${sectionId}_content" placeholder="예: 인스타그램 게시글의 첫 부분으로 주목을 끄는 헤드라인과 이모지 포함">
+                </div>
+            </div>
+        `;
+
+        container.appendChild(sectionElement);
+        this.updateJsonPreview();
+    }
+
+    /**
+     * 필수 섹션 (구성 요소) 삭제
+     */
+    removeRequiredSection(button) {
+        const item = button.closest('.required-section-item');
+        if (item) {
+            item.remove();
+            this.updateJsonPreview();
+        }
+    }
+
+    /**
      * 폼 데이터 수집
      */
     collectFormData() {
@@ -379,7 +531,7 @@ class CreateAssignmentManager {
         const formData = new FormData(form);
         const data = {};
 
-        // 문서 메타데이터
+        // 과제 메타데이터
         const now = new Date().toISOString();
         data.docMetadata = {
             title: formData.get('docTitle') || '',
@@ -434,7 +586,7 @@ class CreateAssignmentManager {
                         },
                         aciRequirements: {
                             format: {
-                                description: formData.get(`session_${sessionId}_aci_description`) || '출력 형식 요구사항',
+                                description: formData.get(`session_${sessionId}_format_description`) || '출력 형식 요구사항',
                                 style: formData.get(`session_${sessionId}_aci_style`) || '',
                                 length: formData.get(`session_${sessionId}_aci_length`) || '',
                                 requiredSections: []
@@ -462,6 +614,13 @@ class CreateAssignmentManager {
                     keywords.split(',').map(k => k.trim()).filter(k => k);
             }
 
+            // 제약 조건 수집
+            const constraints = formData.get(`session_${sessionId}_constraints`) || '';
+            if (constraints) {
+                session.userDisplays.outputRequirements.aciRequirements.constraints = 
+                    constraints.split(',').map(c => c.trim()).filter(c => c);
+            }
+
             // 원본 데이터 수집
             const rawDataItems = sessionItem.querySelectorAll('.raw-data-item');
             rawDataItems.forEach(rawDataItem => {
@@ -479,6 +638,26 @@ class CreateAssignmentManager {
                     session.userDisplays.rawData.push(rawData);
                 }
             });
+
+            // 필수 섹션 수집
+            const requiredSectionItems = sessionItem.querySelectorAll('.required-section-item');
+            requiredSectionItems.forEach(sectionItem => {
+                const sectionId = sectionItem.dataset.sectionId;
+                const order = parseInt(formData.get(`${sectionId}_order`)) || 1;
+                const title = formData.get(`${sectionId}_title`) || '';
+                const content = formData.get(`${sectionId}_content`) || '';
+
+                if (title || content) {
+                    session.userDisplays.outputRequirements.aciRequirements.format.requiredSections.push({
+                        order: order,
+                        title: title,
+                        content: content
+                    });
+                }
+            });
+
+            // 순서대로 정렬
+            session.userDisplays.outputRequirements.aciRequirements.format.requiredSections.sort((a, b) => a.order - b.order);
 
             data.tasks[0].sessions.push(session);
         });

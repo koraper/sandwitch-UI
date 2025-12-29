@@ -87,14 +87,16 @@
                 },
                 "dataReliability": {
                   "description": "데이터 신뢰성",
-                  "requirement": ""
+                  "requirement": "게시글 내용에 대한 신뢰성 있는 데이터를 제공할 것."
                 },
-                "requiredKeywords": [],
-                "constraints": [
-                  "경쟁사 비방 없이 긍정적 에너지 강조",
-                  "법적 리스크 제거",
-                  "안전하고 매력적인 표현"
-                ]
+                "requiredKeywords": {
+                  "description": "필수 키워드",
+                  "requirement": "경쟁사 비방 없이 긍정적 에너지 강조, 법적 리스크 제거, 안전하고 매력적인 표현"
+                },
+                "constraints": {
+                  "description": "제약사항",
+                  "constraint": "경쟁사 비방하는 표현, 법적 리스크 있는 표현, 위험을 부여하는 표현"
+                }
               }
             }
           }
