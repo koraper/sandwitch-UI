@@ -4513,7 +4513,7 @@
 .required-sections-list ul {
     margin: 0;
     padding-left: 1.5rem;
-    list-style-type: decimal;
+    list-style-type: none;
 }
 
 .required-sections-list li {
@@ -4833,7 +4833,8 @@
 
 .message-content {
     flex: 1;
-    max-width: 70%;
+    max-width: 100%;
+    width: 100%;
 }
 
 .chat-message-user .message-content {
@@ -4870,6 +4871,47 @@
     border: 1px solid #e5e7eb;
 }
 
+.message-content {
+    position: relative;
+}
+
+.message-copy-btn {
+    margin-top: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.message-copy-btn:hover {
+    background: #e5e7eb;
+    color: #374151;
+    border-color: #d1d5db;
+}
+
+.message-copy-btn:active {
+    transform: scale(0.95);
+}
+
+.message-copy-btn.copied {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+.message-copy-btn.copied:hover {
+    background: #059669;
+    border-color: #059669;
+}
+
 .chat-message-system .message-content {
     background: transparent;
 }
@@ -4885,7 +4927,7 @@
 .chat-input-wrapper {
     display: flex;
     gap: 0.75rem;
-    padding: 1.25rem;
+    padding: 1.5rem;
     border-top: 1px solid #e5e7eb;
     background: white;
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
@@ -4893,13 +4935,19 @@
 
 .chat-input {
     flex: 1;
-    padding: 0.875rem 1.25rem;
+    min-width: 0;
+    padding: 1rem 1.5rem;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-family: inherit;
     transition: all 0.2s;
     background: #fafbfc;
+    width: 100%;
+    resize: vertical;
+    min-height: 60px;
+    max-height: 200px;
+    line-height: 1.5;
 }
 
 .chat-input:focus {
@@ -5151,7 +5199,7 @@
     }
 
     .message-content {
-        max-width: 85%;
+        max-width: 100%;
     }
 }
 
@@ -6262,7 +6310,7 @@ body[data-competency="PPS"] .pps-only {
 .pps-editor-hint .section-list {
     margin: 0.5rem 0 0 0;
     padding-left: 1.5rem;
-    list-style: disc;
+    list-style: none;
 }
 
 .pps-editor-hint .section-list li {

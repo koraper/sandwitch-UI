@@ -576,8 +576,8 @@ class WorkspaceManager {
      * 우측 패널 렌더링
      */
     renderRightPanel() {
-        this.renderScoringTips();
         this.renderOutputRequirementsPanel();
+        this.renderScoringTips();
         this.setupRightPanelAccordions();
     }
 
@@ -934,20 +934,19 @@ class WorkspaceManager {
                 }
             }
 
-            // 제약사항
-            if (aci.constraints) {
-                const constraints = typeof aci.constraints === 'object' && aci.constraints.constraint
+            // 제약사항 (항상 표시)
+            const constraints = aci.constraints
+                ? (typeof aci.constraints === 'object' && aci.constraints.constraint
                     ? aci.constraints.constraint
-                    : (Array.isArray(aci.constraints) ? aci.constraints.join(', ') : '');
-                if (constraints) {
-                    html += `
-                        <div class="constraints">
-                            <strong><i class="fas fa-ban"></i> 작성 시 주의사항</strong>
-                            <p>${constraints}</p>
-                        </div>
-                    `;
-                }
-            }
+                    : (Array.isArray(aci.constraints) ? aci.constraints.join(', ') : ''))
+                : '';
+
+            html += `
+                <div class="constraints">
+                    <strong><i class="fas fa-ban"></i> 작성 시 주의사항</strong>
+                    <p>${constraints || '없음'}</p>
+                </div>
+            `;
 
             html += `</div>`;
         }
@@ -978,11 +977,11 @@ class WorkspaceManager {
      * 우측 패널 어코디언 설정
      */
     setupRightPanelAccordions() {
-        // 핵심 체크포인트
-        this.setupAccordion('scoringTipsHeader', 'scoringTipsSection', 'scoringTipsSection_collapsed');
-
         // 출력 요구사항
         this.setupAccordion('outputRequirementsHeader', 'outputRequirementsSection', 'outputRequirementsSection_collapsed');
+
+        // 핵심 체크포인트
+        this.setupAccordion('scoringTipsHeader', 'scoringTipsSection', 'scoringTipsSection_collapsed');
     }
 
     /**
@@ -1330,6 +1329,7 @@ class WorkspaceManager {
         messageEl.className = `chat-message chat-message-${role}`;
 
         const avatarIcon = role === 'user' ? 'fa-user' : 'fa-robot';
+        const messageId = `message-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
         messageEl.innerHTML = `
             <div class="message-avatar">
@@ -1337,11 +1337,64 @@ class WorkspaceManager {
             </div>
             <div class="message-content">
                 <p>${this.formatText(content)}</p>
+                ${role === 'assistant' ? `
+                    <button class="message-copy-btn" onclick="window.workspaceManager.copyMessage('${messageId}')" title="응답 복사">
+                        <i class="fas fa-copy"></i> 복사
+                    </button>
+                ` : ''}
             </div>
         `;
 
+        messageEl.id = messageId;
+        messageEl.dataset.content = content;
+
         messagesContainer.appendChild(messageEl);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    /**
+     * 메시지 복사
+     */
+    copyMessage(messageId) {
+        const messageEl = document.getElementById(messageId);
+        if (!messageEl) return;
+
+        const content = messageEl.dataset.content || messageEl.querySelector('.message-content p')?.textContent || '';
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(content).then(() => {
+                const copyBtn = messageEl.querySelector('.message-copy-btn');
+                if (copyBtn) {
+                    const originalHTML = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> 복사됨';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalHTML;
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                }
+                this.showSuccess('메시지가 클립보드에 복사되었습니다.');
+            }).catch(err => {
+                console.error('복사 실패:', err);
+                this.showError('복사에 실패했습니다.');
+            });
+        } else {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = content;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                this.showSuccess('메시지가 클립보드에 복사되었습니다.');
+            } catch (err) {
+                console.error('복사 실패:', err);
+                this.showError('복사에 실패했습니다.');
+            }
+            document.body.removeChild(textArea);
+        }
     }
 
     /**
@@ -2258,49 +2311,11 @@ class WorkspaceManager {
         const maxLength = lengthMatch ? parseInt(lengthMatch[2]) : 0;
 
         let editorHtml = `
-            <div class="output-editor-info">
-                <p><strong><i class="fas fa-file-alt"></i> 형식</strong> ${style}</p>
-                <p><strong><i class="fas fa-text-width"></i> 권장 길이</strong> ${format.length || '-'}</p>
-                ${style.includes('개조식') || style.includes('리스트') ? `
-                    <div class="format-guide pps-format-guide">
-                        <i class="fas fa-info-circle"></i>
-                        <span>개조식 리스트 형태로 작성하세요. 각 항목은 번호나 불릿(-)으로 구분합니다.</span>
-                    </div>
-                ` : ''}
-            </div>
         `;
 
         // PPS는 개조식 리스트 형태이므로 단일 에디터 사용
         if (style.includes('개조식') || style.includes('리스트')) {
-            const sectionId = `pps_output_${this.currentSessionId}`;
-            const savedContent = this.outputData[sectionId] || '';
-
-            editorHtml += `
-                <div class="output-section-item pps-list-editor">
-                    <label class="section-label">
-                        <i class="fas fa-list"></i> 기획서 작성 (개조식 리스트 형태)
-                    </label>
-                    <div class="pps-editor-hint">
-                        <p>다음 섹션들을 포함하여 개조식 리스트 형태로 작성하세요:</p>
-                        <ul class="section-list">
-                            ${requiredSections.map(section => `
-                                <li><strong>${section.order}. ${section.title}</strong>: ${section.content}</li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                    <textarea 
-                        id="${sectionId}"
-                        class="section-input pps-list-input"
-                        rows="15"
-                        placeholder="${requiredSections.map(section => `${section.order}. ${section.title}\n   ${section.content}`).join('\n\n')}"
-                        oninput="window.workspaceManager.updateOutput('${sectionId}', this.value)"
-                    >${savedContent}</textarea>
-                    <div class="pps-editor-tips">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>팁: 각 섹션을 명확히 구분하고, 하위 항목은 들여쓰기(-)를 사용하세요.</span>
-                    </div>
-                </div>
-            `;
+            // 개조식 리스트 형태 - textarea 제거됨
         } else {
             // 일반 섹션별 입력 (인스타그램 포맷 등)
             requiredSections.forEach((section, index) => {
@@ -2325,26 +2340,6 @@ class WorkspaceManager {
             });
         }
 
-        // 필수 키워드 표시
-        if (aci.requiredKeywords) {
-            const keywords = typeof aci.requiredKeywords === 'object' && aci.requiredKeywords.requirement
-                ? aci.requiredKeywords.requirement
-                : (Array.isArray(aci.requiredKeywords) ? aci.requiredKeywords.join(', ') : '');
-
-            if (keywords) {
-                editorHtml += `
-                    <div class="required-keywords-display pps-keywords">
-                        <strong><i class="fas fa-key"></i> 필수 포함 키워드</strong>
-                        <div class="keywords-list">
-                            ${keywords.split(',').map(kw => `<span class="keyword-tag" data-keyword="${kw.trim()}">${kw.trim()}</span>`).join('')}
-                        </div>
-                        <div class="keywords-status" id="keywordsStatus">
-                            <span class="keywords-status-text">키워드 포함 여부를 확인하세요.</span>
-                        </div>
-                    </div>
-                `;
-            }
-        }
 
         // 필수 표기 사항
         if (aci.requiredNotation && aci.requiredNotation.text) {

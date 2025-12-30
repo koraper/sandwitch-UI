@@ -106,11 +106,10 @@
                                 <button class="tab-button active" data-tab="chat" id="chatTab">
                                     <i class="fas fa-robot"></i>
                                     <span>AI 어시스턴트 협업</span>
-                                    <span class="badge badge-info">시뮬레이션</span>
                                 </button>
                                 <button class="tab-button" data-tab="output" id="outputTab">
                                     <i class="fas fa-edit"></i>
-                                    <span>최종 결과물 작성</span>
+                                    <span>결과물 작성 및 제출</span>
                                 </button>
                             </div>
 
@@ -126,28 +125,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="chat-input-wrapper">
-                                            <input type="text" id="chatInput" class="chat-input"
-                                                placeholder="AI에게 질문하거나 지시를 입력하세요..."
-                                                onkeyup="if(event.key === 'Enter') window.workspaceManager.sendMessage()">
-                                            <button class="chat-send-btn" id="chatSendBtn"
-                                                onclick="window.workspaceManager.sendMessage()">
-                                                <i class="fas fa-paper-plane"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 결과물 작성 영역 탭 -->
-                                <div class="tab-panel" id="outputPanel">
-                                    <div class="output-editor" id="outputEditor">
-                                        <!-- 동적으로 생성됨 -->
-                                    </div>
-                                    <div class="output-actions">
-                                        <button class="btn btn-primary" id="submitBtn"
-                                            onclick="window.workspaceManager.submitWork()">
-                                            <i class="fas fa-paper-plane"></i> 과제 제출하기
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -164,17 +141,6 @@
 
                     <!-- 우측 패널 -->
                     <div class="workspace-right-panel">
-                        <!-- 핵심 체크포인트 섹션 -->
-                        <div class="workspace-section accordion-section" id="scoringTipsSection">
-                            <h2 class="section-title accordion-header" id="scoringTipsHeader">
-                                <i class="fas fa-lightbulb"></i> 핵심 체크포인트
-                                <i class="fas fa-chevron-down accordion-icon"></i>
-                            </h2>
-                            <div class="scoring-tips-content accordion-content" id="scoringTipsContent">
-                                <!-- 동적으로 생성됨 -->
-                            </div>
-                        </div>
-
                         <!-- 출력 요구사항 섹션 -->
                         <div class="workspace-section accordion-section" id="outputRequirementsSection">
                             <h2 class="section-title accordion-header" id="outputRequirementsHeader">
@@ -182,6 +148,17 @@
                                 <i class="fas fa-chevron-down accordion-icon"></i>
                             </h2>
                             <div class="output-requirements-content accordion-content" id="outputRequirementsContent">
+                                <!-- 동적으로 생성됨 -->
+                            </div>
+                        </div>
+
+                        <!-- 핵심 체크포인트 섹션 -->
+                        <div class="workspace-section accordion-section" id="scoringTipsSection">
+                            <h2 class="section-title accordion-header" id="scoringTipsHeader">
+                                <i class="fas fa-lightbulb"></i> 핵심 체크포인트
+                                <i class="fas fa-chevron-down accordion-icon"></i>
+                            </h2>
+                            <div class="scoring-tips-content accordion-content" id="scoringTipsContent">
                                 <!-- 동적으로 생성됨 -->
                             </div>
                         </div>

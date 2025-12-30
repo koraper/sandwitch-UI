@@ -1,9 +1,8 @@
 // 새 과제 생성 관리 클래스
 class CreateAssignmentManager {
     constructor() {
-        this.scoringTipCount = 0;
-        this.sessionCount = 0;
         this.modalScoringTipCount = 0;
+        this.modalSessionCount = 0;
         // tasks 배열: 여러 과제를 저장
         this.tasks = [];
         // 현재 선택된 과제 인덱스 (null = 선택 안됨)
@@ -31,6 +30,9 @@ class CreateAssignmentManager {
             this.handleModeChange(docModeSelect);
         }
 
+        // 샘플 데이터 추가 (테스트용)
+        this.loadSampleData();
+
         // 초기 빈 상태 표시
         this.updateEmptyStates();
 
@@ -40,6 +42,94 @@ class CreateAssignmentManager {
 
         // 초기 JSON 미리보기 업데이트
         this.updateJsonPreview();
+    }
+
+    /**
+     * 샘플 데이터 로드 (테스트용)
+     */
+    loadSampleData() {
+        this.tasks = [
+            {
+                taskNumber: 1,
+                title: "[기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획",
+                objective: "법을 어기라는 대표님의 지시를 방어하고, 투자자가 안심할 수 있는 합법적이고 윤리적인 기획서를 완성하라.",
+                mission: "생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오.",
+                timeLimit: 60,
+                scoringTips: [
+                    { tip: "AI에게 명확한 역할(Role)과 상황(Context)을 부여하세요." },
+                    { tip: "한 번에 답을 달라고 하기보다, 단계적(Step-by-step)으로 생각하도록 유도하세요." },
+                    { tip: "대충 질문해서 나온 답을 그대로 쓰지 말고, 비판적으로 검토하고 다시 지시(Refine)하는 과정을 보여주세요." }
+                ],
+                sessions: [
+                    {
+                        sessionNumber: 1,
+                        userDisplays: {
+                            situation: "당신은 헬스케어 스타트업 'P-Lab'의 기획자(PM)입니다.\n 다음 주 벤처캐피탈(VC) 미팅을 앞두고, 대표님이 주말 동안 구상한 [아이디어 메모]와 마케팅팀의 [기초 조사 데이터]를 전달받았습니다.\n 이 원본 자료(Raw Data)에는 심각한 법적, 윤리적 문제가 포함되어 있을 수 있으니 주의하기 바라며, 생성형 AI를 활용해 리스크는 제거하고, 투자자를 설득할 수 있는 안전한 [서비스 컨셉 기획서]를 완성하십시오.",
+                            rawData: [
+                                {
+                                    source: "대표님의 메모",
+                                    content: "1. 김 PM, 우리 앱 이름은 '꿀잠'이야. 기능은 다 넣어. ASMR, 수면 분석 등등.\n2. 마케팅 핵심: 우리 앱 쓰면 불면증 100% 완치된다고 홍보해. '마시는 약보다 효과 좋은 디지털 수면제'라고 딱 박아. 임상시험은 안 했지만 효과는 확실하니까.\n3. 재미 요소: 사용자가 자면서 낸 코골이나 잠꼬대 소리를 녹음해서, 웃긴 건 우리 인스타에 울려서 바이럴 시키자. 당사자 동의? 에이, 익명인데 뭐 어때. 그냥 올려.\n4. 수익 모델: 일단 평생 무료로 풀 거야. 돈은 나중에 광고로 벌면 돼.",
+                                    risks: "1.의료법 위반 가능성 (과장 광고)\n2.개인정보보호법 위반 가능성 (동의 없는 수집)\n3.임상시험 없이 치료 효과 주장"
+                                },
+                                {
+                                    source: "마케팅팀 조사 자료",
+                                    content: "1. 시장: 국내 슬립테크 시장 급성장 중.\n2.타겟: 스마트폰 과몰입 2030 세대.\n3.통계: 유명 인플루언서 헬스 블로그에 따르면, 한국 20대의 92.5%가 심각한 불면증 환자라고 함. (출처: 2024 OO의 건강일기 재인용)",
+                                    risks: "1.출처 불분명한 통계 데이터\n2.과장된 통계 수치"
+                                }
+                            ],
+                            outputRequirements: {
+                                aesRequirements: {
+                                    description: "AES 검증 (법적/사회적 리스크 관리)",
+                                    requirement: "대표님의 지시 중 AES 평가 요소에 위배되는 사항을 찾아내어, 수정할 것."
+                                },
+                                aciRequirements: {
+                                    format: {
+                                        description: "출력 형식 요구사항",
+                                        style: "서술형 줄글이 아닌 개조식 리스트 형태",
+                                        length: "공백 포함 500자 ~ 700자 이내",
+                                        requiredConditions: [
+                                            { order: 1, title: "서비스 정의 (Identity)", content: "서비스명, 슬로건, 핵심 가치 (의료법 리스크 해결 포함)" },
+                                            { order: 2, title: "시장성 검증 (Market Grounding)", content: "타겟 분석 및 공신력 있는 통계 근거 (심평원 등)" },
+                                            { order: 3, title: "리스크 관리 (AES & Safety)", content: "개인정보보호 및 윤리적 문제 해결 방안 (마이데이터 등)" },
+                                            { order: 4, title: "수익 모델 (Business Model)", content: "단계별 수익화 전략 (구독 경제 등)" }
+                                        ]
+                                    },
+                                    requiredNotation: {
+                                        description: "필수 표기 사항",
+                                        requirement: "필수 표기 사항이 있으면 여기에 명시",
+                                        text: ""
+                                    },
+                                    dataReliability: {
+                                        description: "데이터 신뢰성",
+                                        requirement: "출처가 불분명한 통계는 배제하고, 공신력 있는 기관의 데이터로 검증하여 대체할 것."
+                                    },
+                                    requiredKeywords: {
+                                        description: "필수 키워드",
+                                        requirement: "디지털 헬스케어, 구독 경제, 마이데이터"
+                                    },
+                                    constraints: {
+                                        description: "제약사항",
+                                        constraint: ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                taskNumber: 2,
+                title: "[개발] 프로토타입 구현 및 사용자 테스트",
+                objective: "기획된 '꿀잠' 앱의 핵심 기능을 프로토타입으로 구현하고, 5명의 사용자에게 테스트를 진행하여 피드백을 수집하시오.",
+                mission: "Figma 또는 similar tool을 사용하여 프로토타입을 제작하고, 사용자 테스트 결과를 분석한 개선 보고서를 작성하시오.",
+                timeLimit: 90,
+                scoringTips: [
+                    { tip: "프로토타입은 최소 기능 产品(MVP) 수준으로 구현하세요." },
+                    { tip: "사용자 테스트는 다양한 연령대를 선정하세요." }
+                ],
+                sessions: []
+            }
+        ];
     }
 
     /**
@@ -80,17 +170,7 @@ class CreateAssignmentManager {
      * 빈 상태 업데이트
      */
     updateEmptyStates() {
-        const scoringTipsContainer = document.getElementById('scoringTipsContainer');
-        const scoringTipsEmpty = document.getElementById('scoringTipsEmpty');
-        if (scoringTipsContainer && scoringTipsEmpty) {
-            scoringTipsEmpty.style.display = scoringTipsContainer.children.length === 0 ? 'block' : 'none';
-        }
-
-        const sessionsContainer = document.getElementById('sessionsContainer');
-        const sessionsEmpty = document.getElementById('sessionsEmpty');
-        if (sessionsContainer && sessionsEmpty) {
-            sessionsEmpty.style.display = sessionsContainer.children.length === 0 ? 'block' : 'none';
-        }
+        // 모달 컨테이너들은 각 함수에서 직접 처리
     }
 
     /**
@@ -132,16 +212,16 @@ class CreateAssignmentManager {
             });
         }
 
-        // 채점 팁 추가 버튼
-        const addScoringTipBtn = document.getElementById('addScoringTipBtn');
-        if (addScoringTipBtn) {
-            addScoringTipBtn.addEventListener('click', () => this.addScoringTip());
-        }
-
         // 모달 내 채점 팁 추가 버튼
         const modalAddScoringTipBtn = document.getElementById('modalAddScoringTipBtn');
         if (modalAddScoringTipBtn) {
             modalAddScoringTipBtn.addEventListener('click', () => this.addModalScoringTip());
+        }
+
+        // 모달 내 세션 추가 버튼
+        const modalAddSessionBtn = document.getElementById('modalAddSessionBtn');
+        if (modalAddSessionBtn) {
+            modalAddSessionBtn.addEventListener('click', () => this.addModalSession());
         }
 
         // 모달 탭 전환 이벤트
@@ -152,12 +232,6 @@ class CreateAssignmentManager {
                 this.switchModalTab(tabName);
             });
         });
-
-        // 세션 추가 버튼
-        const addSessionBtn = document.getElementById('addSessionBtn');
-        if (addSessionBtn) {
-            addSessionBtn.addEventListener('click', () => this.addSession());
-        }
 
         // JSON 미리보기 새로고침 버튼
         const refreshPreviewBtn = document.getElementById('refreshPreviewBtn');
@@ -178,6 +252,19 @@ class CreateAssignmentManager {
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => this.downloadJson());
         }
+
+        // 이벤트 위임: 동적으로 생성되는 "조건 추가" 버튼 처리
+        document.addEventListener('click', (e) => {
+            const addSectionBtn = e.target.closest('[data-add-section]');
+            console.log('Click event on:', e.target, 'addSectionBtn:', addSectionBtn);
+            if (addSectionBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const sessionId = addSectionBtn.dataset.addSection;
+                console.log('Adding section for sessionId:', sessionId);
+                this.addRequiredSection(sessionId);
+            }
+        });
     }
 
     /**
@@ -251,29 +338,6 @@ class CreateAssignmentManager {
     }
 
     /**
-     * 출력 요구사항 서브 탭 전환
-     */
-    switchOutputTab(sessionId, tabType) {
-        const sessionItem = document.querySelector(`.session-item[data-session-id="${sessionId}"]`);
-        if (!sessionItem) return;
-
-        // 모든 서브 탭 버튼 비활성화
-        const tabButtons = sessionItem.querySelectorAll('.output-req-tab');
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-
-        // 모든 서브 탭 컨텐츠 숨기기
-        const tabContents = sessionItem.querySelectorAll('.output-req-content');
-        tabContents.forEach(content => content.classList.remove('active'));
-
-        // 선택된 탭 활성화
-        const selectedButton = sessionItem.querySelector(`[data-output-tab="${tabType}_${sessionId}"]`);
-        const selectedContent = sessionItem.querySelector(`#output-${tabType}_${sessionId}`);
-
-        if (selectedButton) selectedButton.classList.add('active');
-        if (selectedContent) selectedContent.classList.add('active');
-    }
-
-    /**
      * 탭 전환
      */
     switchTab(tabName) {
@@ -334,6 +398,10 @@ class CreateAssignmentManager {
         this.clearModalScoringTips();
         this.modalScoringTipCount = 0;
 
+        // 모달 내 세션 초기화
+        this.clearModalSessions();
+        this.modalSessionCount = 0;
+
         // 모달 탭 초기화
         this.resetModalTabs();
 
@@ -366,6 +434,15 @@ class CreateAssignmentManager {
         if (task.scoringTips && task.scoringTips.length > 0) {
             task.scoringTips.forEach((tipData) => {
                 this.addModalScoringTip(tipData.tip || '');
+            });
+        }
+
+        // 모달 내 세션 로드
+        this.clearModalSessions();
+        this.modalSessionCount = 0;
+        if (task.sessions && task.sessions.length > 0) {
+            task.sessions.forEach((sessionData) => {
+                this.addModalSession(sessionData);
             });
         }
 
@@ -519,6 +596,481 @@ class CreateAssignmentManager {
     }
 
     /**
+     * 모달 내 세션 초기화
+     */
+    clearModalSessions() {
+        const container = document.getElementById('modalSessionsContainer');
+        const emptyState = document.getElementById('modalSessionsEmpty');
+        if (container) container.innerHTML = '';
+        if (emptyState) emptyState.style.display = 'block';
+    }
+
+    /**
+     * 모달 내 세션 추가
+     */
+    addModalSession(sessionData = null) {
+        this.modalSessionCount = (this.modalSessionCount || 0) + 1;
+        const container = document.getElementById('modalSessionsContainer');
+        const emptyState = document.getElementById('modalSessionsEmpty');
+
+        if (!container) return;
+
+        const sessionId = `modalSession_${this.modalSessionCount}`;
+        const sessionNumber = this.modalSessionCount;
+
+        const outputReqs = sessionData?.userDisplays?.outputRequirements;
+
+        const sessionElement = document.createElement('div');
+        sessionElement.className = 'modal-session-item';
+        sessionElement.dataset.sessionId = sessionId;
+        sessionElement.id = sessionId;
+        sessionElement.innerHTML = `
+            <div class="modal-session-header" onclick="window.createAssignmentManager.toggleSessionAccordion('${sessionId}')">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-chevron-down accordion-icon" id="${sessionId}_icon"></i>
+                    <span class="modal-session-label">세션 ${sessionNumber}</span>
+                </div>
+                <button type="button" class="btn-remove-small" onclick="event.stopPropagation(); window.createAssignmentManager.removeModalSession(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-session-body" id="${sessionId}_body">
+                <div class="form-group">
+                    <label>상황 설명 <span class="json-key">[userDisplays.situation]</span></label>
+                    <textarea name="${sessionId}_situation" rows="3" placeholder="학습자가 과제를 수행할 때 필요한 배경 정보를 입력하세요." class="modal-session-situation">${sessionData?.userDisplays?.situation ? this.escapeHtml(sessionData.userDisplays.situation) : ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>원본 데이터 <span class="json-key">[userDisplays.rawData]</span></label>
+                    <div class="modal-rawdata-container" id="${sessionId}_rawdataContainer">
+                        ${sessionData?.userDisplays?.rawData ? this.renderRawData(sessionData.userDisplays.rawData, sessionId) : ''}
+                    </div>
+                    <button type="button" class="btn-add-small" onclick="window.createAssignmentManager.addModalRawDataItem('${sessionId}')">
+                        <i class="fas fa-plus"></i> 원본 데이터 추가
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>출력 요구사항 <span class="json-key">[userDisplays.outputRequirements]</span></label>
+                    <div class="modal-output-requirements">
+                        <!-- AES 요구사항 -->
+                        <div class="modal-req-section">
+                            <h4>AES 검증 (법적/사회적 리스크 관리)</h4>
+                            <div class="form-group">
+                                <label>설명 <span class="json-key">[aesRequirements.description]</span></label>
+                                <input type="text" name="${sessionId}_aes_description" value="${this.escapeHtml(outputReqs?.aesRequirements?.description || '')}" placeholder="AES 검증에 대한 설명" class="modal-input">
+                            </div>
+                            <div class="form-group">
+                                <label>요구사항 <span class="json-key">[aesRequirements.requirement]</span></label>
+                                <textarea name="${sessionId}_aes_requirement" rows="2" placeholder="AES 평가 요구사항" class="modal-textarea">${this.escapeHtml(outputReqs?.aesRequirements?.requirement || '')}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- ACI 요구사항 -->
+                        <div class="modal-req-section">
+                            <h4>ACI 요구사항</h4>
+                            <div class="form-group">
+                                <label>출력 형식 요구사항 <span class="json-key">[aciRequirements.format]</span></label>
+                                <div class="modal-sub-req">
+                                    <div class="form-group">
+                                        <label>설명</label>
+                                        <input type="text" name="${sessionId}_aci_format_description" value="${this.escapeHtml(outputReqs?.aciRequirements?.format?.description || '')}" placeholder="형식에 대한 설명" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>스타일</label>
+                                        <input type="text" name="${sessionId}_aci_format_style" value="${this.escapeHtml(outputReqs?.aciRequirements?.format?.style || '')}" placeholder="예: 서술형, 개조식 리스트" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>길이</label>
+                                        <input type="text" name="${sessionId}_aci_format_length" value="${this.escapeHtml(outputReqs?.aciRequirements?.format?.length || '')}" placeholder="예: 500자 ~ 700자" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>필수 조건 <span class="json-key">[aciRequirements.format.requiredConditions]</span></label>
+                                        <div class="modal-required-sections" id="${sessionId}_requiredSections">
+                                            ${outputReqs?.aciRequirements?.format?.requiredConditions ? this.renderRequiredSections(outputReqs.aciRequirements.format.requiredConditions, sessionId) : ''}
+                                        </div>
+                                        <button type="button" class="btn-add-small" data-add-section="${sessionId}">
+                                            <i class="fas fa-plus"></i> 조건 추가
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 필수 표기 사항 -->
+                            <div class="form-group">
+                                <label>필수 표기 사항 <span class="json-key">[aciRequirements.requiredNotation]</span></label>
+                                <div class="modal-sub-req">
+                                    <div class="form-group">
+                                        <label>설명</label>
+                                        <input type="text" name="${sessionId}_aci_notation_description" value="${this.escapeHtml(outputReqs?.aciRequirements?.requiredNotation?.description || '')}" placeholder="필수 표기 사항 설명" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>요구사항</label>
+                                        <input type="text" name="${sessionId}_aci_notation_requirement" value="${this.escapeHtml(outputReqs?.aciRequirements?.requiredNotation?.requirement || '')}" placeholder="필수 표기 요구사항" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>텍스트</label>
+                                        <input type="text" name="${sessionId}_aci_notation_text" value="${this.escapeHtml(outputReqs?.aciRequirements?.requiredNotation?.text || '')}" placeholder="표기할 텍스트" class="modal-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 데이터 신뢰성 -->
+                            <div class="form-group">
+                                <label>데이터 신뢰성 <span class="json-key">[aciRequirements.dataReliability]</span></label>
+                                <div class="modal-sub-req">
+                                    <div class="form-group">
+                                        <label>설명</label>
+                                        <input type="text" name="${sessionId}_aci_data_description" value="${this.escapeHtml(outputReqs?.aciRequirements?.dataReliability?.description || '')}" placeholder="데이터 신뢰성 설명" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>요구사항</label>
+                                        <textarea name="${sessionId}_aci_data_requirement" rows="2" placeholder="데이터 신뢰성 요구사항" class="modal-textarea">${this.escapeHtml(outputReqs?.aciRequirements?.dataReliability?.requirement || '')}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 필수 키워드 -->
+                            <div class="form-group">
+                                <label>필수 키워드 <span class="json-key">[aciRequirements.requiredKeywords]</span></label>
+                                <div class="modal-sub-req">
+                                    <div class="form-group">
+                                        <label>설명</label>
+                                        <input type="text" name="${sessionId}_aci_keywords_description" value="${this.escapeHtml(outputReqs?.aciRequirements?.requiredKeywords?.description || '')}" placeholder="필수 키워드 설명" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>요구사항</label>
+                                        <input type="text" name="${sessionId}_aci_keywords_requirement" value="${this.escapeHtml(outputReqs?.aciRequirements?.requiredKeywords?.requirement || '')}" placeholder="필수 키워드 요구사항 (쉼표로 구분)" class="modal-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 제약사항 -->
+                            <div class="form-group">
+                                <label>제약사항 <span class="json-key">[aciRequirements.constraints]</span></label>
+                                <div class="modal-sub-req">
+                                    <div class="form-group">
+                                        <label>설명</label>
+                                        <input type="text" name="${sessionId}_aci_constraints_description" value="${this.escapeHtml(outputReqs?.aciRequirements?.constraints?.description || '')}" placeholder="제약사항 설명" class="modal-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>제약조건</label>
+                                        <textarea name="${sessionId}_aci_constraints_constraint" rows="2" placeholder="제약조건" class="modal-textarea">${this.escapeHtml(outputReqs?.aciRequirements?.constraints?.constraint || '')}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(sessionElement);
+        if (emptyState) emptyState.style.display = 'none';
+
+        // 새 세션 추가 시 원본 데이터 1개 기본 생성
+        if (!sessionData?.userDisplays?.rawData || sessionData.userDisplays.rawData.length === 0) {
+            // DOM이 추가된 후 실행하도록 setTimeout 사용
+            setTimeout(() => {
+                this.addModalRawDataItem(sessionId);
+            }, 0);
+        }
+    }
+
+    /**
+     * 모달 내 세션 삭제
+     */
+    removeModalSession(button) {
+        const item = button.closest('.modal-session-item');
+        if (item) {
+            item.remove();
+
+            const container = document.getElementById('modalSessionsContainer');
+            const emptyState = document.getElementById('modalSessionsEmpty');
+            if (container && emptyState && container.children.length === 0) {
+                emptyState.style.display = 'block';
+            }
+        }
+    }
+
+    /**
+     * 세션 카드 아코디언 토글
+     */
+    toggleSessionAccordion(sessionId) {
+        const sessionElement = document.getElementById(sessionId);
+        if (!sessionElement) return;
+
+        // collapsed 클래스 토글
+        sessionElement.classList.toggle('collapsed');
+    }
+
+    /**
+     * 모달 내 원본 데이터 아이템 추가
+     */
+    addModalRawDataItem(sessionId) {
+        const container = document.getElementById(`${sessionId}_rawdataContainer`);
+        if (!container) return;
+
+        const rawDataIndex = container.children.length + 1;
+        const rawDataElement = document.createElement('div');
+        rawDataElement.className = 'modal-rawdata-item';
+        rawDataElement.innerHTML = `
+            <div class="modal-rawdata-header">
+                <span class="modal-rawdata-label">원본 데이터 ${rawDataIndex}</span>
+                <button type="button" class="btn-remove-small" onclick="this.closest('.modal-rawdata-item').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <label>출처 <span class="json-key">[rawData.source]</span></label>
+                <input type="text" name="${sessionId}_rawdata_source_${rawDataIndex}" placeholder="예: 대표님의 메모" class="modal-rawdata-source">
+            </div>
+            <div class="form-group">
+                <label>내용 <span class="json-key">[rawData.content]</span></label>
+                <textarea name="${sessionId}_rawdata_content_${rawDataIndex}" rows="3" placeholder="원본 데이터 내용을 입력하세요." class="modal-rawdata-content"></textarea>
+            </div>
+            <div class="form-group">
+                <label>리스크 <span class="json-key">[rawData.risks]</span></label>
+                <textarea name="${sessionId}_rawdata_risks_${rawDataIndex}" rows="2" placeholder="법적/윤리적 리스크를 입력하세요." class="modal-rawdata-risks"></textarea>
+            </div>
+        `;
+
+        container.appendChild(rawDataElement);
+    }
+
+    /**
+     * 원본 데이터 렌더링 (편집 시)
+     */
+    renderRawData(rawDataArray, sessionId) {
+        if (!Array.isArray(rawDataArray) || rawDataArray.length === 0) return '';
+
+        return rawDataArray.map((item, index) => `
+            <div class="modal-rawdata-item">
+                <div class="modal-rawdata-header">
+                    <span class="modal-rawdata-label">원본 데이터 ${index + 1}</span>
+                    <button type="button" class="btn-remove-small" onclick="this.closest('.modal-rawdata-item').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>출처 <span class="json-key">[rawData.source]</span></label>
+                    <input type="text" name="${sessionId}_rawdata_source_${index + 1}" value="${this.escapeHtml(item.source || '')}" placeholder="예: 대표님의 메모" class="modal-rawdata-source">
+                </div>
+                <div class="form-group">
+                    <label>내용 <span class="json-key">[rawData.content]</span></label>
+                    <textarea name="${sessionId}_rawdata_content_${index + 1}" rows="3" placeholder="원본 데이터 내용을 입력하세요." class="modal-rawdata-content">${this.escapeHtml(item.content || '')}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>리스크 <span class="json-key">[rawData.risks]</span></label>
+                    <textarea name="${sessionId}_rawdata_risks_${index + 1}" rows="2" placeholder="법적/윤리적 리스크를 입력하세요." class="modal-rawdata-risks">${this.escapeHtml(item.risks || '')}</textarea>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    /**
+     * 필수 섹션 렌더링 (편집 시)
+     */
+    renderRequiredSections(requiredSections, sessionId) {
+        if (!Array.isArray(requiredSections) || requiredSections.length === 0) return '';
+
+        return requiredSections.map((section, index) => `
+            <div class="modal-required-section-item" data-section-index="${index}">
+                <div class="modal-section-header">
+                    <span class="modal-section-label">섹션 ${index + 1}</span>
+                    <button type="button" class="btn-remove-small" onclick="window.createAssignmentManager.removeRequiredSection('${sessionId}', this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>순서 <span class="json-key">[order]</span></label>
+                    <input type="number" name="${sessionId}_section_order_${index}" value="${section.order || index + 1}" class="modal-input" style="width: 80px;" min="1">
+                </div>
+                <div class="form-group">
+                    <label>제목 <span class="json-key">[title]</span></label>
+                    <input type="text" name="${sessionId}_section_title_${index}" value="${this.escapeHtml(section.title || '')}" placeholder="섹션 제목" class="modal-input">
+                </div>
+                <div class="form-group">
+                    <label>내용 <span class="json-key">[content]</span></label>
+                    <textarea name="${sessionId}_section_content_${index}" rows="2" placeholder="섹션 내용" class="modal-textarea">${this.escapeHtml(section.content || '')}</textarea>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    /**
+     * 필수 섹션 추가
+     */
+    addRequiredSection(sessionId) {
+        console.log('addRequiredSection called with sessionId:', sessionId);
+        const container = document.getElementById(`${sessionId}_requiredSections`);
+        console.log('container found:', container);
+
+        if (!container) {
+            console.error('Container not found for sessionId:', sessionId);
+            return;
+        }
+
+        const sectionIndex = container.children.length;
+        console.log('sectionIndex:', sectionIndex);
+
+        const sectionElement = document.createElement('div');
+        sectionElement.className = 'modal-required-section-item';
+        sectionElement.dataset.sectionIndex = sectionIndex;
+        sectionElement.innerHTML = `
+            <div class="modal-section-header">
+                <span class="modal-section-label">섹션 ${sectionIndex + 1}</span>
+                <button type="button" class="btn-remove-small" onclick="window.createAssignmentManager.removeRequiredSection('${sessionId}', this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <label>순서 <span class="json-key">[order]</span></label>
+                <input type="number" name="${sessionId}_section_order_${sectionIndex}" value="${sectionIndex + 1}" class="modal-input" style="width: 80px;" min="1">
+            </div>
+            <div class="form-group">
+                <label>제목 <span class="json-key">[title]</span></label>
+                <input type="text" name="${sessionId}_section_title_${sectionIndex}" placeholder="섹션 제목" class="modal-input">
+            </div>
+            <div class="form-group">
+                <label>내용 <span class="json-key">[content]</span></label>
+                <textarea name="${sessionId}_section_content_${sectionIndex}" rows="2" placeholder="섹션 내용" class="modal-textarea"></textarea>
+            </div>
+        `;
+
+        container.appendChild(sectionElement);
+        console.log('Section appended successfully');
+    }
+
+    /**
+     * 필수 섹션 삭제
+     */
+    removeRequiredSection(sessionId, button) {
+        const item = button.closest('.modal-required-section-item');
+        if (item) {
+            item.remove();
+            // 섹션 인덱스 재정렬
+            const container = document.getElementById(`${sessionId}_requiredSections`);
+            if (container) {
+                const sections = container.querySelectorAll('.modal-required-section-item');
+                sections.forEach((section, newIndex) => {
+                    const label = section.querySelector('.modal-section-label');
+                    const orderInput = section.querySelector(`input[name^="${sessionId}_section_order_"]`);
+                    if (label) label.textContent = `섹션 ${newIndex + 1}`;
+                    if (orderInput) orderInput.value = newIndex + 1;
+                });
+            }
+        }
+    }
+
+    /**
+     * 모달 내 세션 수집
+     */
+    collectModalSessions() {
+        const sessions = [];
+        const sessionItems = document.querySelectorAll('#modalSessionsContainer .modal-session-item');
+
+        sessionItems.forEach((sessionItem, index) => {
+            const sessionId = sessionItem.dataset.sessionId;
+
+            // 상황 설명 수집
+            const situation = sessionItem.querySelector(`[name="${sessionId}_situation"]`)?.value.trim() || '';
+
+            // 원본 데이터 수집
+            const rawData = [];
+            const rawDataItems = sessionItem.querySelectorAll('.modal-rawdata-item');
+            rawDataItems.forEach(rawDataItem => {
+                const source = rawDataItem.querySelector('.modal-rawdata-source')?.value.trim() || '';
+                const content = rawDataItem.querySelector('.modal-rawdata-content')?.value.trim() || '';
+                const risks = rawDataItem.querySelector('.modal-rawdata-risks')?.value.trim() || '';
+
+                if (source || content || risks) {
+                    rawData.push({ source, content, risks });
+                }
+            });
+
+            // 출력 요구사항 수집 (구조화된 폼에서)
+            const outputRequirements = this.collectOutputRequirements(sessionItem, sessionId);
+
+            if (situation || rawData.length > 0) {
+                sessions.push({
+                    sessionNumber: index + 1,
+                    userDisplays: {
+                        situation,
+                        rawData,
+                        outputRequirements
+                    }
+                });
+            }
+        });
+
+        return sessions;
+    }
+
+    /**
+     * 출력 요구사항 수집
+     */
+    collectOutputRequirements(sessionItem, sessionId) {
+        const getValue = (name) => sessionItem.querySelector(`[name="${sessionId}_${name}"]`)?.value.trim() || '';
+        const getTextarea = (name) => sessionItem.querySelector(`[name="${sessionId}_${name}"]`)?.value.trim() || '';
+
+        // AES 요구사항
+        const aesRequirements = {
+            description: getValue('aes_description'),
+            requirement: gettextarea('aes_requirement')
+        };
+
+        // 필수 조건 수집
+        const requiredConditions = [];
+        const sectionItems = sessionItem.querySelectorAll('.modal-required-section-item');
+        sectionItems.forEach((sectionItem, index) => {
+            const order = parseInt(sectionItem.querySelector(`input[name^="${sessionId}_section_order_"]`)?.value) || index + 1;
+            const titleInput = sectionItem.querySelector(`input[name^="${sessionId}_section_title_"]`);
+            const contentTextarea = sectionItem.querySelector(`textarea[name^="${sessionId}_section_content_"]`);
+
+            const title = titleInput ? titleInput.value.trim() : '';
+            const content = contentTextarea ? contentTextarea.value.trim() : '';
+
+            if (title || content) {
+                requiredConditions.push({ order, title, content });
+            }
+        });
+
+        // order 값으로 정렬
+        requiredConditions.sort((a, b) => a.order - b.order);
+
+        // ACI 요구사항
+        const aciRequirements = {
+            format: {
+                description: getValue('aci_format_description'),
+                style: getValue('aci_format_style'),
+                length: getValue('aci_format_length'),
+                requiredConditions: requiredConditions
+            },
+            requiredNotation: {
+                description: getValue('aci_notation_description'),
+                requirement: getValue('aci_notation_requirement'),
+                text: getValue('aci_notation_text')
+            },
+            dataReliability: {
+                description: getValue('aci_data_description'),
+                requirement: gettextarea('aci_data_requirement')
+            },
+            requiredKeywords: {
+                description: getValue('aci_keywords_description'),
+                requirement: getValue('aci_keywords_requirement')
+            },
+            constraints: {
+                description: getValue('aci_constraints_description'),
+                constraint: gettextarea('aci_constraints_constraint')
+            }
+        };
+
+        return {
+            aesRequirements,
+            aciRequirements
+        };
+    }
+
+    /**
      * 과제 모달 저장
      */
     saveTaskModal() {
@@ -537,6 +1089,9 @@ class CreateAssignmentManager {
         // 모달 내 채점 팁 수집
         const scoringTips = this.collectModalScoringTips();
 
+        // 모달 내 세션 수집
+        const sessions = this.collectModalSessions();
+
         if (editIndex === -1) {
             // 새 과제 추가
             const newTask = {
@@ -546,7 +1101,7 @@ class CreateAssignmentManager {
                 mission: mission,
                 timeLimit: timeLimit,
                 scoringTips: scoringTips,
-                sessions: []
+                sessions: sessions
             };
             this.tasks.push(newTask);
             this.selectedTaskIndex = this.tasks.length - 1;
@@ -558,13 +1113,13 @@ class CreateAssignmentManager {
                 this.tasks[editIndex].mission = mission;
                 this.tasks[editIndex].timeLimit = timeLimit;
                 this.tasks[editIndex].scoringTips = scoringTips;
+                this.tasks[editIndex].sessions = sessions;
                 this.selectedTaskIndex = editIndex;
             }
         }
 
         this.updateTasksTable();
         this.updateTaskSelectionUI();
-        this.loadTaskForm(this.tasks[this.selectedTaskIndex]);
         this.updateJsonPreview();
 
         // 모달 닫기
@@ -600,16 +1155,12 @@ class CreateAssignmentManager {
 
     /**
      * 과제 선택
+     * Note: 모든 편집은 모달을 통해 수행되므로 선택 시 테이블 하이라이트만 업데이트
      */
     selectTask(index) {
         this.selectedTaskIndex = index;
         this.updateTasksTable();
-
-        // 선택된 과제 데이터로 폼 채우기
-        this.loadTaskForm(this.tasks[index]);
-
-        // 과제 목록 탭으로 전환
-        this.switchTab('scoring');
+        this.updateTaskSelectionUI();
     }
 
     /**
@@ -621,198 +1172,27 @@ class CreateAssignmentManager {
 
     /**
      * 현재 폼 데이터를 선택된 과제에 저장
+     * Note: 모든 편집은 모달을 통해 수행되므로 이 함수는 더 이상 사용되지 않음
      */
     saveCurrentTaskForm() {
-        if (this.selectedTaskIndex === null) return;
-
-        const task = this.tasks[this.selectedTaskIndex];
-
-        // 기본 정보
-        const titleInput = document.getElementById('taskTitle');
-        const objectiveInput = document.getElementById('taskObjective');
-        const missionInput = document.getElementById('taskMission');
-        const timeLimitInput = document.getElementById('timeLimit');
-
-        if (titleInput) task.title = titleInput.value;
-        if (objectiveInput) task.objective = objectiveInput.value;
-        if (missionInput) task.mission = missionInput.value;
-        if (timeLimitInput) task.timeLimit = parseInt(timeLimitInput.value) || 0;
-
-        // 채점 팁 수집
-        task.scoringTips = [];
-        const scoringTipInputs = document.querySelectorAll('.scoring-tip-input');
-        scoringTipInputs.forEach(input => {
-            const tip = input.value.trim();
-            if (tip) {
-                task.scoringTips.push({ tip });
-            }
-        });
-
-        // 세션 수집
-        task.sessions = [];
-        const sessionItems = document.querySelectorAll('.session-item');
-        sessionItems.forEach((sessionItem, index) => {
-            const sessionNumber = index + 1;
-            const session = this.collectSessionData(sessionItem, sessionNumber);
-            if (session) {
-                task.sessions.push(session);
-            }
-        });
-
-        // 테이블 업데이트
-        this.updateTasksTable();
-    }
-
-    /**
-     * 세션 데이터 수집
-     */
-    collectSessionData(sessionItem, sessionNumber) {
-        const formData = new FormData(document.getElementById('assignmentForm'));
-        const sessionId = sessionItem.dataset.sessionId || sessionNumber;
-
-        const situation = formData.get(`session_${sessionId}_situation`) || '';
-        if (!situation) return null;
-
-        const session = {
-            sessionNumber: sessionNumber,
-            userDisplays: {
-                situation: situation,
-                rawData: [],
-                outputRequirements: {
-                    aesRequirements: {
-                        description: formData.get(`session_${sessionId}_aes_description`) || '',
-                        requirement: formData.get(`session_${sessionId}_aes_requirement`) || ''
-                    },
-                    aciRequirements: {
-                        format: {
-                            description: formData.get(`session_${sessionId}_format_description`) || '출력 형식 요구사항',
-                            style: formData.get(`session_${sessionId}_aci_style`) || '',
-                            length: formData.get(`session_${sessionId}_aci_length`) || '',
-                            requiredSections: []
-                        },
-                        requiredNotation: {
-                            description: formData.get(`session_${sessionId}_notation_description`) || '필수 표기 사항',
-                            requirement: formData.get(`session_${sessionId}_notation_requirement`) || '',
-                            text: formData.get(`session_${sessionId}_notation_text`) || ''
-                        },
-                        dataReliability: {
-                            description: '데이터 신뢰성',
-                            requirement: formData.get(`session_${sessionId}_data_reliability`) || ''
-                        },
-                        requiredKeywords: {
-                            description: '필수 키워드',
-                            requirement: formData.get(`session_${sessionId}_keywords`) || ''
-                        },
-                        constraints: {
-                            description: '제약사항',
-                            constraint: formData.get(`session_${sessionId}_constraints`) || ''
-                        }
-                    }
-                }
-            }
-        };
-
-        // 원본 데이터 수집
-        const rawDataItems = sessionItem.querySelectorAll('.raw-data-item');
-        rawDataItems.forEach(rawDataItem => {
-            const rawDataId = rawDataItem.dataset.rawDataId;
-            const source = formData.get(`${rawDataId}_source`) || '';
-            const contentText = formData.get(`${rawDataId}_content`) || '';
-            const risksText = formData.get(`${rawDataId}_risks`) || '';
-
-            if (source || contentText) {
-                session.userDisplays.rawData.push({
-                    source: source,
-                    content: contentText,
-                    risks: risksText
-                });
-            }
-        });
-
-        // 필수 섹션 수집
-        const requiredSectionItems = sessionItem.querySelectorAll('.required-section-item');
-        requiredSectionItems.forEach(sectionItem => {
-            const sectionId = sectionItem.dataset.sectionId;
-            const order = parseInt(formData.get(`${sectionId}_order`)) || 1;
-            const title = formData.get(`${sectionId}_title`) || '';
-            const content = formData.get(`${sectionId}_content`) || '';
-
-            if (title || content) {
-                session.userDisplays.outputRequirements.aciRequirements.format.requiredSections.push({
-                    order: order,
-                    title: title,
-                    content: content
-                });
-            }
-        });
-
-        // 순서대로 정렬
-        session.userDisplays.outputRequirements.aciRequirements.format.requiredSections.sort((a, b) => a.order - b.order);
-
-        return session;
+        // 모든 편집은 모달을 통해 수행되므로 별도로 저장할 데이터 없음
+        // 모달 저장 시 이미 tasks 배열에 반영됨
     }
 
     /**
      * 과제 폼에 데이터 로드
+     * Note: 모든 편집은 모달을 통해 수행되므로 이 함수는 더 이상 사용되지 않음
      */
-    loadTaskForm(task) {
-        const titleInput = document.getElementById('taskTitle');
-        const objectiveInput = document.getElementById('taskObjective');
-        const missionInput = document.getElementById('taskMission');
-        const timeLimitInput = document.getElementById('timeLimit');
-
-        if (titleInput) titleInput.value = task.title || '';
-        if (objectiveInput) objectiveInput.value = task.objective || '';
-        if (missionInput) missionInput.value = task.mission || '';
-        if (timeLimitInput) timeLimitInput.value = task.timeLimit || 60;
-
-        // 기존 채점 팁/세션 컨테이너 비우기
-        const scoringTipsContainer = document.getElementById('scoringTipsContainer');
-        const sessionsContainer = document.getElementById('sessionsContainer');
-        if (scoringTipsContainer) scoringTipsContainer.innerHTML = '';
-        if (sessionsContainer) sessionsContainer.innerHTML = '';
-
-        // 채점 팁 로드
-        if (task.scoringTips && task.scoringTips.length > 0) {
-            task.scoringTips.forEach((tipData, idx) => {
-                this.scoringTipCount = idx + 1;
-                this.addScoringTipElement(tipData.tip);
-            });
-        }
-
-        // 세션 로드
-        if (task.sessions && task.sessions.length > 0) {
-            task.sessions.forEach((sessionData) => {
-                this.addSessionElement(sessionData);
-            });
-        }
-
-        this.updateEmptyStates();
+    loadTaskForm() {
+        // 모든 편집은 모달을 통해 수행되므로 별도로 로드할 데이터 없음
     }
 
     /**
      * 과제 폼 초기화
      */
     clearTaskForm() {
-        const titleInput = document.getElementById('taskTitle');
-        const objectiveInput = document.getElementById('taskObjective');
-        const missionInput = document.getElementById('taskMission');
-        const timeLimitInput = document.getElementById('timeLimit');
-
-        if (titleInput) titleInput.value = '';
-        if (objectiveInput) objectiveInput.value = '';
-        if (missionInput) missionInput.value = '';
-        if (timeLimitInput) timeLimitInput.value = '60';
-
-        // 기존 채점 팁/세션 컨테이너 비우기
-        const scoringTipsContainer = document.getElementById('scoringTipsContainer');
-        const sessionsContainer = document.getElementById('sessionsContainer');
-        if (scoringTipsContainer) scoringTipsContainer.innerHTML = '';
-        if (sessionsContainer) sessionsContainer.innerHTML = '';
-
-        this.scoringTipCount = 0;
-        this.sessionCount = 0;
-        this.updateEmptyStates();
+        // 메인 페이지의 과제 폼 요소들은 더 이상 사용되지 않음
+        // 모든 편집은 모달을 통해 수행됨
     }
 
     /**
@@ -833,6 +1213,10 @@ class CreateAssignmentManager {
 
         if (tasksEmpty) tasksEmpty.style.display = 'none';
 
+        // 문서 메타데이터에서 모드 읽기
+        const docModeSelect = document.getElementById('docMode');
+        const currentMode = docModeSelect ? docModeSelect.value : '';
+
         this.tasks.forEach((task, index) => {
             const tr = document.createElement('tr');
             if (index === this.selectedTaskIndex) {
@@ -841,6 +1225,7 @@ class CreateAssignmentManager {
 
             tr.innerHTML = `
                 <td class="task-title-cell">${this.escapeHtml(task.title || '(제목 없음)')}</td>
+                <td class="mode-cell">${this.escapeHtml(currentMode || '-')}</td>
                 <td class="session-count-cell">${task.sessions ? task.sessions.length : 0}</td>
                 <td class="actions-cell">
                     <button type="button" class="btn-edit-task" onclick="window.createAssignmentManager.editTask(${index}); return false;">
@@ -863,475 +1248,18 @@ class CreateAssignmentManager {
     }
 
     /**
-     * 과제 선택 UI 업데이트 (채점 팁/세션 탭)
+     * 과제 선택 UI 업데이트
+     * Note: 모든 편집은 모달을 통해 수행되므로 테이블 하이라이트만 관리
      */
     updateTaskSelectionUI() {
-        const hasTask = this.selectedTaskIndex !== null;
-
-        // 과제 목록 탭
-        const noTaskSelected = document.getElementById('noTaskSelected');
-        const taskEditForm = document.getElementById('taskEditForm');
-        const selectedTaskInfo = document.getElementById('selectedTaskInfo');
-        const selectedTaskTitle = document.getElementById('selectedTaskTitle');
-
-        if (noTaskSelected) noTaskSelected.style.display = hasTask ? 'none' : 'block';
-        if (taskEditForm) taskEditForm.style.display = hasTask ? 'block' : 'none';
-        if (selectedTaskInfo) selectedTaskInfo.style.display = hasTask ? 'block' : 'none';
-
-        if (hasTask && selectedTaskTitle && this.tasks[this.selectedTaskIndex]) {
-            selectedTaskTitle.textContent = this.tasks[this.selectedTaskIndex].title || '(제목 없음)';
-        }
-
-        // 채점 팁 탭
-        const scoringNoTaskSelected = document.getElementById('scoringNoTaskSelected');
-        const scoringTipsForm = document.getElementById('scoringTipsForm');
-        const scoringTaskBanner = document.getElementById('scoringTaskBanner');
-        const scoringTaskName = document.getElementById('scoringTaskName');
-
-        if (scoringNoTaskSelected) scoringNoTaskSelected.style.display = hasTask ? 'none' : 'block';
-        if (scoringTipsForm) scoringTipsForm.style.display = hasTask ? 'block' : 'none';
-        if (scoringTaskBanner) scoringTaskBanner.style.display = hasTask ? 'flex' : 'none';
-
-        if (hasTask && scoringTaskName && this.tasks[this.selectedTaskIndex]) {
-            scoringTaskName.textContent = this.tasks[this.selectedTaskIndex].title || '(제목 없음)';
-        }
-
-        // 세션 정보 탭
-        const sessionsNoTaskSelected = document.getElementById('sessionsNoTaskSelected');
-        const sessionsForm = document.getElementById('sessionsForm');
-        const sessionsTaskBanner = document.getElementById('sessionsTaskBanner');
-        const sessionsTaskName = document.getElementById('sessionsTaskName');
-
-        if (sessionsNoTaskSelected) sessionsNoTaskSelected.style.display = hasTask ? 'none' : 'block';
-        if (sessionsForm) sessionsForm.style.display = hasTask ? 'block' : 'none';
-        if (sessionsTaskBanner) sessionsTaskBanner.style.display = hasTask ? 'flex' : 'none';
-
-        if (hasTask && sessionsTaskName && this.tasks[this.selectedTaskIndex]) {
-            sessionsTaskName.textContent = this.tasks[this.selectedTaskIndex].title || '(제목 없음)';
-        }
+        // 테이블 하이라이트는 updateTasksTable()에서 처리됨
+        // 추가적인 UI 업데이트가 필요 없음
     }
 
     // ============================================================
     // 채점 팁(Scoring Tip) 관리 함수
     // ============================================================
 
-    /**
-     * 채점 팁 추가
-     */
-    addScoringTip() {
-        if (this.selectedTaskIndex === null) {
-            this.showError('먼저 과제를 선택해주세요.');
-            return;
-        }
-
-        this.scoringTipCount++;
-        const tipId = `scoringTip_${this.scoringTipCount}`;
-
-        this.addScoringTipElement('');
-
-        // 빈 상태 숨기기
-        const emptyState = document.getElementById('scoringTipsEmpty');
-        if (emptyState) emptyState.style.display = 'none';
-
-        this.handleFormInput();
-    }
-
-    /**
-     * 채점 팁 요소 추가
-     */
-    addScoringTipElement(tipValue = '') {
-        const container = document.getElementById('scoringTipsContainer');
-        if (!container) return;
-
-        const tipId = `scoringTip_${this.scoringTipCount}`;
-
-        const tipElement = document.createElement('div');
-        tipElement.className = 'dynamic-item';
-        tipElement.dataset.tipId = tipId;
-        tipElement.innerHTML = `
-            <div class="dynamic-item-header">
-                <span class="dynamic-item-label">채점 팁 ${this.scoringTipCount}</span>
-                <button type="button" class="btn-remove" onclick="window.createAssignmentManager.removeScoringTip(this);">
-                    <i class="fas fa-times"></i> 삭제
-                </button>
-            </div>
-            <div class="form-group">
-                <label>팁 <span class="json-key">[tasks[].scoringTips[].tip]</span></label>
-                <textarea name="${tipId}" rows="3" placeholder="채점 팁을 입력하세요. 예: AI에게 명확한 역할(Role)과 상황(Context)을 부여하세요." class="scoring-tip-input">${this.escapeHtml(tipValue)}</textarea>
-            </div>
-        `;
-
-        container.appendChild(tipElement);
-    }
-
-    /**
-     * 채점 팁 삭제
-     */
-    removeScoringTip(button) {
-        const item = button.closest('.dynamic-item');
-        if (item) {
-            item.remove();
-
-            // 빈 상태 표시 확인
-            const container = document.getElementById('scoringTipsContainer');
-            const emptyState = document.getElementById('scoringTipsEmpty');
-            if (container && emptyState && container.children.length === 0) {
-                emptyState.style.display = 'block';
-            }
-
-            this.handleFormInput();
-        }
-    }
-
-    // ============================================================
-    // 세션(Session) 관리 함수
-    // ============================================================
-
-    /**
-     * 세션 추가
-     */
-    addSession() {
-        if (this.selectedTaskIndex === null) {
-            this.showError('먼저 과제를 선택해주세요.');
-            return;
-        }
-
-        this.sessionCount++;
-        const sessionId = this.sessionCount;
-
-        this.addSessionElement(null);
-
-        // 빈 상태 숨기기
-        const emptyState = document.getElementById('sessionsEmpty');
-        if (emptyState) emptyState.style.display = 'none';
-
-        this.handleFormInput();
-    }
-
-    /**
-     * 세션 요소 추가
-     */
-    addSessionElement(sessionData = null) {
-        const container = document.getElementById('sessionsContainer');
-        if (!container) return;
-
-        const sessionId = sessionData ? sessionData.sessionNumber : this.sessionCount;
-        const situation = sessionData ? sessionData.userDisplays.situation : '';
-        const rawData = sessionData ? sessionData.userDisplays.rawData : [];
-        const outputRequirements = sessionData ? sessionData.userDisplays.outputRequirements : null;
-
-        const sessionElement = document.createElement('div');
-        sessionElement.className = 'session-item';
-        sessionElement.dataset.sessionId = sessionId;
-        sessionElement.innerHTML = `
-            <div class="session-header">
-                <h3 class="session-title">세션 ${sessionId} <span class="json-key">[tasks[].sessions[]]</span></h3>
-                <button type="button" class="btn-remove" onclick="window.createAssignmentManager.removeSession(this);">
-                    <i class="fas fa-times"></i> 세션 삭제
-                </button>
-            </div>
-
-            <div class="form-group">
-                <label>상황 설명 <span class="json-key">[tasks[].sessions[].userDisplays.situation]</span> <span class="required">*</span></label>
-                <textarea name="session_${sessionId}_situation" rows="5" required placeholder="학습자에게 제공할 상황 설명을 입력하세요. 예: 당신은 헬스케어 스타트업 'P-Lab'의 기획자(PM)입니다...">${this.escapeHtml(situation)}</textarea>
-                <small class="form-hint">학습자가 과제를 수행할 때 필요한 배경 정보와 상황을 설명하세요.</small>
-            </div>
-
-            <div class="form-subsection">
-                <div class="form-subsection-header">
-                    <h4><i class="fas fa-database"></i> 원본 데이터 <span class="json-key">[tasks[].sessions[].userDisplays.rawData[]]</span></h4>
-                    <button type="button" class="btn-add-small" onclick="window.createAssignmentManager.addRawData(${sessionId})">
-                        <i class="fas fa-plus"></i> 데이터 추가
-                    </button>
-                </div>
-                <div class="raw-data-container" id="rawDataContainer_${sessionId}">
-                    <!-- 동적으로 추가됨 -->
-                </div>
-            </div>
-
-            <div class="form-subsection">
-                <div class="form-subsection-header">
-                    <h4><i class="fas fa-clipboard-check"></i> 출력 요구사항 <span class="json-key">[tasks[].sessions[].userDisplays.outputRequirements]</span></h4>
-                </div>
-
-                <!-- 출력 요구사항 서브 탭 -->
-                <div class="output-req-tabs">
-                    <button type="button" class="output-req-tab active" data-output-tab="aes_${sessionId}" onclick="window.createAssignmentManager.switchOutputTab(${sessionId}, 'aes')">
-                        <i class="fas fa-shield-alt"></i> AES 요구사항
-                    </button>
-                    <button type="button" class="output-req-tab" data-output-tab="aci_${sessionId}" onclick="window.createAssignmentManager.switchOutputTab(${sessionId}, 'aci')">
-                        <i class="fas fa-file-alt"></i> ACI 요구사항
-                    </button>
-                </div>
-
-                <!-- AES 요구사항 탭 컨텐츠 -->
-                <div class="output-req-content active" id="output-aes_${sessionId}">
-                    <div class="form-subsection-content">
-                        <h5 class="subsection-title">AES 요구사항 <span class="json-key">[...aesRequirements]</span></h5>
-                        <p class="form-section-description">AES(Accuracy, Ethics, Safety) - 정확성, 윤리, 안전 관련 요구사항을 정의합니다.</p>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>설명 <span class="json-key">[...aesRequirements.description]</span></label>
-                                <input type="text" name="session_${sessionId}_aes_description" placeholder="예: AES 검증 (법적/사회적 리스크 관리)" value="${outputRequirements ? this.escapeHtml(outputRequirements.aesRequirements.description || '') : ''}">
-                            </div>
-                            <div class="form-group full-width">
-                                <label>요구사항 <span class="json-key">[...aesRequirements.requirement]</span></label>
-                                <textarea name="session_${sessionId}_aes_requirement" rows="4" placeholder="예: 대표님의 지시 중 AES평가 요소에 위배되는 사항을 찾아내어, 수정할 것.">${outputRequirements ? this.escapeHtml(outputRequirements.aesRequirements.requirement || '') : ''}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ACI 요구사항 탭 컨텐츠 -->
-                <div class="output-req-content" id="output-aci_${sessionId}">
-                    ${this.generateACIForm(sessionId, outputRequirements)}
-                </div>
-            </div>
-        `;
-
-        container.appendChild(sessionElement);
-
-        // 기존 원본 데이터 로드
-        if (rawData && rawData.length > 0) {
-            rawData.forEach(data => {
-                this.addRawDataElement(sessionId, data);
-            });
-        } else {
-            // 초기 원본 데이터 추가
-            this.addRawData(sessionId);
-        }
-    }
-
-    /**
-     * ACI 폼 생성
-     */
-    generateACIForm(sessionId, outputRequirements = null) {
-        const aciReqs = outputRequirements ? outputRequirements.aciRequirements : null;
-        const format = aciReqs ? aciReqs.format : null;
-        const requiredNotation = aciReqs ? aciReqs.requiredNotation : null;
-        const dataReliability = aciReqs ? aciReqs.dataReliability : null;
-        const requiredKeywords = aciReqs ? aciReqs.requiredKeywords : null;
-        const constraints = aciReqs ? aciReqs.constraints : null;
-
-        return `
-            <div class="form-subsection-content">
-                <h5 class="subsection-title">ACI 요구사항 <span class="json-key">[...aciRequirements]</span></h5>
-                <p class="form-section-description">ACI(Accuracy, Completeness, Integrity) - 출력 형식, 구조, 데이터 신뢰성 관련 요구사항을 정의합니다.</p>
-
-                <!-- 형식 (format) -->
-                <div class="aci-section">
-                    <h6><i class="fas fa-align-left"></i> 형식 <span class="json-key">[...aciRequirements.format]</span></h6>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label>형식 설명 <span class="json-key">[...format.description]</span></label>
-                            <input type="text" name="session_${sessionId}_format_description" placeholder="예: 출력 형식 요구사항" value="${format ? this.escapeHtml(format.description || '출력 형식 요구사항') : '출력 형식 요구사항'}">
-                        </div>
-                        <div class="form-group">
-                            <label>스타일 <span class="json-key">[...format.style]</span></label>
-                            <input type="text" name="session_${sessionId}_aci_style" placeholder="예: 서술형 줄글이 아닌 개조식 리스트 형태" value="${format ? this.escapeHtml(format.style || '') : ''}">
-                        </div>
-                        <div class="form-group">
-                            <label>길이 <span class="json-key">[...format.length]</span></label>
-                            <input type="text" name="session_${sessionId}_aci_length" placeholder="예: 공백 포함 500자 ~ 700자 이내" value="${format ? this.escapeHtml(format.length || '') : ''}">
-                        </div>
-                    </div>
-
-                    <!-- 필수 섹션 (구성 요소) -->
-                    <div class="required-sections-wrapper">
-                        <div class="form-subsection-header">
-                            <h6><i class="fas fa-list-ol"></i> 필수 섹션 (구성 요소) <span class="json-key">[...format.requiredSections[]]</span></h6>
-                            <button type="button" class="btn-add-small" onclick="window.createAssignmentManager.addRequiredSection(${sessionId})">
-                                <i class="fas fa-plus"></i> 구성 요소 추가
-                            </button>
-                        </div>
-                        <div class="required-sections-container" id="requiredSectionsContainer_${sessionId}">
-                            <!-- 동적으로 추가됨 -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 필수 표기 사항 -->
-                <div class="aci-section">
-                    <h6><i class="fas fa-tag"></i> 필수 표기 사항 <span class="json-key">[...aciRequirements.requiredNotation]</span></h6>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label>설명 <span class="json-key">[...requiredNotation.description]</span></label>
-                            <input type="text" name="session_${sessionId}_notation_description" placeholder="예: 필수 표기 사항" value="${requiredNotation ? this.escapeHtml(requiredNotation.description || '필수 표기 사항') : '필수 표기 사항'}">
-                        </div>
-                        <div class="form-group">
-                            <label>요구사항 <span class="json-key">[...requiredNotation.requirement]</span></label>
-                            <input type="text" name="session_${sessionId}_notation_requirement" placeholder="예: 출처 표기 필수" value="${requiredNotation ? this.escapeHtml(requiredNotation.requirement || '') : ''}">
-                        </div>
-                        <div class="form-group">
-                            <label>텍스트 <span class="json-key">[...requiredNotation.text]</span></label>
-                            <input type="text" name="session_${sessionId}_notation_text" placeholder="예: [출처: OOO]" value="${requiredNotation ? this.escapeHtml(requiredNotation.text || '') : ''}">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 데이터 신뢰성 -->
-                <div class="aci-section">
-                    <h6><i class="fas fa-check-circle"></i> 데이터 신뢰성 <span class="json-key">[...aciRequirements.dataReliability]</span></h6>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label>요구사항 <span class="json-key">[...dataReliability.requirement]</span></label>
-                            <textarea name="session_${sessionId}_data_reliability" rows="2" placeholder="예: 출처가 불분명한 통계는 배제하고, 공신력 있는 기관의 데이터로 검증하여 대체할 것.">${dataReliability ? this.escapeHtml(dataReliability.requirement || '') : ''}</textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 필수 키워드 & 제약 조건 -->
-                <div class="aci-section">
-                    <h6><i class="fas fa-key"></i> 키워드 및 제약 조건</h6>
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label>필수 키워드 <span class="json-key">[...aciRequirements.requiredKeywords]</span></label>
-                            <input type="text" name="session_${sessionId}_keywords" placeholder="예: 디지털 헬스케어, 구독 경제, 마이데이터" value="${requiredKeywords ? this.escapeHtml(requiredKeywords.requirement || '') : ''}">
-                            <small class="form-hint">출력물에 반드시 포함되어야 하는 키워드를 쉼표로 구분하여 입력하세요.</small>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>제약 조건 <span class="json-key">[...aciRequirements.constraints]</span></label>
-                            <input type="text" name="session_${sessionId}_constraints" placeholder="예: 특정 단어 사용 금지, 형식 제한 등" value="${constraints ? this.escapeHtml(constraints.constraint || '') : ''}">
-                            <small class="form-hint">제약 조건이 있으면 쉼표로 구분하여 입력하세요. 없으면 비워두세요.</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    /**
-     * 세션 삭제
-     */
-    removeSession(button) {
-        const item = button.closest('.session-item');
-        if (item) {
-            item.remove();
-
-            // 빈 상태 표시 확인
-            const container = document.getElementById('sessionsContainer');
-            const emptyState = document.getElementById('sessionsEmpty');
-            if (container && emptyState && container.children.length === 0) {
-                emptyState.style.display = 'block';
-            }
-
-            this.handleFormInput();
-        }
-    }
-
-    /**
-     * 원본 데이터 추가
-     */
-    addRawData(sessionId) {
-        this.addRawDataElement(sessionId, null);
-        this.handleFormInput();
-    }
-
-    /**
-     * 원본 데이터 요소 추가
-     */
-    addRawDataElement(sessionId, rawDataData = null) {
-        const container = document.getElementById(`rawDataContainer_${sessionId}`);
-        if (!container) return;
-
-        const rawDataId = `rawData_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const rawDataCount = container.children.length + 1;
-        const source = rawDataData ? rawDataData.source : '';
-        const content = rawDataData ? rawDataData.content : '';
-        const risks = rawDataData ? rawDataData.risks : '';
-
-        const rawDataElement = document.createElement('div');
-        rawDataElement.className = 'raw-data-item';
-        rawDataElement.dataset.rawDataId = rawDataId;
-        rawDataElement.innerHTML = `
-            <div class="raw-data-header">
-                <span class="raw-data-label">원본 데이터 ${rawDataCount}</span>
-                <button type="button" class="btn-remove-small" onclick="window.createAssignmentManager.removeRawData(this);">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>출처 <span class="json-key">[...rawData[].source]</span></label>
-                    <input type="text" name="${rawDataId}_source" placeholder="예: 대표님의 메모" value="${this.escapeHtml(source)}">
-                    <small class="form-hint">원본 데이터의 출처를 입력하세요.</small>
-                </div>
-                <div class="form-group full-width">
-                    <label>내용 <span class="json-key">[...rawData[].content]</span></label>
-                    <textarea name="${rawDataId}_content" rows="5" placeholder="각 줄에 내용을 입력하세요. 예:&#10;1. 김 PM, 우리 앱 이름은 '꿀잠'이야...&#10;2. 마케팅 핵심: 우리 앱 쓰면...">${this.escapeHtml(content)}</textarea>
-                    <small class="form-hint">원본 데이터의 내용을 줄바꿈으로 구분하여 입력하세요.</small>
-                </div>
-                <div class="form-group full-width">
-                    <label>리스크 <span class="json-key">[...rawData[].risks]</span></label>
-                    <textarea name="${rawDataId}_risks" rows="3" placeholder="각 줄에 리스크를 입력하세요. 예:&#10;의료법 위반 가능성 (과장 광고)&#10;개인정보보호법 위반 가능성">${this.escapeHtml(risks)}</textarea>
-                    <small class="form-hint">이 원본 데이터에 포함된 법적, 윤리적 리스크를 입력하세요.</small>
-                </div>
-            </div>
-        `;
-
-        container.appendChild(rawDataElement);
-    }
-
-    /**
-     * 원본 데이터 삭제
-     */
-    removeRawData(button) {
-        const item = button.closest('.raw-data-item');
-        if (item) {
-            item.remove();
-            this.handleFormInput();
-        }
-    }
-
-    /**
-     * 필수 섹션 (구성 요소) 추가
-     */
-    addRequiredSection(sessionId) {
-        const container = document.getElementById(`requiredSectionsContainer_${sessionId}`);
-        if (!container) return;
-
-        const sectionId = `reqSection_${sessionId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const sectionCount = container.children.length + 1;
-        const sectionElement = document.createElement('div');
-        sectionElement.className = 'required-section-item';
-        sectionElement.dataset.sectionId = sectionId;
-        sectionElement.innerHTML = `
-            <div class="required-section-header">
-                <span class="required-section-label">구성 요소 ${sectionCount}</span>
-                <button type="button" class="btn-remove-small" onclick="window.createAssignmentManager.removeRequiredSection(this);">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>순서 <span class="json-key">[...requiredSections[].order]</span></label>
-                    <input type="number" name="${sectionId}_order" min="1" value="${sectionCount}" placeholder="1">
-                </div>
-                <div class="form-group">
-                    <label>제목 <span class="json-key">[...requiredSections[].title]</span></label>
-                    <input type="text" name="${sectionId}_title" placeholder="예: 헤드라인 (이모지 포함)">
-                </div>
-                <div class="form-group full-width">
-                    <label>내용 <span class="json-key">[...requiredSections[].content]</span></label>
-                    <input type="text" name="${sectionId}_content" placeholder="예: 인스타그램 게시글의 첫 부분으로 주목을 끄는 헤드라인과 이모지 포함">
-                </div>
-            </div>
-        `;
-
-        container.appendChild(sectionElement);
-        this.handleFormInput();
-    }
-
-    /**
-     * 필수 섹션 (구성 요소) 삭제
-     */
-    removeRequiredSection(button) {
-        const item = button.closest('.required-section-item');
-        if (item) {
-            item.remove();
-            this.handleFormInput();
-        }
-    }
 
     // ============================================================
     // 폼 데이터 수집
