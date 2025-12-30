@@ -48,6 +48,17 @@
                     <!-- 좌측 패널 -->
                     <aside class="workspace-left-panel">
                         <!-- 과제 목록 섹션 -->
+                        <div class="workspace-section accordion-section" id="taskListSection">
+                            <h2 class="section-title accordion-header" id="taskListHeader">
+                                <i class="fas fa-tasks"></i> 과제 목록
+                                <i class="fas fa-chevron-down accordion-icon"></i>
+                            </h2>
+                            <div class="task-list-content accordion-content" id="taskListContent">
+                                <!-- 동적으로 생성됨 -->
+                            </div>
+                        </div>
+
+                        <!-- 과제 목표 및 미션 섹션 -->
                         <div class="workspace-section accordion-section" id="taskInfoSection">
                             <h2 class="section-title accordion-header" id="taskInfoHeader">
                                 <i class="fas fa-bullseye"></i> 과제 목표 및 미션
@@ -81,6 +92,9 @@
 
                     <!-- 리사이즈 핸들 1 -->
                     <div class="resize-handle" id="resizeHandle">
+                        <button class="btn-panel-toggle-on-handle" id="toggleLeftPanelBtn" title="좌측 패널 토글">
+                            &#60;
+                        </button>
                         <div class="resize-handle-line"></div>
                     </div>
 
@@ -142,6 +156,9 @@
 
                     <!-- 리사이즈 핸들 2 -->
                     <div class="resize-handle" id="resizeHandle2">
+                        <button class="btn-panel-toggle-on-handle" id="toggleRightPanelBtn" title="우측 패널 숨기기">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                         <div class="resize-handle-line"></div>
                     </div>
 
