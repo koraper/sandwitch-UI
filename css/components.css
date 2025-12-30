@@ -4728,6 +4728,7 @@
     flex-direction: column;
     overflow: hidden;
     padding: 0;
+    min-height: 500px;
 }
 
 .tab-panel.active {
@@ -4759,6 +4760,7 @@
     flex-direction: column;
     overflow: hidden;
     background: #fafbfc;
+    min-height: 400px;
 }
 
 .chat-messages {
@@ -4768,6 +4770,7 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    min-height: 0;
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -4931,6 +4934,7 @@
     border-top: 1px solid #e5e7eb;
     background: white;
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
 }
 
 .chat-input {
@@ -6285,6 +6289,92 @@ body[data-competency="PPS"] .pps-only {
     font-size: 0.875rem;
     color: #78350f;
     line-height: 1.6;
+}
+
+/* 결과물 작성 영역 스타일 */
+.output-title {
+    padding: 1.5rem;
+    background: white;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.output-title h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.output-title h2 i {
+    color: #6366f1;
+}
+
+.output-textarea-wrapper {
+    padding: 1.5rem;
+    padding-left: 0;
+    padding-right: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.output-textarea {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    resize: both;
+    min-height: 400px;
+    transition: all 0.2s;
+}
+
+.output-textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.output-text-length {
+    margin-top: 0.75rem;
+    text-align: right;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.output-text-length strong {
+    color: #6366f1;
+    font-weight: 600;
+}
+
+.output-submit-wrapper {
+    padding: 1.5rem;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: center;
+}
+
+.submit-btn {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
 }
 
 /* PPS 개조식 리스트 에디터 */

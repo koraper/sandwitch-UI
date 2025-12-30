@@ -445,12 +445,11 @@ class WorkspaceManager {
         // 우측 패널 렌더링
         this.renderRightPanel();
 
-
-        // PPS 전용 탭 설정 (에디터 포함)
-        this.setupPPSTabs();
-
         // PPS 전용 에디터 렌더링
         this.renderPPSOutputEditor();
+
+        // PPS 전용 탭 설정
+        this.setupPPSTabs();
     }
 
     /**
@@ -997,20 +996,35 @@ class WorkspaceManager {
         const chatPanel = document.getElementById('chatPanel');
         const outputPanel = document.getElementById('outputPanel');
 
-        if (!chatTab || !outputTab || !chatPanel || !outputPanel) return;
+        if (!chatTab || !outputTab) {
+            console.error('탭 요소를 찾을 수 없습니다:', { chatTab, outputTab });
+            return;
+        }
+
+        if (!chatPanel || !outputPanel) {
+            console.error('패널을 찾을 수 없습니다:', { chatPanel, outputPanel });
+            return;
+        }
 
         // 저장된 활성 탭 불러오기
         const activeTab = localStorage.getItem('workspace_active_tab') || 'chat';
         this.switchTab(activeTab);
 
-        // 탭 클릭 이벤트
-        chatTab.addEventListener('click', () => {
-            this.switchTab('chat');
-        });
+        // 이벤트 리스너 제거 (중복 방지)
+        if (this.handleChatTabClick) {
+            chatTab.removeEventListener('click', this.handleChatTabClick);
+        }
+        if (this.handleOutputTabClick) {
+            outputTab.removeEventListener('click', this.handleOutputTabClick);
+        }
 
-        outputTab.addEventListener('click', () => {
-            this.switchTab('output');
-        });
+        // 이벤트 핸들러 저장
+        this.handleChatTabClick = () => this.switchTab('chat');
+        this.handleOutputTabClick = () => this.switchTab('output');
+
+        // 탭 클릭 이벤트
+        chatTab.addEventListener('click', this.handleChatTabClick);
+        outputTab.addEventListener('click', this.handleOutputTabClick);
     }
 
     /**
@@ -1019,22 +1033,19 @@ class WorkspaceManager {
     switchTab(tabName) {
         const chatTab = document.getElementById('chatTab');
         const outputTab = document.getElementById('outputTab');
-        const visualizationTab = document.getElementById('visualizationTab');
         const chatPanel = document.getElementById('chatPanel');
         const outputPanel = document.getElementById('outputPanel');
-        const visualizationPanel = document.getElementById('visualizationPanel');
 
-        if (!chatTab || !outputTab || !chatPanel || !outputPanel) return;
+        if (!chatTab || !outputTab || !chatPanel || !outputPanel) {
+            console.error('탭 전환 실패 - 요소를 찾을 수 없습니다');
+            return;
+        }
 
         // 모든 탭과 패널 비활성화
-        const allTabs = [chatTab, outputTab];
-        const allPanels = [chatPanel, outputPanel];
-
-        if (visualizationTab) allTabs.push(visualizationTab);
-        if (visualizationPanel) allPanels.push(visualizationPanel);
-
-        allTabs.forEach(tab => tab.classList.remove('active'));
-        allPanels.forEach(panel => panel.classList.remove('active'));
+        chatTab.classList.remove('active');
+        outputTab.classList.remove('active');
+        chatPanel.classList.remove('active');
+        outputPanel.classList.remove('active');
 
         // 선택된 탭과 패널 활성화
         if (tabName === 'chat') {
@@ -1043,9 +1054,6 @@ class WorkspaceManager {
         } else if (tabName === 'output') {
             outputTab.classList.add('active');
             outputPanel.classList.add('active');
-        } else if (tabName === 'visualization' && visualizationTab && visualizationPanel) {
-            visualizationTab.classList.add('active');
-            visualizationPanel.classList.add('active');
         }
 
         // 상태 저장
@@ -1142,6 +1150,13 @@ class WorkspaceManager {
      */
     updateOutput(sectionId, value) {
         this.outputData[sectionId] = value;
+
+        // 글자 수 실시간 업데이트
+        const lengthDisplay = document.getElementById(`${sectionId}_length`);
+        if (lengthDisplay) {
+            lengthDisplay.textContent = value.length;
+        }
+
         this.updateLengthDisplay();
 
         // PPS인 경우 필수 키워드 검증
@@ -2079,7 +2094,6 @@ class WorkspaceManager {
         }
 
         // 기본 탭 설정
-        this.setupTabs();
     }
 
     /**
@@ -2305,17 +2319,33 @@ class WorkspaceManager {
         const requiredSections = format.requiredSections || [];
         const style = format.style || '';
 
-        // 길이 제한 파싱
-        const lengthMatch = (format.length || '').match(/(\d+)\s*~\s*(\d+)/);
-        const minLength = lengthMatch ? parseInt(lengthMatch[1]) : 0;
-        const maxLength = lengthMatch ? parseInt(lengthMatch[2]) : 0;
-
+        // 타이틀 추가
         let editorHtml = `
+            <div class="output-title">
+                <h2><i class="fas fa-file-alt"></i> 기획서</h2>
+            </div>
         `;
 
         // PPS는 개조식 리스트 형태이므로 단일 에디터 사용
         if (style.includes('개조식') || style.includes('리스트')) {
-            // 개조식 리스트 형태 - textarea 제거됨
+            const sectionId = `pps_output_${this.currentSessionId}`;
+            const savedContent = this.outputData[sectionId] || '';
+            const currentLength = savedContent.length;
+
+            editorHtml += `
+                <div class="output-textarea-wrapper">
+                    <textarea
+                        id="${sectionId}"
+                        class="output-textarea"
+                        rows="20"
+                        placeholder="최종 기획서를 제출하세요."
+                        oninput="window.workspaceManager.updateOutput('${sectionId}', this.value)"
+                    >${savedContent}</textarea>
+                    <div class="output-text-length">
+                        <span>글자 수: <strong id="${sectionId}_length">${currentLength}</strong>자</span>
+                    </div>
+                </div>
+            `;
         } else {
             // 일반 섹션별 입력 (인스타그램 포맷 등)
             requiredSections.forEach((section, index) => {
@@ -2328,7 +2358,7 @@ class WorkspaceManager {
                             ${section.order}. ${section.title}
                             <span class="section-hint">${section.content}</span>
                         </label>
-                        <textarea 
+                        <textarea
                             id="${sectionId}"
                             class="section-input"
                             rows="6"
@@ -2340,6 +2370,15 @@ class WorkspaceManager {
             });
         }
 
+        // 과제 제출 버튼
+        editorHtml += `
+            <div class="output-submit-wrapper">
+                <button type="button" class="btn btn-primary submit-btn" onclick="window.workspaceManager.submitWork()">
+                    <i class="fas fa-paper-plane"></i> 과제 제출하기
+                </button>
+            </div>
+        `;
+
 
         // 필수 표기 사항
         if (aci.requiredNotation && aci.requiredNotation.text) {
@@ -2350,14 +2389,6 @@ class WorkspaceManager {
                 </div>
             `;
         }
-
-        // 글자 수 표시
-        editorHtml += `
-            <div class="output-length-info">
-                <span>작성 분량: <span id="outputLength">0</span>자</span>
-                ${maxLength > 0 ? `<span class="length-limit">(권장: ${minLength} ~ ${maxLength}자)</span>` : ''}
-            </div>
-        `;
 
         container.innerHTML = editorHtml;
         this.updateLengthDisplay();
