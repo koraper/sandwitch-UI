@@ -45,12 +45,12 @@
             ],
             "outputRequirements": {
               "aesRequirements": {
-                "description": "AES 검증 (법적/사회적 리스크 관리)",
+                "description": "윤리/보안(AES) 가이드",
                 "requirement": "대표님의 지시 중 AES 평가 요소에 위배되는 사항을 찾아내어, 수정할 것."
               },
               "aciRequirements": {
                 "format": {
-                  "description": "출력 형식 요구사항",
+                  "description": "결과물 작성(ACI) 가이드",
                   "style": "서술형 줄글이 아닌 개조식 리스트 형태",
                   "length": "공백 포함 500자 ~ 700자 이내",
                   "requiredSections": [
