@@ -203,7 +203,7 @@ class DashboardManager {
                 name: '데이터 기반 통찰력',
                 nameEn: 'Data Insight Generation',
                 description: '데이터를 AI로 분석하고 인사이트를 도출하는 능력\n"코드를 직접 실행하여 데이터를 검증하고, 근거 기반의 실질적인 해결책을 도출"',
-                mode: 'learning',
+                mode: 'evaluation',
                 status: 'open'
             },
             {
@@ -212,8 +212,8 @@ class DashboardManager {
                 name: '생성형 콘텐츠 제작 능력',
                 nameEn: 'Generative Content Creation',
                 description: '텍스트/이미지/영상 생성 능력\n"상황과 목적에 완벽히 부합하는 결과물을 생성하고, 스타일을 정교하게 최적화"',
-                mode: 'learning',
-                status: 'locked'
+                mode: 'evaluation',
+                status: 'open'
             },
             {
                 id: 'wfa',
@@ -356,8 +356,16 @@ class DashboardManager {
             params.append('lectureId', this.lectureId);
         }
         
-        // 워크스페이스 페이지로 이동
-        window.location.href = `workspace.html?${params.toString()}`;
+        // competency에 따라 적절한 워크스페이스 페이지로 이동
+        let workspaceFile;
+        if (competencyCode === 'DIG') {
+            workspaceFile = 'workspaceDIG.html';
+        } else if (competencyCode === 'GCC') {
+            workspaceFile = 'workspaceGCC.html';
+        } else {
+            workspaceFile = 'workspacePPS.html'; // 기본값: PPS
+        }
+        window.location.href = `${workspaceFile}?${params.toString()}`;
     }
 
     /**
