@@ -136,6 +136,100 @@
             margin-bottom: 3px;
         }
 
+        /* 좌측 패널 탭 스타일 */
+        .left-panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #000;
+            margin-bottom: 8px;
+        }
+
+        .left-panel-tab {
+            border: none;
+            border-right: 1px solid #000;
+            background: #fff;
+            color: #000;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 11pt;
+        }
+
+        .left-panel-tab:last-child {
+            border-right: none;
+        }
+
+        .left-panel-tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .left-panel-content {
+            margin-bottom: 16px;
+        }
+
+        .task-item {
+            padding: 6px 0;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .task-item:hover {
+            background: #f5f5f5;
+        }
+
+        .task-item.active {
+            font-weight: bold;
+        }
+
+        .task-objective,
+        .task-mission {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .task-objective strong,
+        .task-mission strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .session-tabs {
+            display: flex;
+            border-bottom: 1px solid #000;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .session-tab {
+            border: none;
+            border-right: 1px solid #000;
+            background: #fff;
+            color: #000;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 10pt;
+        }
+
+        .session-tab:last-child {
+            border-right: none;
+        }
+
+        .session-tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .session-content {
+            line-height: 1.5;
+            font-size: 11pt;
+        }
+
+        .session-situation {
+            margin-bottom: 8px;
+            padding: 6px;
+            background: #f9f9f9;
+            border-left: 2px solid #000;
+        }
+
         /* 탭 구조 */
         .tabs-container {
             display: flex;
@@ -202,11 +296,47 @@
                 <div class="workspace-layout">
                     <!-- 좌측 패널 -->
                     <aside class="workspace-left-panel" id="leftPanel">
-                        <div class="workspace-section">
-                            <div class="section-content">
-                                <p>과제 목록</p>
-                                <p>과제 목표 및 미션</p>
-                                <p>세션 시나리오</p>
+                        <!-- 과제 목록 섹션 -->
+                        <div class="workspace-section" id="taskListSection">
+                            <div class="section-title">과제 목록</div>
+                            <div class="left-panel-tabs">
+                                <button class="left-panel-tab active" data-section="tasks">과제</button>
+                            </div>
+                            <div class="left-panel-content" id="taskListContent">
+                                <div class="task-item active" data-task="1">
+                                    과제 1
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 과제 목표 및 미션 섹션 -->
+                        <div class="workspace-section" id="taskInfoSection">
+                            <div class="section-title">과제 목표 및 미션</div>
+                            <div class="left-panel-content" id="taskInfoContent">
+                                <div class="task-objective">
+                                    <strong>목표:</strong>
+                                    <div id="taskObjective">-</div>
+                                </div>
+                                <div class="task-mission">
+                                    <strong>미션:</strong>
+                                    <div id="taskMission">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 세션 시나리오 섹션 -->
+                        <div class="workspace-section" id="sessionInfoSection">
+                            <div class="section-title">세션 시나리오</div>
+                            <div class="session-tabs" id="sessionTabs">
+                                <button class="session-tab active" data-session="1">세션 1</button>
+                                <button class="session-tab" data-session="2">세션 2</button>
+                                <button class="session-tab" data-session="3">세션 3</button>
+                                <button class="session-tab" data-session="4">세션 4</button>
+                            </div>
+                            <div class="left-panel-content" id="sessionContent">
+                                <div class="session-content">
+                                    <div class="session-situation" id="sessionSituation">-</div>
+                                </div>
                             </div>
                         </div>
                     </aside>
@@ -261,8 +391,118 @@
         </main>
     </div>
 
+    <script>
+        // JSON 데이터 (임시 - 나중에 파일에서 로드)
+        const scenarioData = {
+            "tasks": [
+                {
+                    "taskNumber": 1,
+                    "title": "[실전 프로젝트] 신제품 '제로쿠키' 런칭 성과 진실 규명 감사",
+                    "objective": "지난달 런칭한 신제품 '제로쿠키'에 대해 마케팅팀은 '고객 평점 4.9점의 대박 상품'이라고 보고했지만, 재무팀의 데이터는 반품 급증과 매출 하락을 가리키고 있습니다.\n경영진은 이 모순된 상황을 해결하기 위해 당신을 특별 감사관(Auditor)으로 임명했습니다.\n당신의 목표는 마케팅팀이 제출한 원본 데이터를 직접 분석하여 진실을 밝혀내고 경영 전략을 제언하는 것입니다.",
+                    "mission": "생성형 AI와 협업하여 총 4단계 세션을 통해 프로젝트를 완수하고, 각 세션별 산출물과 [AI 대화 로그(Log) 전문]을 제출하시오.",
+                    "sessions": [
+                        {
+                            "sessionNumber": 1,
+                            "userDisplays": {
+                                "situation": "[세션 1] 증거물 확보 (Data Preprocessing)\n\n마케팅팀으로부터 설문조사 원본 파일(Raw_Feedback.csv)을 확보했습니다. 하지만 현재 상태로는 통계 분석 시스템에 데이터를 업로드할 수 없습니다. 데이터가 오염되어 있고, 보안 규정에 위배되는 요소가 포함되어 있기 때문입니다.\n\n생성형 AI를 활용하여, 아래 [결과물 표준]을 완벽하게 충족하는 정제된 데이터 파일(Cleaned Data)을 만드십시오."
+                            }
+                        },
+                        {
+                            "sessionNumber": 2,
+                            "userDisplays": {
+                                "situation": "[세션 2] 데이터 분석 및 패턴 발견\n\n전처리가 완료된 데이터를 바탕으로 마케팅팀의 주장('고객 평점 4.9점의 대박 상품')과 재무팀의 데이터(반품 급증, 매출 하락) 사이의 모순을 분석하십시오."
+                            }
+                        },
+                        {
+                            "sessionNumber": 3,
+                            "userDisplays": {
+                                "situation": "[세션 3] 시각화 대시보드 구축\n\n마케팅팀의 주장을 검증하는 '고객 반응 시각화 대시보드'를 완성하십시오. 개별적으로 작성된 대시보드에 분석 오류가 있을 경우, 회사의 운명을 건 전략이 잘못된 방향으로 갈 수 있으므로 정밀한 검증이 필요합니다."
+                            }
+                        },
+                        {
+                            "sessionNumber": 4,
+                            "userDisplays": {
+                                "situation": "[세션 4] 경영 제언: 위기 탈출 전략 수립\n\n완성된 차트가 가리키는 진실을 읽고, 회사를 구할 결단을 내리십시오. 세션 3를 통해 확정된 [공식 시각화 데이터]를 바탕으로 '왜(Why)' 이런 위기가 왔는지 규명하고, '무엇(What)'을 해야 할지 결정해야 합니다.\n\n당신의 역할: 전략기획팀장\n당신의 임무: 사장님께 보고할 [위기 대응 경영 제언서]를 AI와 함께 작성하십시오."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // 초기화
+        let currentTask = scenarioData.tasks[0];
+        let currentSession = currentTask.sessions[0];
+
+        // 과제 목록 렌더링
+        function renderTaskList() {
+            const taskListContent = document.getElementById('taskListContent');
+            taskListContent.innerHTML = '';
+            
+            scenarioData.tasks.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item' + (task.taskNumber === currentTask.taskNumber ? ' active' : '');
+                taskItem.textContent = `과제 ${task.taskNumber}: ${task.title.substring(0, 20)}...`;
+                taskItem.dataset.task = task.taskNumber;
+                taskItem.addEventListener('click', () => selectTask(task.taskNumber));
+                taskListContent.appendChild(taskItem);
+            });
+        }
+
+        // 과제 선택
+        function selectTask(taskNumber) {
+            currentTask = scenarioData.tasks.find(t => t.taskNumber === taskNumber);
+            if (!currentTask) return;
+
+            // 과제 목록 활성화 업데이트
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.task == taskNumber);
+            });
+
+            // 목표 및 미션 업데이트
+            document.getElementById('taskObjective').textContent = currentTask.objective;
+            document.getElementById('taskMission').textContent = currentTask.mission;
+
+            // 세션 목록 업데이트 및 첫 번째 세션 선택
+            if (currentTask.sessions && currentTask.sessions.length > 0) {
+                currentSession = currentTask.sessions[0];
+                selectSession(1);
+            }
+        }
+
+        // 세션 선택
+        function selectSession(sessionNumber) {
+            const session = currentTask.sessions.find(s => s.sessionNumber === sessionNumber);
+            if (!session) return;
+
+            currentSession = session;
+
+            // 세션 탭 활성화 업데이트
+            document.querySelectorAll('.session-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.session == sessionNumber);
+            });
+
+            // 세션 내용 업데이트
+            const situation = session.userDisplays?.situation || '-';
+            document.getElementById('sessionSituation').textContent = situation;
+        }
+
+        // 세션 탭 클릭 이벤트
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTaskList();
+            selectTask(1);
+
+            // 세션 탭 클릭 이벤트 리스너
+            document.querySelectorAll('.session-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    selectSession(parseInt(tab.dataset.session));
+                });
+            });
+        });
+    </script>
     <script src="js/modal.js"></script>
     <script src="js/workspaceDIG.js"></script>
 </body>
 
 </html>
+
