@@ -26,6 +26,11 @@
             font-size: 12pt;
         }
 
+        #taskInfoContent {
+            text-align: center;
+        }
+
+
         .workspace-container {
             display: flex;
             flex-direction: column;
@@ -180,16 +185,32 @@
             font-weight: bold;
         }
 
-        .task-objective,
-        .task-mission {
+        .task-objective {
             margin-bottom: 12px;
             line-height: 1.5;
+        }
+
+        #taskObjective {
+            text-align: left;
+            white-space: pre-wrap;
+        }
+
+        .task-mission {
+            margin-top: 12px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        #taskMission {
+            text-align: left;
+            white-space: pre-wrap;
         }
 
         .task-objective strong,
         .task-mission strong {
             display: block;
             margin-bottom: 4px;
+            text-align: center;
         }
 
         .session-tabs {
@@ -313,13 +334,13 @@
                         <div class="workspace-section" id="taskInfoSection">
                             <div class="section-title">과제 목표 및 미션</div>
                             <div class="left-panel-content" id="taskInfoContent">
-                                <div class="task-objective">
-                                    <strong>목표:</strong>
-                                    <div id="taskObjective">-</div>
+                                <div style="margin-bottom: 12px; line-height: 1.5;">
+                                    <strong style="display: block; margin-bottom: 4px; text-align: center;">목표:</strong>
+                                    <div id="taskObjective" style="text-align: left; white-space: pre-wrap;">-</div>
                                 </div>
-                                <div class="task-mission">
-                                    <strong>미션:</strong>
-                                    <div id="taskMission">-</div>
+                                <div style="margin-top: 12px; margin-bottom: 12px; line-height: 1.5;">
+                                    <strong style="display: block; margin-bottom: 4px; text-align: center;">미션:</strong>
+                                    <div id="taskMission" style="text-align: left; white-space: pre-wrap;">-</div>
                                 </div>
                             </div>
                         </div>
@@ -351,7 +372,8 @@
                             <div class="tabs-header">
                                 <button class="tab-button active" data-tab="chat" id="chatTab">AI 어시스턴트 협업</button>
                                 <button class="tab-button" data-tab="output" id="outputTab">결과물 작성 및 제출</button>
-                                <button class="tab-button" data-tab="visualization" id="visualizationTab">데이터 시각화</button>
+                                <button class="tab-button" data-tab="visualization" id="visualizationTab">데이터
+                                    시각화</button>
                             </div>
 
                             <!-- 탭 콘텐츠 -->
@@ -438,7 +460,7 @@
         function renderTaskList() {
             const taskListContent = document.getElementById('taskListContent');
             taskListContent.innerHTML = '';
-            
+
             scenarioData.tasks.forEach(task => {
                 const taskItem = document.createElement('div');
                 taskItem.className = 'task-item' + (task.taskNumber === currentTask.taskNumber ? ' active' : '');
@@ -460,8 +482,18 @@
             });
 
             // 목표 및 미션 업데이트
-            document.getElementById('taskObjective').textContent = currentTask.objective;
-            document.getElementById('taskMission').textContent = currentTask.mission;
+            const taskObjectiveEl = document.getElementById('taskObjective');
+            const taskMissionEl = document.getElementById('taskMission');
+            if (taskObjectiveEl) {
+                taskObjectiveEl.textContent = currentTask.objective;
+                taskObjectiveEl.style.textAlign = 'left';
+                taskObjectiveEl.style.whiteSpace = 'pre-wrap';
+            }
+            if (taskMissionEl) {
+                taskMissionEl.textContent = currentTask.mission;
+                taskMissionEl.style.textAlign = 'left';
+                taskMissionEl.style.whiteSpace = 'pre-wrap';
+            }
 
             // 세션 목록 업데이트 및 첫 번째 세션 선택
             if (currentTask.sessions && currentTask.sessions.length > 0) {
@@ -505,4 +537,3 @@
 </body>
 
 </html>
-

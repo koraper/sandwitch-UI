@@ -324,11 +324,11 @@ class WorkspaceManager {
             } else if (this.scenarioPath) {
                 // 파일에서 로드
                 const response = await fetch(this.scenarioPath);
-                
+
                 if (!response.ok) {
                     throw new Error(`시나리오 파일을 불러올 수 없습니다: ${response.statusText} (경로: ${this.scenarioPath})`);
                 }
-                
+
                 this.scenarioData = await response.json();
                 this.processScenarioData();
             } else {
@@ -612,7 +612,7 @@ class WorkspaceManager {
                 <div class="task-list-item ${isSelected ? 'selected' : ''}" 
                      data-task-number="${task.taskNumber}"
                      onclick="window.workspaceManager.selectTask(${task.taskNumber})">
-                    <div class="task-number">과제 ${task.taskNumber}</div>
+                    
                     <div class="task-title-text">${task.title}</div>
                     ${isSelected ? '<div class="task-selected-badge"><i class="fas fa-check-circle"></i> 현재 과제</div>' : ''}
                 </div>
@@ -1000,9 +1000,9 @@ class WorkspaceManager {
         outputTab.addEventListener('click', this.handleOutputTabClick);
     }
 
-        /**
-     * 탭 전환
-     */
+    /**
+ * 탭 전환
+ */
     switchTab(tabName) {
         const chatTab = document.getElementById('chatTab');
         const outputTab = document.getElementById('outputTab');
@@ -1044,7 +1044,7 @@ class WorkspaceManager {
      * 결과물 작성 영역 렌더링
      */
     renderOutputEditor() {
-        
+
 
         // DIG 및 기본 워크스페이스용 일반 에디터
         const container = document.getElementById('outputEditor');
