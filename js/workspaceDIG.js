@@ -657,11 +657,12 @@ class WorkspaceManager {
 
         container.innerHTML = `
             <div class="info-item info-item-objective">
-                <label><i class="fas fa-flag-checkered"></i> 목표</label>
+                <label style="display: block; text-align: center; font-weight: bold;"><i class="fas fa-flag-checkered"></i> 목표</label>
                 <p class="info-text">${this.currentTask.objective || '-'}</p>
             </div>
+            <br>
             <div class="info-item info-item-mission">
-                <label><i class="fas fa-tasks"></i> 핵심 미션</label>
+                <label style="display: block; text-align: center; font-weight: bold;"><i class="fas fa-tasks"></i> 핵심 미션</label>
                 <p class="info-text">${this.currentTask.mission || '-'}</p>
             </div>
         `;
@@ -771,11 +772,10 @@ class WorkspaceManager {
         // 상황 설명 (situation 필드 표시) - PPS 워크스페이스에서 중요하게 표시
         let sessionHtml = '';
         if (userDisplays.situation) {
-            const situationTitle = '비즈니스 상황';
             sessionHtml = `
                 <div class="session-item session-item-situation">
-                    <h3 class="session-item-title">
-                        <i class="fas fa-info-circle"></i> ${situationTitle}
+                    <h3 class="session-item-title"; style="text-align: center;">
+                        <i class="fas fa-info-circle"></i> 과제 상황
                     </h3>
                     <div class="session-item-content">
                         <p class="situation-text">${this.formatText(userDisplays.situation)}</p>
@@ -787,14 +787,15 @@ class WorkspaceManager {
         // 원본 데이터
         if (userDisplays.rawData && userDisplays.rawData.length > 0) {
             sessionHtml += `
-                <div class="session-item">
-                    <h3 class="session-item-title">
+                <br/>
+                    <div class="session-item">
+                    <h3 class="session-item-title"; style="text-align: center;">
                         <i class="fas fa-database"></i> 제공 데이터 자산
                     </h3>
                     <div class="session-item-content">
                         ${userDisplays.rawData.map(rawData => `
                             <div class="raw-data-item">
-                                <div class="raw-data-header">
+                                <div class="raw-data-header";>
                                     <strong><i class="fas fa-file-csv"></i> ${rawData.source || '데이터셋'}</strong>
                                 </div>
                                 <div class="raw-data-content">
@@ -1389,7 +1390,7 @@ class WorkspaceManager {
     generateAIResponse(userMessage) {
         const responses = [
             '분석하신 내용을 바탕으로 구체적인 프롬프트를 설계하시는 것이 좋겠습니다. 특히 요구사항에 명시된 필수 섹션을 잊지 마세요.',
-            '비즈니스 상황에서 발생할 수 있는 리스크를 AES 가이드에 따라 필터링하는 것이 중요합니다. 이 부분을 다시 한번 체크해보시겠어요?',
+            '과제 상황에서 발생할 수 있는 리스크를 AES 가이드에 따라 필터링하는 것이 중요합니다. 이 부분을 다시 한번 체크해보시겠어요?',
             '좋은 접근입니다. 작성하신 결과물이 권장 길이에 적합한지도 함께 확인해주시면 더욱 완성도 높은 결과물이 될 것 같습니다.',
             '제시된 데이터 자산을 충분히 활용하고 계신가요? 각 데이터 항목이 결과물에 어떻게 반영될지 고민해보시면 좋겠습니다.',
             '필수 표기 사항이 누락되지 않도록 주의해 주세요. 채점 기준에서 중요한 비중을 차지하는 항목입니다.',

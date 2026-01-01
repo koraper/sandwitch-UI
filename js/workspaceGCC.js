@@ -833,7 +833,7 @@ class WorkspaceManager {
             sessionHtml = `
                 <div class="session-item session-item-situation">
                     <h3 class="session-item-title">
-                        <i class="fas fa-info-circle"></i> 비즈니스 상황
+                        <i class="fas fa-info-circle"></i> 과제 상황
                     </h3>
                     <div class="session-item-content">
                         <p class="situation-text">${this.formatText(userDisplays.situation)}</p>
