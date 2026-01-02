@@ -796,10 +796,10 @@ class WorkspaceManager {
                         ${userDisplays.rawData.map(rawData => `
                             <div class="raw-data-item">
                                 <div class="raw-data-header";>
-                                    <strong><i class="fas fa-file-csv"></i> ${rawData.source || '데이터셋'}</strong>
+                                    <i class="fas fa-file-csv"></i> ${rawData.source || '데이터셋'}
                                 </div>
                                 <div class="raw-data-content">
-                                    <pre class="raw-data-text">${this.formatText(rawData.content || '')}</pre>
+                                    <pre class="raw-data-text" style="white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; margin: 0; padding: 0;">${this.formatText(rawData.content || '')}</pre>
                                 </div>
                             </div>
                         `).join('')}
@@ -823,35 +823,37 @@ class WorkspaceManager {
         // AES 요구사항
         if (outputRequirements.aesRequirements) {
             const aes = outputRequirements.aesRequirements;
-            html += `
-                <div class="requirement-group aes-requirements">
-                    <h4 class="requirement-title">
-                        <i class="fas fa-shield-alt"></i> 윤리/보안(AES) 가이드
-                    </h4>
-                    <p class="requirement-description">${aes.description || ''}</p>
-                    <div class="requirement-text">${this.formatText(aes.requirement || '')}</div>
-                </div>
-            `;
+            if (aes.description || aes.requirement) {
+                html += `
+                    <div class="requirement-group aes-requirements">
+                        <h4 class="requirement-title">
+                            <i class="fas fa-shield-alt"></i> ${aes.description || '윤리/보안(AES) 가이드'}
+                        </h4>
+                        ${aes.requirement ? `<div class="requirement-text">${this.formatText(aes.requirement)}</div>` : ''}
+                    </div>
+                `;
+            }
         }
 
         // ACI 요구사항
         if (outputRequirements.aciRequirements) {
             const aci = outputRequirements.aciRequirements;
+            const aciTitle = aci.format?.description || '결과물 작성(ACI) 가이드';
             html += `
                 <div class="requirement-group aci-requirements">
                     <h4 class="requirement-title">
-                        <i class="fas fa-file-signature"></i> 결과물 작성(ACI) 가이드
+                        <i class="fas fa-file-signature"></i> ${aciTitle}
                     </h4>
             `;
 
-            // 형식 요구사항
+            // 형식 요구사항 (값이 있는 경우만 표시)
             if (aci.format) {
-                html += `
-                    <div class="format-requirements">
-                        <p><strong>작성 형식</strong> <span>${aci.format.style || '-'}</span></p>
-                        <p><strong>권장 길이</strong> <span>${aci.format.length || '-'}</span></p>
-                    </div>
-                `;
+                const formatItems = [];
+                if (aci.format.style) formatItems.push(`<p><strong>작성 형식</strong> <span>${aci.format.style}</span></p>`);
+                if (aci.format.length) formatItems.push(`<p><strong>권장 길이</strong> <span>${aci.format.length}</span></p>`);
+                if (formatItems.length > 0) {
+                    html += `<div class="format-requirements">${formatItems.join('')}</div>`;
+                }
 
                 // 필수 섹션
                 if (aci.format.requiredSections && aci.format.requiredSections.length > 0) {
@@ -862,7 +864,7 @@ class WorkspaceManager {
                                 ${aci.format.requiredSections.map(section => `
                                     <li>
                                         <strong>${section.order}. ${section.title}</strong>
-                                        <p>${section.content}</p>
+                                        ${section.content ? `<p>${section.content}</p>` : ''}
                                     </li>
                                 `).join('')}
                             </ul>
@@ -872,22 +874,22 @@ class WorkspaceManager {
             }
 
             // 필수 표기 사항
-            if (aci.requiredNotation) {
+            if (aci.requiredNotation && (aci.requiredNotation.requirement || aci.requiredNotation.text)) {
                 html += `
                     <div class="required-notation">
                         <strong><i class="fas fa-exclamation-circle"></i> 필수 표기 사항</strong>
-                        <p>${aci.requiredNotation.requirement || ''}</p>
+                        ${aci.requiredNotation.requirement ? `<p>${aci.requiredNotation.requirement}</p>` : ''}
                         ${aci.requiredNotation.text ? `<span class="notation-text">${aci.requiredNotation.text}</span>` : ''}
                     </div>
                 `;
             }
 
-            // 데이터 신뢰성
-            if (aci.dataReliability) {
+            // 데이터 신뢰성 (값이 있는 경우만 표시)
+            if (aci.dataReliability && (aci.dataReliability.description || aci.dataReliability.requirement)) {
                 html += `
                     <div class="data-reliability">
-                        <strong><i class="fas fa-check-double"></i> 데이터 신뢰성</strong>
-                        <p>${aci.dataReliability.requirement || ''}</p>
+                        <strong><i class="fas fa-check-double"></i> ${aci.dataReliability.description || '데이터 신뢰성'}</strong>
+                        ${aci.dataReliability.requirement ? `<p>${aci.dataReliability.requirement}</p>` : ''}
                     </div>
                 `;
             }
@@ -907,19 +909,20 @@ class WorkspaceManager {
                 }
             }
 
-            // 제약사항 (항상 표시)
-            const constraints = aci.constraints
-                ? (typeof aci.constraints === 'object' && aci.constraints.constraint
+            // 제약사항 (값이 있는 경우만 표시)
+            if (aci.constraints) {
+                const constraints = typeof aci.constraints === 'object' && aci.constraints.constraint
                     ? aci.constraints.constraint
-                    : (Array.isArray(aci.constraints) ? aci.constraints.join(', ') : ''))
-                : '';
-
-            html += `
-                <div class="constraints">
-                    <strong><i class="fas fa-ban"></i> 작성 시 주의사항</strong>
-                    <p>${constraints || '없음'}</p>
-                </div>
-            `;
+                    : (Array.isArray(aci.constraints) ? aci.constraints.join(', ') : aci.constraints);
+                if (constraints) {
+                    html += `
+                        <div class="constraints">
+                            <strong><i class="fas fa-ban"></i> 작성 시 주의사항</strong>
+                            <p>${constraints}</p>
+                        </div>
+                    `;
+                }
+            }
 
             html += `</div>`;
         }
@@ -1762,17 +1765,28 @@ class WorkspaceManager {
         uploadSection.id = 'digDataUploadSection';
         uploadSection.className = 'workspace-section accordion-section dig-only';
 
+        // rawData에서 파일명 추출
+        const session = this.findCurrentSession();
+        const rawDataList = session?.userDisplays?.rawData || [];
+        const fileNames = rawDataList.map(data => {
+            const fileUrl = data.fileUrl || '';
+            return fileUrl.split('/').pop() || '파일';
+        }).join(', ');
+
         uploadSection.innerHTML = `
-            <h2 class="section-title accordion-header" id="digDataUploadHeader">
-                <i class="fas fa-file-upload"></i> 데이터 파일 관리
+            <h2 class="section-title accordion-header" id="digDataUploadHeader" style="text-align: center; font-weight: bold; border-bottom: none;">
+                <i class="fas fa-file-upload"></i> 원본 파일
                 <i class="fas fa-chevron-down accordion-icon"></i>
             </h2>
             <div class="accordion-content" id="digDataUploadContent">
                 <div class="data-upload-area">
                     <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
-                    <button class="btn btn-secondary" id="uploadCsvBtn" onclick="document.getElementById('csvFileInput').click()" style="background: green; color: white;">
-                        <i class="fas fa-upload"></i> CSV 파일 업로드
-                    </button>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span><i class="fas fa-file-csv"></i> ${fileNames || 'Raw_Feedback.csv'}</span>
+                        <button class="btn btn-secondary" id="uploadCsvBtn" onclick="document.getElementById('csvFileInput').click()" style="background: green; color: white;">
+                            <i class="fas fa-upload"></i> 파일 다운로드
+                        </button>
+                    </div>
                     <div class="uploaded-files" id="uploadedFilesList"></div>
                 </div>
                 <div class="data-download-area" id="digDownloadArea" style="display: none;">

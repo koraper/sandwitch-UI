@@ -292,6 +292,123 @@
         .tab-panel.active {
             display: block;
         }
+
+        /* 세션 아이템 스타일 */
+        .session-item {
+            margin-bottom: 12px;
+        }
+
+        .session-item-title {
+            margin-bottom: 6px;
+            padding-bottom: 3px;
+        }
+
+        .session-item-content {
+            line-height: 1.5;
+        }
+
+        /* 원본 데이터 스타일 */
+        .raw-data-item {
+            margin-bottom: 8px;
+        }
+
+        .raw-data-header {
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        .raw-data-content {
+            overflow-x: visible;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .raw-data-text {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 출력 요구사항 스타일 */
+        .requirement-group {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .requirement-group:last-child {
+            border-bottom: none;
+        }
+
+        .requirement-title {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .requirement-description {
+            font-size: 10pt;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .requirement-text {
+            font-size: 10pt;
+            line-height: 1.4;
+        }
+
+        .format-requirements p {
+            font-size: 10pt;
+            margin-bottom: 4px;
+        }
+
+        .required-sections-list {
+            margin-top: 8px;
+        }
+
+        .required-sections-list strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .required-sections-list ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .required-sections-list li {
+            margin-bottom: 6px;
+        }
+
+        .required-sections-list li strong {
+            display: inline;
+        }
+
+        .required-sections-list li p {
+            margin: 4px 0 0 0;
+        }
+
+        .data-reliability,
+        .required-keywords,
+        .constraints {
+            margin-top: 8px;
+        }
+
+        .data-reliability strong,
+        .required-keywords strong,
+        .constraints strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .data-reliability p,
+        .required-keywords p,
+        .constraints p {
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -399,10 +516,8 @@
                     <!-- 우측 패널 -->
                     <aside class="workspace-right-panel" id="rightPanel">
                         <div class="workspace-section">
-                            <div class="section-content">
-                                <p>출력 요구사항</p>
-                                <p>핵심 체크포인트</p>
-                            </div>
+                            <div class="section-title">출력 요구사항</div>
+                            <div id="outputRequirementsContent"></div>
                         </div>
                     </aside>
                 </div>
