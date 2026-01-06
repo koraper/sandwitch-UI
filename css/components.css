@@ -5857,6 +5857,49 @@
     margin-bottom: 0.5rem;
 }
 
+/* Mission and Submission Items */
+.modal-mission-item,
+.modal-submission-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem;
+    background: #ffffff;
+    margin-bottom: 0.75rem;
+}
+
+.modal-mission-header,
+.modal-submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.modal-mission-label,
+.modal-submission-label {
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.modal-mission-text,
+.modal-submission-text {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.modal-mission-text:focus,
+.modal-submission-text:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
 .modal-rawdata-item {
     border: 1px solid #e5e7eb;
     border-radius: 6px;

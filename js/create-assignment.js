@@ -1052,6 +1052,24 @@ class CreateAssignmentManager {
                     <textarea name="${sessionId}_situation" rows="3" placeholder="학습자가 과제를 수행할 때 필요한 배경 정보를 입력하세요." class="modal-session-situation">${sessionData?.userDisplays?.situation ? this.escapeHtml(sessionData.userDisplays.situation) : ''}</textarea>
                 </div>
                 <div class="form-group">
+                    <label>미션 <span class="json-key">[userDisplays.missions]</span></label>
+                    <div class="modal-missions-container" id="${sessionId}_missionsContainer">
+                        ${sessionData?.userDisplays?.missions ? this.renderMissions(sessionData.userDisplays.missions, sessionId) : ''}
+                    </div>
+                    <button type="button" class="btn-add-small" onclick="window.createAssignmentManager.addModalMissionItem('${sessionId}')">
+                        <i class="fas fa-plus"></i> 미션 추가
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>제출물 <span class="json-key">[userDisplays.submissions]</span></label>
+                    <div class="modal-submissions-container" id="${sessionId}_submissionsContainer">
+                        ${sessionData?.userDisplays?.submissions ? this.renderSubmissions(sessionData.userDisplays.submissions, sessionId) : ''}
+                    </div>
+                    <button type="button" class="btn-add-small" onclick="window.createAssignmentManager.addModalSubmissionItem('${sessionId}')">
+                        <i class="fas fa-plus"></i> 제출물 추가
+                    </button>
+                </div>
+                <div class="form-group">
                     <label>원본 데이터 <span class="json-key">[userDisplays.rawData]</span></label>
                     <div class="modal-rawdata-container" id="${sessionId}_rawdataContainer">
                         ${sessionData?.userDisplays?.rawData ? this.renderRawData(sessionData.userDisplays.rawData, sessionId) : ''}
@@ -1226,7 +1244,57 @@ class CreateAssignmentManager {
     }
 
     /**
-     * 모달 내 원본 데이터 아이템 추가
+     * 모달 미션 항목 추가
+     */
+    addModalMissionItem(sessionId, missionItem = null) {
+        const container = document.getElementById(`${sessionId}_missionsContainer`);
+        if (!container) return;
+
+        const missionIndex = container.children.length + 1;
+        const missionElement = document.createElement('div');
+        missionElement.className = 'modal-mission-item';
+
+        missionElement.innerHTML = `
+            <div class="modal-mission-header">
+                <span class="modal-mission-label">미션 ${missionIndex}</span>
+                <button type="button" class="btn-remove-small" onclick="this.closest('.modal-mission-item').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <textarea name="${sessionId}_mission_${missionIndex}" rows="2" placeholder="미션 내용을 입력하세요." class="modal-mission-text">${this.escapeHtml(missionItem || '')}</textarea>
+            </div>
+        `;
+
+        container.appendChild(missionElement);
+    }
+
+    /**
+     * 모달 제출물 항목 추가
+     */
+    addModalSubmissionItem(sessionId, submissionItem = null) {
+        const container = document.getElementById(`${sessionId}_submissionsContainer`);
+        if (!container) return;
+
+        const submissionIndex = container.children.length + 1;
+        const submissionElement = document.createElement('div');
+        submissionElement.className = 'modal-submission-item';
+
+        submissionElement.innerHTML = `
+            <div class="modal-submission-header">
+                <span class="modal-submission-label">제출물 ${submissionIndex}</span>
+                <button type="button" class="btn-remove-small" onclick="this.closest('.modal-submission-item').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <textarea name="${sessionId}_submission_${submissionIndex}" rows="2" placeholder="제출물 내용을 입력하세요." class="modal-submission-text">${this.escapeHtml(submissionItem || '')}</textarea>
+            </div>
+        `;
+
+        container.appendChild(submissionElement);
+    }
+
      */
     addModalRawDataItem(sessionId, rawDataItem = null) {
         const container = document.getElementById(`${sessionId}_rawdataContainer`);
@@ -1371,6 +1439,48 @@ class CreateAssignmentManager {
         if (!fileUrl) return '';
         const parts = fileUrl.split('/');
         return parts[parts.length - 1];
+    }
+
+    /**
+     * 미션 렌더링 (편집 시)
+     */
+    renderMissions(missionsArray, sessionId) {
+        if (!Array.isArray(missionsArray) || missionsArray.length === 0) return '';
+
+        return missionsArray.map((mission, index) => `
+            <div class="modal-mission-item">
+                <div class="modal-mission-header">
+                    <span class="modal-mission-label">미션 ${index + 1}</span>
+                    <button type="button" class="btn-remove-small" onclick="this.closest('.modal-mission-item').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <textarea name="${sessionId}_mission_${index + 1}" rows="2" placeholder="미션 내용을 입력하세요." class="modal-mission-text">${this.escapeHtml(mission || '')}</textarea>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    /**
+     * 제출물 렌더링 (편집 시)
+     */
+    renderSubmissions(submissionsArray, sessionId) {
+        if (!Array.isArray(submissionsArray) || submissionsArray.length === 0) return '';
+
+        return submissionsArray.map((submission, index) => `
+            <div class="modal-submission-item">
+                <div class="modal-submission-header">
+                    <span class="modal-submission-label">제출물 ${index + 1}</span>
+                    <button type="button" class="btn-remove-small" onclick="this.closest('.modal-submission-item').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <textarea name="${sessionId}_submission_${index + 1}" rows="2" placeholder="제출물 내용을 입력하세요." class="modal-submission-text">${this.escapeHtml(submission || '')}</textarea>
+                </div>
+            </div>
+        `).join('');
     }
 
     /**
@@ -1548,6 +1658,26 @@ class CreateAssignmentManager {
             // 상황 설명 수집
             const situation = sessionItem.querySelector(`[name="${sessionId}_situation"]`)?.value.trim() || '';
 
+            // 미션 수집
+            const missions = [];
+            const missionItems = sessionItem.querySelectorAll('.modal-mission-item');
+            missionItems.forEach((missionItem) => {
+                const missionText = missionItem.querySelector('.modal-mission-text')?.value.trim() || '';
+                if (missionText) {
+                    missions.push(missionText);
+                }
+            });
+
+            // 제출물 수집
+            const submissions = [];
+            const submissionItems = sessionItem.querySelectorAll('.modal-submission-item');
+            submissionItems.forEach((submissionItem) => {
+                const submissionText = submissionItem.querySelector('.modal-submission-text')?.value.trim() || '';
+                if (submissionText) {
+                    submissions.push(submissionText);
+                }
+            });
+
             // 원본 데이터 수집
             const rawData = [];
             const rawDataItems = sessionItem.querySelectorAll('.modal-rawdata-item');
@@ -1573,10 +1703,12 @@ class CreateAssignmentManager {
             // 출력 요구사항 수집 (구조화된 폼에서)
             const outputRequirements = this.collectOutputRequirements(sessionItem, sessionId);
 
-            if (situation || rawData.length > 0) {
+            if (situation || rawData.length > 0 || missions.length > 0 || submissions.length > 0) {
                 sessions.push({
                     sessionNumber: index + 1,
                     userDisplays: {
+                        missions,
+                        submissions,
                         situation,
                         rawData,
                         outputRequirements
