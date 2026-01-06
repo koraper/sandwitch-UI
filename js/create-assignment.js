@@ -70,7 +70,7 @@ class CreateAssignmentManager {
                         {
                             sessionNumber: 1,
                             userDisplays: {
-                                situation: "증거물 확보 (Data Preprocessing)\n\n마케팅팀으로부터 설문조사 원본 파일(Raw_Feedback.csv)을 확보했습니다. 하지만 현재 상태로는 통계 분석 시스템에 데이터를 업로드할 수 없습니다. 데이터가 오염되어 있고, 보안 규정에 위배되는 요소가 포함되어 있기 때문입니다.\n\n생성형 AI를 활용하여, 아래 [결과물 표준]을 완벽하게 충족하는 정제된 데이터 파일(Cleaned Data)을 만드십시오.",
+                                situation: "증거물 확보 (Data Preprocessing)\n\n마케팅팀으로부터 설문조사 원본 파일(s1_Customer_Survey.xlsx)을 확보했습니다. 하지만 현재 상태로는 통계 분석 시스템에 데이터를 업로드할 수 없습니다. 데이터가 오염되어 있고, 보안 규정에 위배되는 요소가 포함되어 있기 때문입니다.\n\n생성형 AI를 활용하여, 아래 [결과물 표준]을 완벽하게 충족하는 정제된 데이터 파일(Cleaned Data)을 만드십시오.",
                                 rawData: [
                                     {
                                         source: "마케팅팀 원본 데이터",
@@ -92,7 +92,7 @@ class CreateAssignmentManager {
                                             requiredConditions: [
                                                 {
                                                     order: 1,
-                                                    title: "전처리완료 데이터 (Cleaned_Data.csv)",
+                                                    title: "전처리완료 데이터 (s2_Cleaned_Customer_Survey.xlsx)",
                                                     content: "보안 및 컴플라이언스 준수, 데이터 무결성 확보된 CSV 파일",
                                                     items: [
                                                         "개인 식별 정보(이름, 연락처, 이메일 등) 전체 제거",
@@ -128,7 +128,7 @@ class CreateAssignmentManager {
                                 situation: "데이터 분석 및 패턴 발견\n\n전처리가 완료된 데이터를 바탕으로 마케팅팀의 주장('고객 평점 4.9점의 대박 상품')과 재무팀의 데이터(반품 급증, 매출 하락) 사이의 모순을 분석하십시오.",
                                 rawData: [
                                     {
-                                        source: "전처리 완료 데이터 (Cleaned_Data.csv)",
+                                        source: "전처리 완료 데이터 (s2_Cleaned_Customer_Survey.xlsx)",
                                         content: "세션 1에서 정제된 데이터 파일",
                                         risks: "",
                                         fileUrl: "~/s2_Cleaned_Customer_Survey.xlsx"
@@ -210,7 +210,7 @@ class CreateAssignmentManager {
                                 situation: "[세션 3] 시각화 대시보드 구축\n\n마케팅팀의 주장을 검증하는 '고객 반응 시각화 대시보드'를 완성하십시오. 개별적으로 작성된 대시보드에 분석 오류가 있을 경우, 회사의 운명을 건 전략이 잘못된 방향으로 갈 수 있으므로 정밀한 검증이 필요합니다.",
                                 rawData: [
                                     {
-                                        source: "전처리 완료 데이터 (Cleaned_Data.csv)",
+                                        source: "전처리 완료 데이터 (s2_Cleaned_Customer_Survey.xlsx)",
                                         content: "세션 1에서 정제된 데이터 파일",
                                         risks: ""
                                     },
