@@ -1032,7 +1032,7 @@ class CreateAssignmentManager {
     /**
      * 모달 내 원본 데이터 아이템 추가
      */
-    addModalRawDataItem(sessionId) {
+    addModalRawDataItem(sessionId, rawDataItem = null) {
         const container = document.getElementById(`${sessionId}_rawdataContainer`);
         if (!container) return;
 
@@ -1048,15 +1048,20 @@ class CreateAssignmentManager {
             </div>
             <div class="form-group">
                 <label>출처 <span class="json-key">[rawData.source]</span></label>
-                <input type="text" name="${sessionId}_rawdata_source_${rawDataIndex}" placeholder="예: 대표님의 메모" class="modal-rawdata-source">
+                <input type="text" name="${sessionId}_rawdata_source_${rawDataIndex}" value="${this.escapeHtml(rawDataItem?.source || '')}" placeholder="예: 대표님의 메모" class="modal-rawdata-source">
             </div>
             <div class="form-group">
                 <label>내용 <span class="json-key">[rawData.content]</span></label>
-                <textarea name="${sessionId}_rawdata_content_${rawDataIndex}" rows="3" placeholder="원본 데이터 내용을 입력하세요." class="modal-rawdata-content"></textarea>
+                <textarea name="${sessionId}_rawdata_content_${rawDataIndex}" rows="3" placeholder="원본 데이터 내용을 입력하세요." class="modal-rawdata-content">${this.escapeHtml(rawDataItem?.content || '')}</textarea>
             </div>
             <div class="form-group">
                 <label>리스크 <span class="json-key">[rawData.risks]</span></label>
-                <textarea name="${sessionId}_rawdata_risks_${rawDataIndex}" rows="2" placeholder="법적/윤리적 리스크를 입력하세요." class="modal-rawdata-risks"></textarea>
+                <textarea name="${sessionId}_rawdata_risks_${rawDataIndex}" rows="2" placeholder="법적/윤리적 리스크를 입력하세요." class="modal-rawdata-risks">${this.escapeHtml(rawDataItem?.risks || '')}</textarea>
+            </div>
+            <div class="form-group">
+                <label>파일 URL <span class="json-key">[rawData.fileUrl]</span></label>
+                <input type="text" name="${sessionId}_rawdata_fileurl_${rawDataIndex}" value="${this.escapeHtml(rawDataItem?.fileUrl || '')}" placeholder="예: ~/Raw_Feedback.csv" class="modal-rawdata-fileurl">
+                ${rawDataItem?.fileUrl ? `<small class="form-hint" style="color: #10b981;"><i class="fas fa-check-circle"></i> 파일 등록됨: ${this.escapeHtml(rawDataItem.fileUrl)}</small>` : '<small class="form-hint">파일 경로가 있을 경우 입력하세요 (선택사항)</small>'}
             </div>
         `;
 
@@ -1088,6 +1093,11 @@ class CreateAssignmentManager {
                 <div class="form-group">
                     <label>리스크 <span class="json-key">[rawData.risks]</span></label>
                     <textarea name="${sessionId}_rawdata_risks_${index + 1}" rows="2" placeholder="법적/윤리적 리스크를 입력하세요." class="modal-rawdata-risks">${this.escapeHtml(item.risks || '')}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>파일 URL <span class="json-key">[rawData.fileUrl]</span></label>
+                    <input type="text" name="${sessionId}_rawdata_fileurl_${index + 1}" value="${this.escapeHtml(item.fileUrl || '')}" placeholder="예: ~/Raw_Feedback.csv" class="modal-rawdata-fileurl">
+                    ${item.fileUrl ? `<small class="form-hint" style="color: #10b981;"><i class="fas fa-check-circle"></i> 파일 등록됨: ${this.escapeHtml(item.fileUrl)}</small>` : '<small class="form-hint">파일 경로가 있을 경우 입력하세요 (선택사항)</small>'}
                 </div>
             </div>
         `).join('');
@@ -1208,9 +1218,14 @@ class CreateAssignmentManager {
                 const source = rawDataItem.querySelector('.modal-rawdata-source')?.value.trim() || '';
                 const content = rawDataItem.querySelector('.modal-rawdata-content')?.value.trim() || '';
                 const risks = rawDataItem.querySelector('.modal-rawdata-risks')?.value.trim() || '';
+                const fileUrl = rawDataItem.querySelector('.modal-rawdata-fileurl')?.value.trim() || '';
 
-                if (source || content || risks) {
-                    rawData.push({ source, content, risks });
+                if (source || content || risks || fileUrl) {
+                    const dataItem = { source, content, risks };
+                    if (fileUrl) {
+                        dataItem.fileUrl = fileUrl;
+                    }
+                    rawData.push(dataItem);
                 }
             });
 
