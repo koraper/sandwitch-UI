@@ -1144,6 +1144,10 @@ class CreateAssignmentManager {
         const rawDataIndex = container.children.length + 1;
         const rawDataElement = document.createElement('div');
         rawDataElement.className = 'modal-rawdata-item';
+
+        const fileUrl = rawDataItem?.fileUrl || '';
+        const hasFile = fileUrl && fileUrl.length > 0;
+
         rawDataElement.innerHTML = `
             <div class="modal-rawdata-header">
                 <span class="modal-rawdata-label">원본 데이터 ${rawDataIndex}</span>
@@ -1164,13 +1168,118 @@ class CreateAssignmentManager {
                 <textarea name="${sessionId}_rawdata_risks_${rawDataIndex}" rows="2" placeholder="법적/윤리적 리스크를 입력하세요." class="modal-rawdata-risks">${this.escapeHtml(rawDataItem?.risks || '')}</textarea>
             </div>
             <div class="form-group">
-                <label>파일 URL <span class="json-key">[rawData.fileUrl]</span></label>
-                <input type="text" name="${sessionId}_rawdata_fileurl_${rawDataIndex}" value="${this.escapeHtml(rawDataItem?.fileUrl || '')}" placeholder="예: ~/s1_Customer_Survey.xlsx" class="modal-rawdata-fileurl">
-                ${rawDataItem?.fileUrl ? `<small class="form-hint" style="color: #10b981;"><i class="fas fa-check-circle"></i> 파일 등록됨: ${this.escapeHtml(rawDataItem.fileUrl)}</small>` : '<small class="form-hint">파일 경로가 있을 경우 입력하세요 (선택사항)</small>'}
+                <label>파일 업로드 <span class="json-key">[rawData.fileUrl]</span></label>
+                <div class="file-upload-wrapper">
+                    <input type="file"
+                           id="${sessionId}_rawdata_file_${rawDataIndex}"
+                           name="${sessionId}_rawdata_file_${rawDataIndex}"
+                           class="modal-rawdata-file"
+                           accept=".xlsx,.xls,.csv,.pdf,.doc,.docx"
+                           onchange="window.createAssignmentManager.handleFileSelect(this, '${sessionId}_rawdata_fileurl_${rawDataIndex}', '${sessionId}_rawdata_filename_${rawDataIndex}')">
+                    <input type="hidden" name="${sessionId}_rawdata_fileurl_${rawDataIndex}" value="${this.escapeHtml(fileUrl)}">
+                    <input type="hidden" name="${sessionId}_rawdata_filename_${rawDataIndex}" value="${this.escapeHtml(rawDataItem?.fileName || '')}">
+
+                    <div class="file-upload-preview" id="${sessionId}_file_preview_${rawDataIndex}">
+                        ${hasFile ? `
+                            <div class="file-preview-success">
+                                <i class="fas fa-file-alt"></i>
+                                <span class="file-name">${this.escapeHtml(rawDataItem?.fileName || this.extractFileName(fileUrl))}</span>
+                                <button type="button" class="btn-remove-file" onclick="window.createAssignmentManager.clearFile('${sessionId}_rawdata_file_${rawDataIndex}', '${sessionId}_rawdata_fileurl_${rawDataIndex}', '${sessionId}_rawdata_filename_${rawDataIndex}', '${sessionId}_file_preview_${rawDataIndex}')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        ` : `
+                            <div class="file-upload-placeholder" onclick="document.getElementById('${sessionId}_rawdata_file_${rawDataIndex}').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>클릭하여 파일 선택</span>
+                                <small>지원 형식: XLSX, XLS, CSV, PDF, DOC, DOCX</small>
+                            </div>
+                        `}
+                    </div>
+                </div>
             </div>
         `;
 
         container.appendChild(rawDataElement);
+    }
+
+    /**
+     * 파일 선택 처리
+     */
+    handleFileSelect(fileInput, fileUrlInputId, fileNameInputId) {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        // 파일 이름 설정
+        const fileNameInput = document.querySelector(`input[name="${fileNameInputId}"]`);
+        if (fileNameInput) {
+            fileNameInput.value = file.name;
+        }
+
+        // 파일 URL 설정 (실제 시스템에서는 서버 업로드 후 URL을 받아야 함)
+        const fileUrlInput = document.querySelector(`input[name="${fileUrlInputId}"]`);
+        if (fileUrlInput) {
+            // 현재는 파일명만 ~/ 경로로 설정
+            fileUrlInput.value = `~/${file.name}`;
+        }
+
+        // 미리보기 업데이트
+        const previewContainer = fileInput.closest('.file-upload-wrapper').querySelector('.file-upload-preview');
+        if (previewContainer) {
+            previewContainer.innerHTML = `
+                <div class="file-preview-success">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="file-name">${this.escapeHtml(file.name)}</span>
+                    <button type="button" class="btn-remove-file" onclick="window.createAssignmentManager.clearFile('${fileInput.id}', '${fileUrlInputId}', '${fileNameInputId}', '${previewContainer.id}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * 파일 선택 취소
+     */
+    clearFile(fileInputId, fileUrlInputId, fileNameInputId, previewContainerId) {
+        // 파일 입력 초기화
+        const fileInput = document.getElementById(fileInputId);
+        if (fileInput) {
+            fileInput.value = '';
+        }
+
+        // URL 입력 초기화
+        const fileUrlInput = document.querySelector(`input[name="${fileUrlInputId}"]`);
+        if (fileUrlInput) {
+            fileUrlInput.value = '';
+        }
+
+        // 파일명 입력 초기화
+        const fileNameInput = document.querySelector(`input[name="${fileNameInputId}"]`);
+        if (fileNameInput) {
+            fileNameInput.value = '';
+        }
+
+        // 미리보기 초기화
+        const previewContainer = document.getElementById(previewContainerId);
+        if (previewContainer) {
+            previewContainer.innerHTML = `
+                <div class="file-upload-placeholder" onclick="document.getElementById('${fileInputId}').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>클릭하여 파일 선택</span>
+                    <small>지원 형식: XLSX, XLS, CSV, PDF, DOC, DOCX</small>
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * 파일 URL에서 파일명 추출
+     */
+    extractFileName(fileUrl) {
+        if (!fileUrl) return '';
+        const parts = fileUrl.split('/');
+        return parts[parts.length - 1];
     }
 
     /**
@@ -1179,7 +1288,12 @@ class CreateAssignmentManager {
     renderRawData(rawDataArray, sessionId) {
         if (!Array.isArray(rawDataArray) || rawDataArray.length === 0) return '';
 
-        return rawDataArray.map((item, index) => `
+        return rawDataArray.map((item, index) => {
+            const fileUrl = item.fileUrl || '';
+            const fileName = item.fileName || this.extractFileName(fileUrl);
+            const hasFile = fileUrl && fileUrl.length > 0;
+
+            return `
             <div class="modal-rawdata-item">
                 <div class="modal-rawdata-header">
                     <span class="modal-rawdata-label">원본 데이터 ${index + 1}</span>
@@ -1200,12 +1314,39 @@ class CreateAssignmentManager {
                     <textarea name="${sessionId}_rawdata_risks_${index + 1}" rows="2" placeholder="법적/윤리적 리스크를 입력하세요." class="modal-rawdata-risks">${this.escapeHtml(item.risks || '')}</textarea>
                 </div>
                 <div class="form-group">
-                    <label>파일 URL <span class="json-key">[rawData.fileUrl]</span></label>
-                    <input type="text" name="${sessionId}_rawdata_fileurl_${index + 1}" value="${this.escapeHtml(item.fileUrl || '')}" placeholder="예: ~/s1_Customer_Survey.xlsx" class="modal-rawdata-fileurl">
-                    ${item.fileUrl ? `<small class="form-hint" style="color: #10b981;"><i class="fas fa-check-circle"></i> 파일 등록됨: ${this.escapeHtml(item.fileUrl)}</small>` : '<small class="form-hint">파일 경로가 있을 경우 입력하세요 (선택사항)</small>'}
+                    <label>파일 업로드 <span class="json-key">[rawData.fileUrl]</span></label>
+                    <div class="file-upload-wrapper">
+                        <input type="file"
+                               id="${sessionId}_rawdata_file_${index + 1}"
+                               name="${sessionId}_rawdata_file_${index + 1}"
+                               class="modal-rawdata-file"
+                               accept=".xlsx,.xls,.csv,.pdf,.doc,.docx"
+                               onchange="window.createAssignmentManager.handleFileSelect(this, '${sessionId}_rawdata_fileurl_${index + 1}', '${sessionId}_rawdata_filename_${index + 1}')">
+                        <input type="hidden" name="${sessionId}_rawdata_fileurl_${index + 1}" value="${this.escapeHtml(fileUrl)}">
+                        <input type="hidden" name="${sessionId}_rawdata_filename_${index + 1}" value="${this.escapeHtml(fileName)}">
+
+                        <div class="file-upload-preview" id="${sessionId}_file_preview_${index + 1}">
+                            ${hasFile ? `
+                                <div class="file-preview-success">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span class="file-name">${this.escapeHtml(fileName)}</span>
+                                    <button type="button" class="btn-remove-file" onclick="window.createAssignmentManager.clearFile('${sessionId}_rawdata_file_${index + 1}', '${sessionId}_rawdata_fileurl_${index + 1}', '${sessionId}_rawdata_filename_${index + 1}', '${sessionId}_file_preview_${index + 1}')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            ` : `
+                                <div class="file-upload-placeholder" onclick="document.getElementById('${sessionId}_rawdata_file_${index + 1}').click()">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>클릭하여 파일 선택</span>
+                                    <small>지원 형식: XLSX, XLS, CSV, PDF, DOC, DOCX</small>
+                                </div>
+                            `}
+                        </div>
+                    </div>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     /**
@@ -1319,16 +1460,20 @@ class CreateAssignmentManager {
             // 원본 데이터 수집
             const rawData = [];
             const rawDataItems = sessionItem.querySelectorAll('.modal-rawdata-item');
-            rawDataItems.forEach(rawDataItem => {
+            rawDataItems.forEach((rawDataItem, index) => {
                 const source = rawDataItem.querySelector('.modal-rawdata-source')?.value.trim() || '';
                 const content = rawDataItem.querySelector('.modal-rawdata-content')?.value.trim() || '';
                 const risks = rawDataItem.querySelector('.modal-rawdata-risks')?.value.trim() || '';
-                const fileUrl = rawDataItem.querySelector('.modal-rawdata-fileurl')?.value.trim() || '';
+                const fileUrl = rawDataItem.querySelector(`input[name="${sessionId}_rawdata_fileurl_${index + 1}"]`)?.value.trim() || '';
+                const fileName = rawDataItem.querySelector(`input[name="${sessionId}_rawdata_filename_${index + 1}"]`)?.value.trim() || '';
 
                 if (source || content || risks || fileUrl) {
                     const dataItem = { source, content, risks };
                     if (fileUrl) {
                         dataItem.fileUrl = fileUrl;
+                    }
+                    if (fileName) {
+                        dataItem.fileName = fileName;
                     }
                     rawData.push(dataItem);
                 }
