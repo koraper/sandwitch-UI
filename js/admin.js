@@ -1598,6 +1598,9 @@ class AdminManager {
                         const mode = selectedMode.value;
                         const competency = competencies.find(c => c.code === competencyCode);
 
+                        // 역량별 파일로 네비게이션
+                        const fileName = `${competencyCode}_create-assignment.html`;
+
                         // URL 파라미터로 전달
                         const params = new URLSearchParams({
                             competencyCode: competencyCode,
@@ -1608,7 +1611,7 @@ class AdminManager {
                         });
 
                         document.head.removeChild(style);
-                        window.location.href = `create-assignment.html?${params.toString()}`;
+                        window.location.href = `${fileName}?${params.toString()}`;
                     },
                     style: 'primary'
                 }
