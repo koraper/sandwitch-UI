@@ -76,7 +76,7 @@ class CreateAssignmentManager {
                                         source: "마케팅팀 원본 데이터",
                                         content: "설문조사 원본 파일이 제공됩니다. 이 파일에는 개인정보(이름, 전화번호, 이메일 등)가 포함되어 있고, 데이터 형식이 일관되지 않으며, 결측값과 이상치가 포함되어 있습니다.",
                                         risks: "1.개인정보보호법(PII) 위반 가능성\n2.데이터 무결성 문제 (결측값, 이상치)\n3.데이터 형식 불일치 (숫자/문자 혼재)",
-                                        fileUrl: "~/Raw_Feedback.csv"
+                                        fileUrl: "~/s1_Customer_Survey.xlsx"
                                     }
                                 ],
                                 outputRequirements: {
@@ -90,8 +90,28 @@ class CreateAssignmentManager {
                                             style: "CSV 파일 형식",
                                             outputFormat: "정제된 데이터 파일",
                                             requiredConditions: [
-                                                { order: 1, title: "전처리완료 데이터 (Cleaned_Data.csv)", content: "보안 및 컴플라이언스 준수, 데이터 무결성 확보된 CSV 파일" },
-                                                { order: 2, title: "기초 통계 요약표", content: "Score(만족도) 컬럼의 기초 통계량(Count, Mean, Median, Min, Max, 결측치), Gender와 Age_Group별 응답자 수와 비율, 논리적 검증 평가" }
+                                                {
+                                                    order: 1,
+                                                    title: "전처리완료 데이터 (Cleaned_Data.csv)",
+                                                    content: "보안 및 컴플라이언스 준수, 데이터 무결성 확보된 CSV 파일",
+                                                    items: [
+                                                        "개인 식별 정보(이름, 연락처, 이메일 등) 전체 제거",
+                                                        "정량적 변수(만족도 등)를 숫자형으로 통일",
+                                                        "결측값, 이상치, 불완전한 데이터 정제",
+                                                        "분석에 필요한 변수만 유지"
+                                                    ]
+                                                },
+                                                {
+                                                    order: 2,
+                                                    title: "기초 통계 요약표",
+                                                    content: "Score(만족도) 컬럼의 기초 통계량(Count, Mean, Median, Min, Max, 결측치), Gender와 Age_Group별 응답자 수와 비율, 논리적 검증 평가",
+                                                    items: [
+                                                        "Score: Count, Mean, Median, Min, Max, 결측치 수",
+                                                        "Gender별 응답자 수 및 비율",
+                                                        "Age_Group별 응답자 수 및 비율",
+                                                        "데이터 논리적 검증 평가"
+                                                    ]
+                                                }
                                             ]
                                         },
                                         dataReliability: {
@@ -111,13 +131,13 @@ class CreateAssignmentManager {
                                         source: "전처리 완료 데이터 (Cleaned_Data.csv)",
                                         content: "세션 1에서 정제된 데이터 파일",
                                         risks: "",
-                                        fileUrl: "~/Cleaned_Data.csv"
+                                        fileUrl: "~/s2_Cleaned_Customer_Survey.xlsx"
                                     },
                                     {
                                         source: "재무팀 데이터",
                                         content: "반품률, 매출 데이터 등 재무 관련 정보",
                                         risks: "",
-                                        fileUrl: "~/Sales_Data.csv"
+                                        fileUrl: "~/s3_Sales_Data.xlsx"
                                     }
                                 ],
                                 outputRequirements: {
@@ -131,9 +151,36 @@ class CreateAssignmentManager {
                                             style: "분석 리포트 형식",
                                             length: "공백 포함 800자 ~ 1000자 이내",
                                             requiredConditions: [
-                                                { order: 1, title: "데이터 패턴 분석", content: "만족도 점수 분포, 인구통계적 특성 분석" },
-                                                { order: 2, title: "모순 지점 발견", content: "마케팅팀 주장과 재무팀 데이터 간의 불일치 지점 규명" },
-                                                { order: 3, title: "가설 설정", content: "데이터로부터 도출된 가설 및 검증 방안" }
+                                                {
+                                                    order: 1,
+                                                    title: "데이터 패턴 분석",
+                                                    content: "만족도 점수 분포, 인구통계적 특성 분석",
+                                                    items: [
+                                                        "만족도 점수의 전반적인 분포 확인",
+                                                        "Gender, Age_Group 등 인구통계적 특성별 만족도 차이 분석",
+                                                        "이상치나 특이 패턴 발견 시 보고"
+                                                    ]
+                                                },
+                                                {
+                                                    order: 2,
+                                                    title: "모순 지점 발견",
+                                                    content: "마케팅팀 주장과 재무팀 데이터 간의 불일치 지점 규명",
+                                                    items: [
+                                                        "마케팅팀 '고객 평점 4.9점' 주장의 근거 분석",
+                                                        "재무팀 반품 급증, 매출 하락 데이터와의 대조",
+                                                        "두 데이터 간의 모순 지점 명확히 규명"
+                                                    ]
+                                                },
+                                                {
+                                                    order: 3,
+                                                    title: "가설 설정",
+                                                    content: "데이터로부터 도출된 가설 및 검증 방안",
+                                                    items: [
+                                                        "왜 이런 모순이 발생했는지 가설 제시",
+                                                        "가설 검증을 위한 추가 분석 방안 제안",
+                                                        "데이터 기반의 논리적 인과관계 설정"
+                                                    ]
+                                                }
                                             ]
                                         },
                                         requiredNotation: {
@@ -184,9 +231,36 @@ class CreateAssignmentManager {
                                             style: "시각화 대시보드",
                                             length: "차트 및 그래프 포함",
                                             requiredConditions: [
-                                                { order: 1, title: "인구통계 편향 (Pie Chart)", content: "성별, 연령대별 응답자 분포 시각화" },
-                                                { order: 2, title: "만족도 급락 추세 (Line Chart)", content: "시간에 따른 만족도 점수 변화 추이" },
-                                                { order: 3, title: "부정 키워드 분석 (Word Cloud)", content: "고객 피드백에서 나타난 부정적 키워드 시각화" }
+                                                {
+                                                    order: 1,
+                                                    title: "인구통계 편향 (Pie Chart)",
+                                                    content: "성별, 연령대별 응답자 분포 시각화",
+                                                    items: [
+                                                        "Gender별 응답자 비율을 원형 차트로 시각화",
+                                                        "Age_Group별 응답자 비율을 원형 차트로 시각화",
+                                                        "데이터 출처와 전체 응답자 수 명시"
+                                                    ]
+                                                },
+                                                {
+                                                    order: 2,
+                                                    title: "만족도 급락 추세 (Line Chart)",
+                                                    content: "시간에 따른 만족도 점수 변화 추이",
+                                                    items: [
+                                                        "날짜/시간별 평균 만족도 점수 선 그래프",
+                                                        "급락 구간 명확히 표시 및 강조",
+                                                        "분석 기간(시작일-종료일) 명시"
+                                                    ]
+                                                },
+                                                {
+                                                    order: 3,
+                                                    title: "부정 키워드 분석 (Word Cloud)",
+                                                    content: "고객 피드백에서 나타난 부정적 키워드 시각화",
+                                                    items: [
+                                                        "빈도 기반 부정 키워드 워드 클라우드",
+                                                        "주요 부정 키워드 TOP 10 표시",
+                                                        "키워드 출처(피드백 텍스트) 명시"
+                                                    ]
+                                                }
                                             ]
                                         },
                                         requiredNotation: {
@@ -232,9 +306,40 @@ class CreateAssignmentManager {
                                             style: "경영 제언서 형식 (3-Step Logic: Fact-Reason-Proposal)",
                                             length: "공백 포함 1000자 ~ 1500자 이내",
                                             requiredConditions: [
-                                                { order: 1, title: "Fact (진단)", content: "차트에 나타난 구체적인 수치(최댓값, 최소값, 급락한 날짜, 편향된 비율 %)를 정확히 인용하여 현재의 위기 상황을 진단" },
-                                                { order: 2, title: "Reason (원인)", content: "데이터(부정 키워드 등)에서 발견된 문제의 구체적 원인을 명시 (예: 배송, 맛, 가격 등)" },
-                                                { order: 3, title: "Proposal (제언)", content: "원인을 제거하고 실적을 반등시킬 즉각적인 개선 액션 플랜 제시, 피해를 입은 기존 고객에 대한 구체적인 보상안 (환불, 재발송, 쿠폰 등), 브랜드 이미지 회복을 위한 진정성 있는 사과 및 소통 계획" }
+                                                {
+                                                    order: 1,
+                                                    title: "Fact (진단)",
+                                                    content: "차트에 나타난 구체적인 수치(최댓값, 최소값, 급락한 날짜, 편향된 비율 %)를 정확히 인용하여 현재의 위기 상황을 진단",
+                                                    items: [
+                                                        "인구통계 편향: 특정 연령대/성별 비율 구체적 수치 인용",
+                                                        "만족도 급락: 급락 시작일, 최저점, 하락폭 등 수치 인용",
+                                                        "부정 키워드: 주요 키워드와 빈도수 인용",
+                                                        "반품률, 매출 하락 등 재무 데이터 정확히 인용"
+                                                    ]
+                                                },
+                                                {
+                                                    order: 2,
+                                                    title: "Reason (원인)",
+                                                    content: "데이터(부정 키워드 등)에서 발견된 문제의 구체적 원인을 명시 (예: 배송, 맛, 가격 등)",
+                                                    items: [
+                                                        "부정 키워드 분석에서 도출된 원인 요약",
+                                                        "왜 이런 원인이 만족도 급락으로 이어졌는지 논리적 연결",
+                                                        "마케팅팀 주장(4.9점)과 재무팀 데이터(반품급증) 괴리의 원인 규명",
+                                                        "데이터에 기반한 근본 원인(Root Cause) 제시"
+                                                    ]
+                                                },
+                                                {
+                                                    order: 3,
+                                                    title: "Proposal (제언)",
+                                                    content: "원인을 제거하고 실적을 반등시킬 즉각적인 개선 액션 플랜 제시, 피해를 입은 기존 고객에 대한 구체적인 보상안 (환불, 재발송, 쿠폰 등), 브랜드 이미지 회복을 위한 진정성 있는 사과 및 소통 계획",
+                                                    items: [
+                                                        "즉각적인 개선 액션 플랜(단기/중기/장기)",
+                                                        "피해 고객 보상안: 환불, 재발송, 쿠폰, 사과 등 구체적 제안",
+                                                        "재발 방지를 위한 시스템 개선 방안",
+                                                        "브랜드 신뢰 회복을 위한 진정성 있는 사과 및 소통 계획",
+                                                        "CSR(기업의 사회적 책임) 관점에서 책임 있는 태도 강조"
+                                                    ]
+                                                }
                                             ]
                                         },
                                         requiredNotation: {
@@ -1060,7 +1165,7 @@ class CreateAssignmentManager {
             </div>
             <div class="form-group">
                 <label>파일 URL <span class="json-key">[rawData.fileUrl]</span></label>
-                <input type="text" name="${sessionId}_rawdata_fileurl_${rawDataIndex}" value="${this.escapeHtml(rawDataItem?.fileUrl || '')}" placeholder="예: ~/Raw_Feedback.csv" class="modal-rawdata-fileurl">
+                <input type="text" name="${sessionId}_rawdata_fileurl_${rawDataIndex}" value="${this.escapeHtml(rawDataItem?.fileUrl || '')}" placeholder="예: ~/s1_Customer_Survey.xlsx" class="modal-rawdata-fileurl">
                 ${rawDataItem?.fileUrl ? `<small class="form-hint" style="color: #10b981;"><i class="fas fa-check-circle"></i> 파일 등록됨: ${this.escapeHtml(rawDataItem.fileUrl)}</small>` : '<small class="form-hint">파일 경로가 있을 경우 입력하세요 (선택사항)</small>'}
             </div>
         `;
@@ -1096,7 +1201,7 @@ class CreateAssignmentManager {
                 </div>
                 <div class="form-group">
                     <label>파일 URL <span class="json-key">[rawData.fileUrl]</span></label>
-                    <input type="text" name="${sessionId}_rawdata_fileurl_${index + 1}" value="${this.escapeHtml(item.fileUrl || '')}" placeholder="예: ~/Raw_Feedback.csv" class="modal-rawdata-fileurl">
+                    <input type="text" name="${sessionId}_rawdata_fileurl_${index + 1}" value="${this.escapeHtml(item.fileUrl || '')}" placeholder="예: ~/s1_Customer_Survey.xlsx" class="modal-rawdata-fileurl">
                     ${item.fileUrl ? `<small class="form-hint" style="color: #10b981;"><i class="fas fa-check-circle"></i> 파일 등록됨: ${this.escapeHtml(item.fileUrl)}</small>` : '<small class="form-hint">파일 경로가 있을 경우 입력하세요 (선택사항)</small>'}
                 </div>
             </div>
