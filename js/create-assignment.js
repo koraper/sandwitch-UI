@@ -757,6 +757,17 @@ class CreateAssignmentManager {
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- 채점 기준 추가 영역 -->
+                            <div class="modal-constraints-add-area">
+                                <div class="add-area-icon">
+                                    <i class="fas fa-plus-circle"></i>
+                                </div>
+                                <p class="add-area-text">채점 기준을 추가하여 평가 기준을 확장하세요</p>
+                                <button type="button" class="btn-add-small add-area-button" onclick="window.createAssignmentManager.addScoringCriteria('${sessionId}')">
+                                    <i class="fas fa-plus"></i> 채점 기준 추가
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1421,6 +1432,204 @@ class CreateAssignmentManager {
 
         // LocalStorage에 저장
         localStorage.setItem('sandwitchUI_assignments', JSON.stringify(existingAssignments));
+    }
+
+    /**
+     * 채점 기준 추가
+     */
+    addScoringCriteria(sessionId) {
+        // 모달 표시
+        this.showScoringCriteriaModal(sessionId);
+    }
+
+    /**
+     * 채점 기준 모달 표시
+     */
+    showScoringCriteriaModal(sessionId) {
+        // 모달 HTML 생성
+        const modalHtml = `
+            <div class="modal modal-show" id="scoringCriteriaModal">
+                <div class="modal-overlay" onclick="window.createAssignmentManager.closeScoringCriteriaModal()"></div>
+                <div class="modal-container" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">
+                            <i class="fas fa-plus-circle"></i> 채점 기준 추가
+                        </h3>
+                        <button type="button" class="modal-close" onclick="window.createAssignmentManager.closeScoringCriteriaModal()" title="닫기">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="scoringCriteriaForm">
+                            <input type="hidden" id="scoringSessionId" value="${sessionId}">
+
+                            <div class="form-group">
+                                <label for="scoringCategory">평가 분류 <span class="required">*</span></label>
+                                <select id="scoringCategory" class="modal-input" required>
+                                    <option value="">선택하세요</option>
+                                    <option value="ACI">ACI (결과물 작성 능력)</option>
+                                    <option value="AES">AES (법적/사회적 리스크 관리)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="scoringElement">세부 평가 요소 <span class="required">*</span></label>
+                                <input type="text" id="scoringElement" class="modal-input" required placeholder="예: 데이터 분석 정확성">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="scoringGuide">상세 평가 가이드 <span class="required">*</span></label>
+                                <textarea id="scoringGuide" class="modal-textarea" rows="4" required placeholder="평가 기준에 대한 상세 가이드라인을 입력하세요"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="scoringPoints">배점 <span class="required">*</span></label>
+                                <input type="number" id="scoringPoints" class="modal-input" required min="0" max="100" placeholder="예: 10">
+                                <small class="form-hint">0-100 사이의 숫자를 입력하세요</small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="window.createAssignmentManager.closeScoringCriteriaModal()">
+                            취소
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="window.createAssignmentManager.saveScoringCriteria()">
+                            <i class="fas fa-save"></i> 추가
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 기존 모달이 있다면 제거
+        const existingModal = document.getElementById('scoringCriteriaModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        // body에 모달 추가
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    /**
+     * 채점 기준 모달 닫기
+     */
+    closeScoringCriteriaModal() {
+        const modal = document.getElementById('scoringCriteriaModal');
+        if (modal) {
+            modal.classList.remove('modal-show');
+            modal.classList.add('modal-hide');
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        }
+    }
+
+    /**
+     * 채점 기준 저장
+     */
+    saveScoringCriteria() {
+        const sessionId = document.getElementById('scoringSessionId').value;
+        const category = document.getElementById('scoringCategory').value;
+        const element = document.getElementById('scoringElement').value.trim();
+        const guide = document.getElementById('scoringGuide').value.trim();
+        const points = parseInt(document.getElementById('scoringPoints').value) || 0;
+
+        // 필수 필드 검증
+        if (!category || !element || !guide) {
+            this.showError('모든 필수 항목을 입력해주세요.');
+            return;
+        }
+
+        if (points < 0 || points > 100) {
+            this.showError('배점은 0-100 사이여야 합니다.');
+            return;
+        }
+
+        // 세션 요소 찾기
+        const sessionElement = document.getElementById(sessionId);
+        if (!sessionElement) {
+            this.showError('세션을 찾을 수 없습니다.');
+            return;
+        }
+
+        // 기존 채점 기준 컨테이너 확인
+        let criteriaContainer = sessionElement.querySelector('.scoring-criteria-container');
+        if (!criteriaContainer) {
+            // 채점 기준 추가 영역을 컨테이너로 변경
+            const addArea = sessionElement.querySelector('.modal-constraints-add-area');
+            if (addArea) {
+                addArea.insertAdjacentHTML('beforebegin', `
+                    <div class="scoring-criteria-container">
+                        <h4 style="margin: 1.5rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb; font-size: 0.875rem; font-weight: 600; color: #374151;">
+                            <i class="fas fa-check-circle"></i> 채점 기준
+                        </h4>
+                        <div class="scoring-criteria-list"></div>
+                    </div>
+                `);
+                criteriaContainer = sessionElement.querySelector('.scoring-criteria-container');
+            }
+        }
+
+        // 채점 기준 항목 생성
+        const criteriaCount = criteriaContainer.querySelectorAll('.scoring-criteria-item').length + 1;
+        const criteriaId = `scoringCriteria_${Date.now()}`;
+
+        const criteriaHtml = `
+            <div class="scoring-criteria-item" data-criteria-id="${criteriaId}" style="border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; background: #f9fafb;">
+                <div class="scoring-criteria-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="criteria-badge" style="background: ${category === 'ACI' ? '#dbeafe' : '#fef3c7'}; color: ${category === 'ACI' ? '#1e40af' : '#92400e'}; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                            ${category}
+                        </span>
+                        <span class="criteria-points" style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                            ${points}점
+                        </span>
+                    </div>
+                    <button type="button" class="btn-remove-small" onclick="window.createAssignmentManager.removeScoringCriteria('${criteriaId}')" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 0.25rem;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="scoring-criteria-content">
+                    <div style="font-weight: 600; color: #374151; margin-bottom: 0.5rem; font-size: 0.875rem;">
+                        ${this.escapeHtml(element)}
+                    </div>
+                    <div style="color: #6b7280; font-size: 0.8125rem; line-height: 1.5;">
+                        ${this.escapeHtml(guide)}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 채점 기준 목록에 추가
+        const criteriaList = criteriaContainer.querySelector('.scoring-criteria-list');
+        if (criteriaList) {
+            criteriaList.insertAdjacentHTML('beforeend', criteriaHtml);
+        }
+
+        // 모달 닫기
+        this.closeScoringCriteriaModal();
+
+        this.showSuccess('채점 기준이 추가되었습니다.');
+    }
+
+    /**
+     * 채점 기준 삭제
+     */
+    removeScoringCriteria(criteriaId) {
+        const criteriaItem = document.querySelector(`[data-criteria-id="${criteriaId}"]`);
+        if (criteriaItem) {
+            criteriaItem.remove();
+
+            // 채점 기준이 없으면 컨테이너도 제거
+            const container = document.querySelector('.scoring-criteria-container');
+            if (container) {
+                const remainingItems = container.querySelectorAll('.scoring-criteria-item');
+                if (remainingItems.length === 0) {
+                    container.remove();
+                }
+            }
+        }
     }
 
     /**
