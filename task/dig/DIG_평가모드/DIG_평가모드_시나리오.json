@@ -44,13 +44,13 @@
             ],
             "outputRequirements": {
               "aesRequirements": {
-                "description": "윤리/보안(AES) 가이드",
+                "description": "조건 1. 보안 및 컴플라이언스 준수",
                 "requirement": "본 프로젝트는 외부 분석 툴(AI)을 사용하므로, 개인정보보호법(PII) 및 개인정보 보안을 엄격히 준수해야 합니다.\n\n데이터 내에 개인을 식별할 수 있는 민감 정보가 포함되어 있는지 확인하고, 발견 즉시 해당 정보가 AI 서버에 그대로 올라가지 않게 처리하십시오.\n식별 정보가 하나라도 남아있을 경우 보안 위반으로 감점으로 처리됩니다."
               },
               "aciRequirements": {
                 "format": {
-                  "description": "결과물 작성(ACI) 가이드",
-                  "style": "CSV 파일 형식",
+                  "description": "조건 2. 데이터 무결성 확보",
+                  "style": "xlsx 파일 형식",
                   "outputFormat": "정제된 데이터 파일",
                   "requiredSections": [
                     {
