@@ -334,6 +334,48 @@ class CreateAssignmentManager {
         const taskModalTitle = document.getElementById('taskModalTitle');
 
         if (editTaskIndex) editTaskIndex.value = '-1';
+
+        // DIG 시나리오 데이터가 이미 로드되어 있으면 미리 채우기
+        if (this.tasks && this.tasks.length > 0) {
+            const firstTask = this.tasks[0];
+            console.log('DIG 시나리오 데이터 찾음:', firstTask);
+
+            if (modalTaskTitle) modalTaskTitle.value = firstTask.title || '';
+            if (modalTaskObjective) modalTaskObjective.value = firstTask.objective || '';
+            if (modalTaskMission) modalTaskMission.value = firstTask.mission || '';
+            if (taskModalTitle) taskModalTitle.innerHTML = '<i class="fas fa-edit"></i> 과제 편집 (DIG 시나리오)';
+
+            // 제한 시간 설정
+            this.setModalTimeLimitByMode(modalTimeLimit, firstTask.timeLimit);
+
+            // 채점 팁 로드
+            this.clearModalScoringTips();
+            this.modalScoringTipCount = 0;
+            if (firstTask.scoringTips && firstTask.scoringTips.length > 0) {
+                firstTask.scoringTips.forEach((tipData) => {
+                    this.addModalScoringTip(tipData.tip || '');
+                });
+            }
+
+            // 세션 로드
+            this.clearModalSessions();
+            this.modalSessionCount = 0;
+            if (firstTask.sessions && firstTask.sessions.length > 0) {
+                firstTask.sessions.forEach((sessionData) => {
+                    this.addModalSession(sessionData);
+                });
+            }
+
+            // 모달 탭 초기화
+            this.resetModalTabs();
+
+            // 모달 표시
+            modal.classList.add('modal-show');
+            modal.classList.remove('modal-hide');
+            return;
+        }
+
+        // 데이터가 없으면 빈 폼
         if (modalTaskTitle) modalTaskTitle.value = '';
         if (modalTaskObjective) modalTaskObjective.value = '';
         if (modalTaskMission) modalTaskMission.value = '';
