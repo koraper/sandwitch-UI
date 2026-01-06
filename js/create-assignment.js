@@ -70,52 +70,33 @@ class CreateAssignmentManager {
                         {
                             sessionNumber: 1,
                             userDisplays: {
-                                situation: "당신은 뉴진스컴퍼니의 데이터 분석가입니다.\n신제품 '제로쿠키' 런칭 2주 차, 마케팅팀에서 '판매량 3배 돌파'라는 성과 보고서가 제출되었습니다.\n하지만 경영진은 이 수치가 과장된 것이 아닌지 의문을 제기하며, 데이터 분석팀에 진실 규명을 요청했습니다.\n제공된 CSV 원본 데이터를 확인하고, 감사를 시작하세요.",
+                                situation: "증거물 확보 (Data Preprocessing)\n\n마케팅팀으로부터 설문조사 원본 파일(Raw_Feedback.csv)을 확보했습니다. 하지만 현재 상태로는 통계 분석 시스템에 데이터를 업로드할 수 없습니다. 데이터가 오염되어 있고, 보안 규정에 위배되는 요소가 포함되어 있기 때문입니다.\n\n생성형 AI를 활용하여, 아래 [결과물 표준]을 완벽하게 충족하는 정제된 데이터 파일(Cleaned Data)을 만드십시오.",
                                 rawData: [
                                     {
-                                        source: "마케팅팀 보고서",
-                                        content: "런칭 2주 만에 누적 판매량 300,000개 돌파!\n전날 대비 일일 판매량이 평균 3배 증가했으며, 온라인 몰의 방문자 수는 50만 명을 넘어섰습니다.\n소셜 미디어에서는 '제로쿠키' 관련 게시글이 하루 10,000건 이상 언급되며 바이럴 현상을 보이고 있습니다.",
-                                        risks: "1. 기준 일자가 명시되지 않음 (전날 대비 무엇과 비교?)\n2. 누적 판매량과 일일 판매량의 구분 모호\n3. 소셜 미디어 언급량이 실제 구매로 연결되었는지 검증 필요"
-                                    },
-                                    {
-                                        source: "원본 데이터 (zero_cookie_sales.csv)",
-                                        content: "날짜, 일일_판매량, 누적_판매량, 온라인_방문자수, SNS_언급수\n2024-01-01, 50000, 50000, 150000, 2000\n2024-01-02, 55000, 105000, 180000, 3500\n2024-01-03, 52000, 157000, 175000, 3200\n...\n(14일간 데이터 포함)",
-                                        risks: "데이터 형식은 CSV이나, 마케팅팀의 계산 방법과 일치하는지 검증 필요"
+                                        source: "마케팅팀 원본 데이터",
+                                        content: "설문조사 원본 파일이 제공됩니다. 이 파일에는 개인정보(이름, 전화번호, 이메일 등)가 포함되어 있고, 데이터 형식이 일관되지 않으며, 결측값과 이상치가 포함되어 있습니다.",
+                                        risks: "1.개인정보보호법(PII) 위반 가능성\n2.데이터 무결성 문제 (결측값, 이상치)\n3.데이터 형식 불일치 (숫자/문자 혼재)",
+                                        fileUrl: "~/Raw_Feedback.csv"
                                     }
                                 ],
                                 outputRequirements: {
                                     aesRequirements: {
-                                        description: "AES 검증 (데이터 신뢰성)",
-                                        requirement: "마케팅팀의 주장이 데이터와 일치하는지 검증하고, 왜곡이 있다면 수정할 것."
+                                        description: "윤리/보안(AES) 가이드",
+                                        requirement: "본 프로젝트는 외부 분석 툴(AI)을 사용하므로, 개인정보보호법(PII) 및 개인정보 보안을 엄격히 준수해야 합니다.\n\n데이터 내에 개인을 식별할 수 있는 민감 정보가 포함되어 있는지 확인하고, 발견 즉시 해당 정보가 AI 서버에 그대로 올라가지 않게 처리하십시오.\n식별 정보가 하나라도 남아있을 경우 보안 위반으로 감점으로 처리됩니다."
                                     },
                                     aciRequirements: {
                                         format: {
-                                            description: "출력 형식 요구사항",
-                                            style: "데이터 전처리 과정을 보고서 형식으로 작성",
-                                            length: "공백 포함 800자 ~ 1000자",
+                                            description: "결과물 작성(ACI) 가이드",
+                                            style: "CSV 파일 형식",
+                                            outputFormat: "정제된 데이터 파일",
                                             requiredConditions: [
-                                                { order: 1, title: "데이터 현황 파악 (Data Overview)", content: "제공된 CSV의 기본 통계 (행 수, 열 수, 결측치 여부, 데이터 타입 확인)" },
-                                                { order: 2, title: "데이터 품질 검증 (Quality Check)", content: "중복 데이터, 이상치(Outlier), 결측치 처리 및 수정 내역" },
-                                                { order: 3, title: "데이터 전처리 (Preprocessing)", content: "필요한 컬럼 추출, 데이터 형 변환, 파생 변수 생성" },
-                                                { order: 4, title: "검증 결과 (Validation)", content: "마케팅팀 주장과의 비교 및 오류 발견 사항" }
+                                                { order: 1, title: "전처리완료 데이터 (Cleaned_Data.csv)", content: "보안 및 컴플라이언스 준수, 데이터 무결성 확보된 CSV 파일" },
+                                                { order: 2, title: "기초 통계 요약표", content: "Score(만족도) 컬럼의 기초 통계량(Count, Mean, Median, Min, Max, 결측치), Gender와 Age_Group별 응답자 수와 비율, 논리적 검증 평가" }
                                             ]
                                         },
-                                        requiredNotation: {
-                                            description: "필수 표기 사항",
-                                            requirement: "사용한 라이브러리(Excel, Python Pandas, R 등)와 전처리 코드 포함",
-                                            text: "도구: Excel/Pandas/R\n코드: (필요 시 첨부)"
-                                        },
                                         dataReliability: {
-                                            description: "데이터 신뢰성",
-                                            requirement: "원본 CSV 파일의 무결성을 유지하고, 수정 사항은 로그로 기록할 것."
-                                        },
-                                        requiredKeywords: {
-                                            description: "필수 키워드",
-                                            requirement: "데이터 전처리, 데이터 품질, 결측치, 이상치, 중복 데이터"
-                                        },
-                                        constraints: {
-                                            description: "제약사항",
-                                            constraint: "원본 데이터는 수정하지 말고, 사본을 사용하여 전처리할 것."
+                                            description: "데이터 무결성 확보",
+                                            requirement: "평균(Mean), 합계(Sum), 추세(Trend) 분석을 수행할 예정이므로, 모든 정량적 지표(만족도 등)는 산술 연산이 가능한 숫자 형태로 통일하고, 분석의 신뢰도를 떨어뜨리는 결측값이나 불완전한 데이터는 분석 대상에서 제외하십시오."
                                         }
                                     }
                                 }
@@ -124,52 +105,53 @@ class CreateAssignmentManager {
                         {
                             sessionNumber: 2,
                             userDisplays: {
-                                situation: "전처리가 완료된 데이터를 바탕으로, 마케팅팀의 '판매량 3배 돌파' 주장이 사실인지 분석해야 합니다.\n단순 평균 비교가 아닌, 통계적 검정을 통해 유의미한 증가인지 확인하세요.\n또한 일일 판매량 추이를 시계열 분석하여 패턴을 발견하고, 이상치 여부를 판별하시오.",
+                                situation: "데이터 분석 및 패턴 발견\n\n전처리가 완료된 데이터를 바탕으로 마케팅팀의 주장('고객 평점 4.9점의 대박 상품')과 재무팀의 데이터(반품 급증, 매출 하락) 사이의 모순을 분석하십시오.",
                                 rawData: [
                                     {
-                                        source: "전처리된 데이터",
-                                        content: "14일간 일일 판매량, 누적 판매량, 방문자 수, SNS 언급수 데이터",
-                                        risks: "시계열 데이터의 계절성, 추세, 주기성을 고려해야 함"
+                                        source: "전처리 완료 데이터 (Cleaned_Data.csv)",
+                                        content: "세션 1에서 정제된 데이터 파일",
+                                        risks: "",
+                                        fileUrl: "~/Cleaned_Data.csv"
                                     },
                                     {
-                                        source: "마케팅팀의 주장",
-                                        content: "전날 대비 일일 판매량이 평균 3배 증가",
-                                        risks: "평균의 기준(어떤 기간과 비교?)과 분산(표준편차)을 함께 고려해야 함"
+                                        source: "재무팀 데이터",
+                                        content: "반품률, 매출 데이터 등 재무 관련 정보",
+                                        risks: "",
+                                        fileUrl: "~/Sales_Data.csv"
                                     }
                                 ],
                                 outputRequirements: {
                                     aesRequirements: {
-                                        description: "AES 검증 (통계적 유효성)",
-                                        requirement: "마케팅팀의 통계적 주장이 타당한지, 데이터 조작이나 오해의 소지가 없는지 검증할 것."
+                                        description: "AES 검증 (법적/사회적 리스크 관리)",
+                                        requirement: "데이터 분석 결과의 신뢰성을 확보하고, 편향된 해석을 방지할 것."
                                     },
                                     aciRequirements: {
                                         format: {
                                             description: "출력 형식 요구사항",
-                                            style: "데이터 분석 보고서 형식 (통계 수치 포함)",
-                                            length: "공백 포함 1000자 ~ 1200자",
+                                            style: "분석 리포트 형식",
+                                            length: "공백 포함 800자 ~ 1000자 이내",
                                             requiredConditions: [
-                                                { order: 1, title: "기초 통계 분석 (Descriptive Statistics)", content: "평균, 중위수, 표준편차, 최댓값/최솟값 계산" },
-                                                { order: 2, title: "비교 분석 (Comparative Analysis)", content: "전날 대비 증가율 계산 및 '3배' 주장 검증" },
-                                                { order: 3, title: "시계열 분석 (Time Series)", content: "추세 파악, 이동평균, 계절성 확인" },
-                                                { order: 4, title: "이상치 탐지 (Outlier Detection)", content: "IQR, Z-score 등을 활용한 이상치 식별 및 원인 분석" }
+                                                { order: 1, title: "데이터 패턴 분석", content: "만족도 점수 분포, 인구통계적 특성 분석" },
+                                                { order: 2, title: "모순 지점 발견", content: "마케팅팀 주장과 재무팀 데이터 간의 불일치 지점 규명" },
+                                                { order: 3, title: "가설 설정", content: "데이터로부터 도출된 가설 및 검증 방안" }
                                             ]
                                         },
                                         requiredNotation: {
                                             description: "필수 표기 사항",
-                                            requirement: "사용한 통계적 방법론과 검정 방법 명시",
-                                            text: "방법: 기술 통계, 시계열 분석\n검정: (필요 시 t-test, ANOVA 등)"
+                                            requirement: "분석에 사용한 데이터 출처를 명시할 것",
+                                            text: ""
                                         },
                                         dataReliability: {
                                             description: "데이터 신뢰성",
-                                            requirement: "표본 크기와 모수의 가정을 명시하고, 통계적 유의수준(α=0.05)을 준수할 것."
+                                            requirement: "통계적 유의성을 고려한 분석 결과를 제시할 것."
                                         },
                                         requiredKeywords: {
                                             description: "필수 키워드",
-                                            requirement: "기술통계, 시계열 분석, 이상치, 추세, 이동평균, 표준편차"
+                                            requirement: "분석, 패턴, 모순, 가설"
                                         },
                                         constraints: {
                                             description: "제약사항",
-                                            constraint: "결과를 해석할 때 인과관계와 상관관계를 혼동하지 말 것."
+                                            constraint: ""
                                         }
                                     }
                                 }
@@ -178,47 +160,51 @@ class CreateAssignmentManager {
                         {
                             sessionNumber: 3,
                             userDisplays: {
-                                situation: "분석 결과를 경영진에게 보고해야 합니다.\n숫자로만 보고하면 이해가 어렵기 때문에, 시각화 자료를 활용하여 명확하게 전달해야 합니다.\n하지만 시각화 역시 오해의 소지가 있는 방식으로 만들어질 수 있으니 주의하세요.\n예를 들어, Y축의 범위를 조작하면 증가 폭이 과장될 수 있습니다.",
+                                situation: "[세션 3] 시각화 대시보드 구축\n\n마케팅팀의 주장을 검증하는 '고객 반응 시각화 대시보드'를 완성하십시오. 개별적으로 작성된 대시보드에 분석 오류가 있을 경우, 회사의 운명을 건 전략이 잘못된 방향으로 갈 수 있으므로 정밀한 검증이 필요합니다.",
                                 rawData: [
                                     {
-                                        source: "세션 2의 분석 결과",
-                                        content: "일일 판매량 추이, 누적 판매량, 방문자 수, SNS 언급수 데이터",
-                                        risks: "시각화 방식에 따라 해석이 달라질 수 있음"
+                                        source: "전처리 완료 데이터 (Cleaned_Data.csv)",
+                                        content: "세션 1에서 정제된 데이터 파일",
+                                        risks: ""
+                                    },
+                                    {
+                                        source: "시각화 요구사항",
+                                        content: "인구통계 편향(Pie Chart), 만족도 급락 추세(Line Chart), 부정 키워드 분석(Word Cloud) 결과가 포함되어야 함",
+                                        risks: ""
                                     }
                                 ],
                                 outputRequirements: {
                                     aesRequirements: {
-                                        description: "AES 검증 (시각화 윤리)",
-                                        requirement: "시각화가 데이터를 왜곡하지 않도록 하고, 오해의 소지가 있는 표현(예: Y축 조작)을 피할 것."
+                                        description: "AES 검증 (법적/사회적 리스크 관리)",
+                                        requirement: "시각화된 데이터가 왜곡되지 않도록 객관적인 표현을 유지할 것."
                                     },
                                     aciRequirements: {
                                         format: {
                                             description: "출력 형식 요구사항",
-                                            style: "데이터 대시보드 형식 (여러 시각화 차트 포함)",
-                                            length: "시각화 차트 3개 이상 + 해설 500자 이상",
+                                            style: "시각화 대시보드",
+                                            length: "차트 및 그래프 포함",
                                             requiredConditions: [
-                                                { order: 1, title: "시계열 그래프 (Line Chart)", content: "일일 판매량 추이 (Y축은 0부터 시작하여 왜곡 방지)" },
-                                                { order: 2, title: "막대 그래프 (Bar Chart)", content: "요일별 판매량 비교 (주말/주중 차이 확인)" },
-                                                { order: 3, title: "산점도 (Scatter Plot)", content: "SNS 언급수와 판매량의 상관관계 (상관계수 포함)" },
-                                                { order: 4, title: "히트맵 (Heatmap) 또는 테이블", content: "시간대별/요일별 판매 패턴 (데이터가 있을 경우)" }
+                                                { order: 1, title: "인구통계 편향 (Pie Chart)", content: "성별, 연령대별 응답자 분포 시각화" },
+                                                { order: 2, title: "만족도 급락 추세 (Line Chart)", content: "시간에 따른 만족도 점수 변화 추이" },
+                                                { order: 3, title: "부정 키워드 분석 (Word Cloud)", content: "고객 피드백에서 나타난 부정적 키워드 시각화" }
                                             ]
                                         },
                                         requiredNotation: {
                                             description: "필수 표기 사항",
-                                            requirement: "축 라벨, 범례, 단위, 데이터 출처를 명확히 표시",
-                                            text: "X축: 날짜\nY축: 판매량(개)\n데이터 출처: zero_cookie_sales.csv"
+                                            requirement: "각 차트의 데이터 출처와 분석 기간을 명시할 것",
+                                            text: ""
                                         },
                                         dataReliability: {
                                             description: "데이터 신뢰성",
-                                            requirement: "시각화는 분석된 데이터를 기반으로 하며, 인위적인 데이터 수정 없이 실제 값을 반영할 것."
+                                            requirement: "시각화된 데이터가 원본 데이터와 일치하는지 검증할 것."
                                         },
                                         requiredKeywords: {
                                             description: "필수 키워드",
-                                            requirement: "데이터 시각화, 시계열 그래프, 막대 그래프, 산점도, 상관관계"
+                                            requirement: "시각화, 대시보드, 차트, 추세"
                                         },
                                         constraints: {
                                             description: "제약사항",
-                                            constraint: "3D 차트나 과장된 시각 효과는 지양하고, 가독성을 최우선으로 할 것."
+                                            constraint: ""
                                         }
                                     }
                                 }
@@ -227,47 +213,46 @@ class CreateAssignmentManager {
                         {
                             sessionNumber: 4,
                             userDisplays: {
-                                situation: "3개 세션의 감사 결과를 종합하여, 경영진에 최종 보고서를 제출해야 합니다.\n마케팅팀의 '판매량 3배 돌파' 주장은 사실인가, 과장된 것인가?\n데이터 근거를 바탕으로 명확하게 결론을 내리고, 개선이 필요한 사항이 있다면 제안하세요.\n또한, 이번 감사 과정에서 배운 데이터 리터러시 교훈을 정리하시오.",
+                                situation: "[세션 4] 경영 제언: 위기 탈출 전략 수립\n\n완성된 차트가 가리키는 진실을 읽고, 회사를 구할 결단을 내리십시오. 세션 3를 통해 확정된 [공식 시각화 데이터]를 바탕으로 '왜(Why)' 이런 위기가 왔는지 규명하고, '무엇(What)'을 해야 할지 결정해야 합니다.\n\n당신의 역할: 전략기획팀장\n당신의 임무: 사장님께 보고할 [위기 대응 경영 제언서]를 AI와 함께 작성하십시오.",
                                 rawData: [
                                     {
-                                        source: "세션 1~3의 결과물",
-                                        content: "데이터 전처리 보고서, 통계 분석 결과, 시각화 대시보드",
-                                        risks: "각 세션의 결론을 종합하여 논리적인 일관성을 유지해야 함"
+                                        source: "공식 시각화 데이터 (Final_Chart_Report.pdf)",
+                                        content: "인구통계 편향(Pie Chart), 만족도 급락 추세(Line Chart), 부정 키워드 분석(Word Cloud) 결과가 포함된 확정 데이터",
+                                        risks: ""
                                     }
                                 ],
                                 outputRequirements: {
                                     aesRequirements: {
-                                        description: "AES 검증 (종합 결론의 객관성)",
-                                        requirement: "감사 결과는 데이터에 기반하여 객관적으로 작성하고, 마케팅팀에 대한 인적 비난은 피할 것."
+                                        description: "AES 검증 (법적/사회적 리스크 관리)",
+                                        requirement: "고객 케어 및 리스크 관리 방안을 포함하여 무너진 신뢰를 회복할 경영적 판단이 포함되어야 합니다."
                                     },
                                     aciRequirements: {
                                         format: {
                                             description: "출력 형식 요구사항",
-                                            style: "최종 감사 보고서 형식 (경영진 보고용)",
-                                            length: "공백 포함 1200자 ~ 1500자",
+                                            style: "경영 제언서 형식 (3-Step Logic: Fact-Reason-Proposal)",
+                                            length: "공백 포함 1000자 ~ 1500자 이내",
                                             requiredConditions: [
-                                                { order: 1, title: "감사 개요 (Executive Summary)", content: "감사 목적, 분석 기간, 주요 발견 사항 요약" },
-                                                { order: 2, title: "세부 감사 결과 (Detailed Findings)", content: "세션 1~3의 핵심 결과와 '3배 돌파' 주장에 대한 판단" },
-                                                { order: 3, title: "개선 제안 (Recommendations)", content: "데이터 관리 프로세스, 보고 방식, 시각화 가이드라인 개선안" },
-                                                { order: 4, title: "데이터 리터러시 교훈 (Lessons Learned)", content: "이번 감사를 통해 배운 데이터 리터러시 원칙과 실천 방안" }
+                                                { order: 1, title: "Fact (진단)", content: "차트에 나타난 구체적인 수치(최댓값, 최소값, 급락한 날짜, 편향된 비율 %)를 정확히 인용하여 현재의 위기 상황을 진단" },
+                                                { order: 2, title: "Reason (원인)", content: "데이터(부정 키워드 등)에서 발견된 문제의 구체적 원인을 명시 (예: 배송, 맛, 가격 등)" },
+                                                { order: 3, title: "Proposal (제언)", content: "원인을 제거하고 실적을 반등시킬 즉각적인 개선 액션 플랜 제시, 피해를 입은 기존 고객에 대한 구체적인 보상안 (환불, 재발송, 쿠폰 등), 브랜드 이미지 회복을 위한 진정성 있는 사과 및 소통 계획" }
                                             ]
                                         },
                                         requiredNotation: {
                                             description: "필수 표기 사항",
-                                            requirement: "감사 보고서 작성자, 감사 일자, 참고 자료 목록",
-                                            text: "작성자: 데이터 분석팀\n감사 기간: 2024-01-01 ~ 2024-01-14\n참고 자료: zero_cookie_sales.csv, 세션 1~3 결과물"
+                                            requirement: "보고서 내 숫자가 제공된 공식 데이터와 일치하는지 확인할 것",
+                                            text: ""
                                         },
                                         dataReliability: {
                                             description: "데이터 신뢰성",
-                                            requirement: "모든 결론은 분석된 데이터와 통계적 검증에 기반하며, 근거 없는 추측을 배제할 것."
+                                            requirement: "추상적인 표현은 금지하고, 차트에 나타난 구체적인 수치를 정확히 인용하여 현재의 위기 상황을 진단하십시오."
                                         },
                                         requiredKeywords: {
                                             description: "필수 키워드",
-                                            requirement: "데이터 감사, 데이터 리터러시, 경영 보고서, 개선 제안, 최종 결론"
+                                            requirement: "전략, 개선, 필요, 보상, 신뢰 회복"
                                         },
                                         constraints: {
                                             description: "제약사항",
-                                            constraint: "보고서는 경영진이 이해하기 쉬운 용어로 작성하고, 전문 용어는 풀어서 설명할 것."
+                                            constraint: "단순 변명이 아닌, 책임 있는 기업의 태도(CSR)를 보여주는 것이 핵심"
                                         }
                                     }
                                 }
