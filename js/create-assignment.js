@@ -48,88 +48,319 @@ class CreateAssignmentManager {
      * 샘플 데이터 로드 (테스트용)
      */
     loadSampleData() {
-        this.tasks = [
-            {
-                taskNumber: 1,
-                title: "[기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획",
-                objective: "법을 어기라는 대표님의 지시를 방어하고, 투자자가 안심할 수 있는 합법적이고 윤리적인 기획서를 완성하라.",
-                mission: "생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오.",
-                timeLimit: 60,
-                scoringTips: [
-                    { tip: "AI에게 명확한 역할(Role)과 상황(Context)을 부여하세요." },
-                    { tip: "한 번에 답을 달라고 하기보다, 단계적(Step-by-step)으로 생각하도록 유도하세요." },
-                    { tip: "대충 질문해서 나온 답을 그대로 쓰지 말고, 비판적으로 검토하고 다시 지시(Refine)하는 과정을 보여주세요." }
-                ],
-                sessions: [
-                    {
-                        sessionNumber: 1,
-                        userDisplays: {
-                            situation: "당신은 헬스케어 스타트업 'P-Lab'의 기획자(PM)입니다.\n 다음 주 벤처캐피탈(VC) 미팅을 앞두고, 대표님이 주말 동안 구상한 [아이디어 메모]와 마케팅팀의 [기초 조사 데이터]를 전달받았습니다.\n 이 원본 자료(Raw Data)에는 심각한 법적, 윤리적 문제가 포함되어 있을 수 있으니 주의하기 바라며, 생성형 AI를 활용해 리스크는 제거하고, 투자자를 설득할 수 있는 안전한 [서비스 컨셉 기획서]를 완성하십시오.",
-                            rawData: [
-                                {
-                                    source: "대표님의 메모",
-                                    content: "1. 김 PM, 우리 앱 이름은 '꿀잠'이야. 기능은 다 넣어. ASMR, 수면 분석 등등.\n2. 마케팅 핵심: 우리 앱 쓰면 불면증 100% 완치된다고 홍보해. '마시는 약보다 효과 좋은 디지털 수면제'라고 딱 박아. 임상시험은 안 했지만 효과는 확실하니까.\n3. 재미 요소: 사용자가 자면서 낸 코골이나 잠꼬대 소리를 녹음해서, 웃긴 건 우리 인스타에 울려서 바이럴 시키자. 당사자 동의? 에이, 익명인데 뭐 어때. 그냥 올려.\n4. 수익 모델: 일단 평생 무료로 풀 거야. 돈은 나중에 광고로 벌면 돼.",
-                                    risks: "1.의료법 위반 가능성 (과장 광고)\n2.개인정보보호법 위반 가능성 (동의 없는 수집)\n3.임상시험 없이 치료 효과 주장"
-                                },
-                                {
-                                    source: "마케팅팀 조사 자료",
-                                    content: "1. 시장: 국내 슬립테크 시장 급성장 중.\n2.타겟: 스마트폰 과몰입 2030 세대.\n3.통계: 유명 인플루언서 헬스 블로그에 따르면, 한국 20대의 92.5%가 심각한 불면증 환자라고 함. (출처: 2024 OO의 건강일기 재인용)",
-                                    risks: "1.출처 불분명한 통계 데이터\n2.과장된 통계 수치"
+        const urlParams = new URLSearchParams(window.location.search);
+        const competencyCode = urlParams.get('competencyCode');
+
+        // DIG 역량일 경우 DIG 시나리오 데이터 로드
+        if (competencyCode === 'DIG') {
+            this.tasks = [
+                {
+                    taskNumber: 1,
+                    title: "[실전 프로젝트] 신제품 '제로쿠키' 런칭 성과 진실 규명 감사",
+                    objective: "신제품 '제로쿠키' 런칭 후 마케팅 성과를 감사하고, 데이터 리터러시(Data Literacy) 원칙에 따라 데이터 왜곡 여부를 판별하시오.",
+                    mission: "제공된 원본 데이터(Raw Data)를 활용하여 생성형 AI와 협업으로 4개 세션의 과제를 수행하고, 각 세션의 결과물과 AI 대화 로그를 제출하시오.",
+                    timeLimit: 180,
+                    scoringTips: [
+                        { tip: "데이터 출처와 수집 방식을 먼저 확인하세요." },
+                        { tip: "AI에게 분석 방법론(Methodology)을 명확히 지시하세요." },
+                        { tip: "시각화 결과물은 오해의 소지가 없는지 검증하세요." },
+                        { tip: "데이터 기반 결론의 타당성을 비판적으로 검토하세요." }
+                    ],
+                    sessions: [
+                        {
+                            sessionNumber: 1,
+                            userDisplays: {
+                                situation: "당신은 뉴진스컴퍼니의 데이터 분석가입니다.\n신제품 '제로쿠키' 런칭 2주 차, 마케팅팀에서 '판매량 3배 돌파'라는 성과 보고서가 제출되었습니다.\n하지만 경영진은 이 수치가 과장된 것이 아닌지 의문을 제기하며, 데이터 분석팀에 진실 규명을 요청했습니다.\n제공된 CSV 원본 데이터를 확인하고, 감사를 시작하세요.",
+                                rawData: [
+                                    {
+                                        source: "마케팅팀 보고서",
+                                        content: "런칭 2주 만에 누적 판매량 300,000개 돌파!\n전날 대비 일일 판매량이 평균 3배 증가했으며, 온라인 몰의 방문자 수는 50만 명을 넘어섰습니다.\n소셜 미디어에서는 '제로쿠키' 관련 게시글이 하루 10,000건 이상 언급되며 바이럴 현상을 보이고 있습니다.",
+                                        risks: "1. 기준 일자가 명시되지 않음 (전날 대비 무엇과 비교?)\n2. 누적 판매량과 일일 판매량의 구분 모호\n3. 소셜 미디어 언급량이 실제 구매로 연결되었는지 검증 필요"
+                                    },
+                                    {
+                                        source: "원본 데이터 (zero_cookie_sales.csv)",
+                                        content: "날짜, 일일_판매량, 누적_판매량, 온라인_방문자수, SNS_언급수\n2024-01-01, 50000, 50000, 150000, 2000\n2024-01-02, 55000, 105000, 180000, 3500\n2024-01-03, 52000, 157000, 175000, 3200\n...\n(14일간 데이터 포함)",
+                                        risks: "데이터 형식은 CSV이나, 마케팅팀의 계산 방법과 일치하는지 검증 필요"
+                                    }
+                                ],
+                                outputRequirements: {
+                                    aesRequirements: {
+                                        description: "AES 검증 (데이터 신뢰성)",
+                                        requirement: "마케팅팀의 주장이 데이터와 일치하는지 검증하고, 왜곡이 있다면 수정할 것."
+                                    },
+                                    aciRequirements: {
+                                        format: {
+                                            description: "출력 형식 요구사항",
+                                            style: "데이터 전처리 과정을 보고서 형식으로 작성",
+                                            length: "공백 포함 800자 ~ 1000자",
+                                            requiredConditions: [
+                                                { order: 1, title: "데이터 현황 파악 (Data Overview)", content: "제공된 CSV의 기본 통계 (행 수, 열 수, 결측치 여부, 데이터 타입 확인)" },
+                                                { order: 2, title: "데이터 품질 검증 (Quality Check)", content: "중복 데이터, 이상치(Outlier), 결측치 처리 및 수정 내역" },
+                                                { order: 3, title: "데이터 전처리 (Preprocessing)", content: "필요한 컬럼 추출, 데이터 형 변환, 파생 변수 생성" },
+                                                { order: 4, title: "검증 결과 (Validation)", content: "마케팅팀 주장과의 비교 및 오류 발견 사항" }
+                                            ]
+                                        },
+                                        requiredNotation: {
+                                            description: "필수 표기 사항",
+                                            requirement: "사용한 라이브러리(Excel, Python Pandas, R 등)와 전처리 코드 포함",
+                                            text: "도구: Excel/Pandas/R\n코드: (필요 시 첨부)"
+                                        },
+                                        dataReliability: {
+                                            description: "데이터 신뢰성",
+                                            requirement: "원본 CSV 파일의 무결성을 유지하고, 수정 사항은 로그로 기록할 것."
+                                        },
+                                        requiredKeywords: {
+                                            description: "필수 키워드",
+                                            requirement: "데이터 전처리, 데이터 품질, 결측치, 이상치, 중복 데이터"
+                                        },
+                                        constraints: {
+                                            description: "제약사항",
+                                            constraint: "원본 데이터는 수정하지 말고, 사본을 사용하여 전처리할 것."
+                                        }
+                                    }
                                 }
-                            ],
-                            outputRequirements: {
-                                aesRequirements: {
-                                    description: "AES 검증 (법적/사회적 리스크 관리)",
-                                    requirement: "대표님의 지시 중 AES 평가 요소에 위배되는 사항을 찾아내어, 수정할 것."
-                                },
-                                aciRequirements: {
-                                    format: {
-                                        description: "출력 형식 요구사항",
-                                        style: "서술형 줄글이 아닌 개조식 리스트 형태",
-                                        length: "공백 포함 500자 ~ 700자 이내",
-                                        requiredConditions: [
-                                            { order: 1, title: "서비스 정의 (Identity)", content: "서비스명, 슬로건, 핵심 가치 (의료법 리스크 해결 포함)" },
-                                            { order: 2, title: "시장성 검증 (Market Grounding)", content: "타겟 분석 및 공신력 있는 통계 근거 (심평원 등)" },
-                                            { order: 3, title: "리스크 관리 (AES & Safety)", content: "개인정보보호 및 윤리적 문제 해결 방안 (마이데이터 등)" },
-                                            { order: 4, title: "수익 모델 (Business Model)", content: "단계별 수익화 전략 (구독 경제 등)" }
-                                        ]
+                            }
+                        },
+                        {
+                            sessionNumber: 2,
+                            userDisplays: {
+                                situation: "전처리가 완료된 데이터를 바탕으로, 마케팅팀의 '판매량 3배 돌파' 주장이 사실인지 분석해야 합니다.\n단순 평균 비교가 아닌, 통계적 검정을 통해 유의미한 증가인지 확인하세요.\n또한 일일 판매량 추이를 시계열 분석하여 패턴을 발견하고, 이상치 여부를 판별하시오.",
+                                rawData: [
+                                    {
+                                        source: "전처리된 데이터",
+                                        content: "14일간 일일 판매량, 누적 판매량, 방문자 수, SNS 언급수 데이터",
+                                        risks: "시계열 데이터의 계절성, 추세, 주기성을 고려해야 함"
                                     },
-                                    requiredNotation: {
-                                        description: "필수 표기 사항",
-                                        requirement: "필수 표기 사항이 있으면 여기에 명시",
-                                        text: ""
+                                    {
+                                        source: "마케팅팀의 주장",
+                                        content: "전날 대비 일일 판매량이 평균 3배 증가",
+                                        risks: "평균의 기준(어떤 기간과 비교?)과 분산(표준편차)을 함께 고려해야 함"
+                                    }
+                                ],
+                                outputRequirements: {
+                                    aesRequirements: {
+                                        description: "AES 검증 (통계적 유효성)",
+                                        requirement: "마케팅팀의 통계적 주장이 타당한지, 데이터 조작이나 오해의 소지가 없는지 검증할 것."
                                     },
-                                    dataReliability: {
-                                        description: "데이터 신뢰성",
-                                        requirement: "출처가 불분명한 통계는 배제하고, 공신력 있는 기관의 데이터로 검증하여 대체할 것."
+                                    aciRequirements: {
+                                        format: {
+                                            description: "출력 형식 요구사항",
+                                            style: "데이터 분석 보고서 형식 (통계 수치 포함)",
+                                            length: "공백 포함 1000자 ~ 1200자",
+                                            requiredConditions: [
+                                                { order: 1, title: "기초 통계 분석 (Descriptive Statistics)", content: "평균, 중위수, 표준편차, 최댓값/최솟값 계산" },
+                                                { order: 2, title: "비교 분석 (Comparative Analysis)", content: "전날 대비 증가율 계산 및 '3배' 주장 검증" },
+                                                { order: 3, title: "시계열 분석 (Time Series)", content: "추세 파악, 이동평균, 계절성 확인" },
+                                                { order: 4, title: "이상치 탐지 (Outlier Detection)", content: "IQR, Z-score 등을 활용한 이상치 식별 및 원인 분석" }
+                                            ]
+                                        },
+                                        requiredNotation: {
+                                            description: "필수 표기 사항",
+                                            requirement: "사용한 통계적 방법론과 검정 방법 명시",
+                                            text: "방법: 기술 통계, 시계열 분석\n검정: (필요 시 t-test, ANOVA 등)"
+                                        },
+                                        dataReliability: {
+                                            description: "데이터 신뢰성",
+                                            requirement: "표본 크기와 모수의 가정을 명시하고, 통계적 유의수준(α=0.05)을 준수할 것."
+                                        },
+                                        requiredKeywords: {
+                                            description: "필수 키워드",
+                                            requirement: "기술통계, 시계열 분석, 이상치, 추세, 이동평균, 표준편차"
+                                        },
+                                        constraints: {
+                                            description: "제약사항",
+                                            constraint: "결과를 해석할 때 인과관계와 상관관계를 혼동하지 말 것."
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            sessionNumber: 3,
+                            userDisplays: {
+                                situation: "분석 결과를 경영진에게 보고해야 합니다.\n숫자로만 보고하면 이해가 어렵기 때문에, 시각화 자료를 활용하여 명확하게 전달해야 합니다.\n하지만 시각화 역시 오해의 소지가 있는 방식으로 만들어질 수 있으니 주의하세요.\n예를 들어, Y축의 범위를 조작하면 증가 폭이 과장될 수 있습니다.",
+                                rawData: [
+                                    {
+                                        source: "세션 2의 분석 결과",
+                                        content: "일일 판매량 추이, 누적 판매량, 방문자 수, SNS 언급수 데이터",
+                                        risks: "시각화 방식에 따라 해석이 달라질 수 있음"
+                                    }
+                                ],
+                                outputRequirements: {
+                                    aesRequirements: {
+                                        description: "AES 검증 (시각화 윤리)",
+                                        requirement: "시각화가 데이터를 왜곡하지 않도록 하고, 오해의 소지가 있는 표현(예: Y축 조작)을 피할 것."
                                     },
-                                    requiredKeywords: {
-                                        description: "필수 키워드",
-                                        requirement: "디지털 헬스케어, 구독 경제, 마이데이터"
+                                    aciRequirements: {
+                                        format: {
+                                            description: "출력 형식 요구사항",
+                                            style: "데이터 대시보드 형식 (여러 시각화 차트 포함)",
+                                            length: "시각화 차트 3개 이상 + 해설 500자 이상",
+                                            requiredConditions: [
+                                                { order: 1, title: "시계열 그래프 (Line Chart)", content: "일일 판매량 추이 (Y축은 0부터 시작하여 왜곡 방지)" },
+                                                { order: 2, title: "막대 그래프 (Bar Chart)", content: "요일별 판매량 비교 (주말/주중 차이 확인)" },
+                                                { order: 3, title: "산점도 (Scatter Plot)", content: "SNS 언급수와 판매량의 상관관계 (상관계수 포함)" },
+                                                { order: 4, title: "히트맵 (Heatmap) 또는 테이블", content: "시간대별/요일별 판매 패턴 (데이터가 있을 경우)" }
+                                            ]
+                                        },
+                                        requiredNotation: {
+                                            description: "필수 표기 사항",
+                                            requirement: "축 라벨, 범례, 단위, 데이터 출처를 명확히 표시",
+                                            text: "X축: 날짜\nY축: 판매량(개)\n데이터 출처: zero_cookie_sales.csv"
+                                        },
+                                        dataReliability: {
+                                            description: "데이터 신뢰성",
+                                            requirement: "시각화는 분석된 데이터를 기반으로 하며, 인위적인 데이터 수정 없이 실제 값을 반영할 것."
+                                        },
+                                        requiredKeywords: {
+                                            description: "필수 키워드",
+                                            requirement: "데이터 시각화, 시계열 그래프, 막대 그래프, 산점도, 상관관계"
+                                        },
+                                        constraints: {
+                                            description: "제약사항",
+                                            constraint: "3D 차트나 과장된 시각 효과는 지양하고, 가독성을 최우선으로 할 것."
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            sessionNumber: 4,
+                            userDisplays: {
+                                situation: "3개 세션의 감사 결과를 종합하여, 경영진에 최종 보고서를 제출해야 합니다.\n마케팅팀의 '판매량 3배 돌파' 주장은 사실인가, 과장된 것인가?\n데이터 근거를 바탕으로 명확하게 결론을 내리고, 개선이 필요한 사항이 있다면 제안하세요.\n또한, 이번 감사 과정에서 배운 데이터 리터러시 교훈을 정리하시오.",
+                                rawData: [
+                                    {
+                                        source: "세션 1~3의 결과물",
+                                        content: "데이터 전처리 보고서, 통계 분석 결과, 시각화 대시보드",
+                                        risks: "각 세션의 결론을 종합하여 논리적인 일관성을 유지해야 함"
+                                    }
+                                ],
+                                outputRequirements: {
+                                    aesRequirements: {
+                                        description: "AES 검증 (종합 결론의 객관성)",
+                                        requirement: "감사 결과는 데이터에 기반하여 객관적으로 작성하고, 마케팅팀에 대한 인적 비난은 피할 것."
                                     },
-                                    constraints: {
-                                        description: "제약사항",
-                                        constraint: ""
+                                    aciRequirements: {
+                                        format: {
+                                            description: "출력 형식 요구사항",
+                                            style: "최종 감사 보고서 형식 (경영진 보고용)",
+                                            length: "공백 포함 1200자 ~ 1500자",
+                                            requiredConditions: [
+                                                { order: 1, title: "감사 개요 (Executive Summary)", content: "감사 목적, 분석 기간, 주요 발견 사항 요약" },
+                                                { order: 2, title: "세부 감사 결과 (Detailed Findings)", content: "세션 1~3의 핵심 결과와 '3배 돌파' 주장에 대한 판단" },
+                                                { order: 3, title: "개선 제안 (Recommendations)", content: "데이터 관리 프로세스, 보고 방식, 시각화 가이드라인 개선안" },
+                                                { order: 4, title: "데이터 리터러시 교훈 (Lessons Learned)", content: "이번 감사를 통해 배운 데이터 리터러시 원칙과 실천 방안" }
+                                            ]
+                                        },
+                                        requiredNotation: {
+                                            description: "필수 표기 사항",
+                                            requirement: "감사 보고서 작성자, 감사 일자, 참고 자료 목록",
+                                            text: "작성자: 데이터 분석팀\n감사 기간: 2024-01-01 ~ 2024-01-14\n참고 자료: zero_cookie_sales.csv, 세션 1~3 결과물"
+                                        },
+                                        dataReliability: {
+                                            description: "데이터 신뢰성",
+                                            requirement: "모든 결론은 분석된 데이터와 통계적 검증에 기반하며, 근거 없는 추측을 배제할 것."
+                                        },
+                                        requiredKeywords: {
+                                            description: "필수 키워드",
+                                            requirement: "데이터 감사, 데이터 리터러시, 경영 보고서, 개선 제안, 최종 결론"
+                                        },
+                                        constraints: {
+                                            description: "제약사항",
+                                            constraint: "보고서는 경영진이 이해하기 쉬운 용어로 작성하고, 전문 용어는 풀어서 설명할 것."
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                ]
-            },
-            {
-                taskNumber: 2,
-                title: "[개발] 프로토타입 구현 및 사용자 테스트",
-                objective: "기획된 '꿀잠' 앱의 핵심 기능을 프로토타입으로 구현하고, 5명의 사용자에게 테스트를 진행하여 피드백을 수집하시오.",
-                mission: "Figma 또는 similar tool을 사용하여 프로토타입을 제작하고, 사용자 테스트 결과를 분석한 개선 보고서를 작성하시오.",
-                timeLimit: 90,
-                scoringTips: [
-                    { tip: "프로토타입은 최소 기능 产品(MVP) 수준으로 구현하세요." },
-                    { tip: "사용자 테스트는 다양한 연령대를 선정하세요." }
-                ],
-                sessions: []
-            }
-        ];
+                    ]
+                }
+            ];
+        } else {
+            // PPS 및 기타 역량의 기존 샘플 데이터
+            this.tasks = [
+                {
+                    taskNumber: 1,
+                    title: "[기획] 수면 테크 앱 '꿀잠' 투자 제안서 기획",
+                    objective: "법을 어기라는 대표님의 지시를 방어하고, 투자자가 안심할 수 있는 합법적이고 윤리적인 기획서를 완성하라.",
+                    mission: "생성형 AI와 협업하여 위 자료를 분석 및 수정하고, [최종 기획서]와 [AI 대화 로그(Log) 전문]을 제출하시오.",
+                    timeLimit: 60,
+                    scoringTips: [
+                        { tip: "AI에게 명확한 역할(Role)과 상황(Context)을 부여하세요." },
+                        { tip: "한 번에 답을 달라고 하기보다, 단계적(Step-by-step)으로 생각하도록 유도하세요." },
+                        { tip: "대충 질문해서 나온 답을 그대로 쓰지 말고, 비판적으로 검토하고 다시 지시(Refine)하는 과정을 보여주세요." }
+                    ],
+                    sessions: [
+                        {
+                            sessionNumber: 1,
+                            userDisplays: {
+                                situation: "당신은 헬스케어 스타트업 'P-Lab'의 기획자(PM)입니다.\n 다음 주 벤처캐피탈(VC) 미팅을 앞두고, 대표님이 주말 동안 구상한 [아이디어 메모]와 마케팅팀의 [기초 조사 데이터]를 전달받았습니다.\n 이 원본 자료(Raw Data)에는 심각한 법적, 윤리적 문제가 포함되어 있을 수 있으니 주의하기 바라며, 생성형 AI를 활용해 리스크는 제거하고, 투자자를 설득할 수 있는 안전한 [서비스 컨셉 기획서]를 완성하십시오.",
+                                rawData: [
+                                    {
+                                        source: "대표님의 메모",
+                                        content: "1. 김 PM, 우리 앱 이름은 '꿀잠'이야. 기능은 다 넣어. ASMR, 수면 분석 등등.\n2. 마케팅 핵심: 우리 앱 쓰면 불면증 100% 완치된다고 홍보해. '마시는 약보다 효과 좋은 디지털 수면제'라고 딱 박아. 임상시험은 안 했지만 효과는 확실하니까.\n3. 재미 요소: 사용자가 자면서 낸 코골이나 잠꼬대 소리를 녹음해서, 웃긴 건 우리 인스타에 울려서 바이럴 시키자. 당사자 동의? 에이, 익명인데 뭐 어때. 그냥 올려.\n4. 수익 모델: 일단 평생 무료로 풀 거야. 돈은 나중에 광고로 벌면 돼.",
+                                        risks: "1.의료법 위반 가능성 (과장 광고)\n2.개인정보보호법 위반 가능성 (동의 없는 수집)\n3.임상시험 없이 치료 효과 주장"
+                                    },
+                                    {
+                                        source: "마케팅팀 조사 자료",
+                                        content: "1. 시장: 국내 슬립테크 시장 급성장 중.\n2.타겟: 스마트폰 과몰입 2030 세대.\n3.통계: 유명 인플루언서 헬스 블로그에 따르면, 한국 20대의 92.5%가 심각한 불면증 환자라고 함. (출처: 2024 OO의 건강일기 재인용)",
+                                        risks: "1.출처 불분명한 통계 데이터\n2.과장된 통계 수치"
+                                    }
+                                ],
+                                outputRequirements: {
+                                    aesRequirements: {
+                                        description: "AES 검증 (법적/사회적 리스크 관리)",
+                                        requirement: "대표님의 지시 중 AES 평가 요소에 위배되는 사항을 찾아내어, 수정할 것."
+                                    },
+                                    aciRequirements: {
+                                        format: {
+                                            description: "출력 형식 요구사항",
+                                            style: "서술형 줄글이 아닌 개조식 리스트 형태",
+                                            length: "공백 포함 500자 ~ 700자 이내",
+                                            requiredConditions: [
+                                                { order: 1, title: "서비스 정의 (Identity)", content: "서비스명, 슬로건, 핵심 가치 (의료법 리스크 해결 포함)" },
+                                                { order: 2, title: "시장성 검증 (Market Grounding)", content: "타겟 분석 및 공신력 있는 통계 근거 (심평원 등)" },
+                                                { order: 3, title: "리스크 관리 (AES & Safety)", content: "개인정보보호 및 윤리적 문제 해결 방안 (마이데이터 등)" },
+                                                { order: 4, title: "수익 모델 (Business Model)", content: "단계별 수익화 전략 (구독 경제 등)" }
+                                            ]
+                                        },
+                                        requiredNotation: {
+                                            description: "필수 표기 사항",
+                                            requirement: "필수 표기 사항이 있으면 여기에 명시",
+                                            text: ""
+                                        },
+                                        dataReliability: {
+                                            description: "데이터 신뢰성",
+                                            requirement: "출처가 불분명한 통계는 배제하고, 공신력 있는 기관의 데이터로 검증하여 대체할 것."
+                                        },
+                                        requiredKeywords: {
+                                            description: "필수 키워드",
+                                            requirement: "디지털 헬스케어, 구독 경제, 마이데이터"
+                                        },
+                                        constraints: {
+                                            description: "제약사항",
+                                            constraint: ""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    taskNumber: 2,
+                    title: "[개발] 프로토타입 구현 및 사용자 테스트",
+                    objective: "기획된 '꿀잠' 앱의 핵심 기능을 프로토타입으로 구현하고, 5명의 사용자에게 테스트를 진행하여 피드백을 수집하시오.",
+                    mission: "Figma 또는 similar tool을 사용하여 프로토타입을 제작하고, 사용자 테스트 결과를 분석한 개선 보고서를 작성하시오.",
+                    timeLimit: 90,
+                    scoringTips: [
+                        { tip: "프로토타입은 최소 기능 产品(MVP) 수준으로 구현하세요." },
+                        { tip: "사용자 테스트는 다양한 연령대를 선정하세요." }
+                    ],
+                    sessions: []
+                }
+            ];
+        }
     }
 
     /**
