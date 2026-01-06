@@ -873,7 +873,6 @@ class CreateAssignmentManager {
         container.appendChild(submissionElement);
     }
 
-     */
     addModalRawDataItem(sessionId, rawDataItem = null) {
         const container = document.getElementById(`${sessionId}_rawdataContainer`);
         if (!container) return;
@@ -1308,7 +1307,7 @@ class CreateAssignmentManager {
         // AES 요구사항
         const aesRequirements = {
             description: getValue('aes_description'),
-            requirement: gettextarea('aes_requirement')
+            requirement: getTextarea('aes_requirement')
         };
 
         // 필수 조건 수집
@@ -1345,7 +1344,7 @@ class CreateAssignmentManager {
             },
             dataReliability: {
                 description: getValue('aci_data_description'),
-                requirement: gettextarea('aci_data_requirement')
+                requirement: getTextarea('aci_data_requirement')
             },
             requiredKeywords: {
                 description: getValue('aci_keywords_description'),
@@ -1353,7 +1352,7 @@ class CreateAssignmentManager {
             },
             constraints: {
                 description: getValue('aci_constraints_description'),
-                constraint: gettextarea('aci_constraints_constraint')
+                constraint: getTextarea('aci_constraints_constraint')
             }
         };
 
